@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with MDPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const { app, BrowserWindow, ipcMain, IpcMessageEvent } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const { join } = require('path');
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -45,6 +45,8 @@ function createManagerWindow() {
     // when you should delete the corresponding element.
     managerWindow = null;
   });
+
+  console.log(require('electron').screen.getAllDisplays());
 }
 
 function createPresenterWindow() {
@@ -57,7 +59,7 @@ function createPresenterWindow() {
   // Open the DevTools.
   presenterWindow.webContents.openDevTools();
 
-  presenterWindow.maximize();
+  presenterWindow.setFullScreen(true);
 
   // Emitted when the window is closed.
   presenterWindow.on('closed', () => {
@@ -70,7 +72,7 @@ function createPresenterWindow() {
 
 function createShowWindow() {
   // Create the browser window.
-  showWindow = new BrowserWindow({ width: 800, height: 600 });
+  showWindow = new BrowserWindow({ width: 800, height: 600, x:1707, y:0 });
 
   // and load the index.html of the app.
   showWindow.loadFile(join(__dirname, 'ui', 'show', 'show.html'));
@@ -78,7 +80,7 @@ function createShowWindow() {
   // Open the DevTools.
   showWindow.webContents.openDevTools();
 
-  showWindow.maximize();
+  showWindow.setFullScreen(true);
 
   // Emitted when the window is closed.
   showWindow.on('closed', () => {
