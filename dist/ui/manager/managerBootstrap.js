@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright (c) Bryan Hughes <bryan@nebri.us>
 
 This file is part of MDPrez.
@@ -15,28 +15,9 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with MDPrez.  If not, see <http://www.gnu.org/licenses/>.
--->
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Manager</title>
-  </head>
-  <body>
-    <h1>Manager</h1>
-    <div>
-      <span>Speaker View:</span>
-      <select id="speakerViewMonitorSelect">
-        <option>Loading</option>
-      </select>
-    </div>
-    <div>
-      <span>Audience View:</span>
-      <select id="audienceViewMonitorSelect">
-        <option>Loading</option>
-      </select>
-    </div>
-    <button id="presentButton">Present Show</button>
-    <script src="./managerBootstrap.js"></script>
-  </body>
-</html>
+*/
+
+// A little hacky, but we have to call TypeScript files as module. It can't
+// be top-level, so we use this little indirection to make sure that the TS files
+// are indeed called as a module (i.e. module, exports, and module.exports exist)
+require('./manager.js');

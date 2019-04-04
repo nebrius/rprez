@@ -1,3 +1,4 @@
+"use strict";
 /*
 Copyright (c) Bryan Hughes <bryan@nebri.us>
 
@@ -16,12 +17,4 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with MDPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-const { ipcRenderer } = require('electron');
-
-function requestOpenPresentation() {
-  const message = {
-    type: 'request-open-presentation'
-  };
-  ipcRenderer.send('asynchronous-message', message);
-}
+//# sourceMappingURL=show.js.map

@@ -1,4 +1,5 @@
-<!--
+"use strict";
+/*
 Copyright (c) Bryan Hughes <bryan@nebri.us>
 
 This file is part of MDPrez.
@@ -15,28 +16,13 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with MDPrez.  If not, see <http://www.gnu.org/licenses/>.
--->
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Manager</title>
-  </head>
-  <body>
-    <h1>Manager</h1>
-    <div>
-      <span>Speaker View:</span>
-      <select id="speakerViewMonitorSelect">
-        <option>Loading</option>
-      </select>
-    </div>
-    <div>
-      <span>Audience View:</span>
-      <select id="audienceViewMonitorSelect">
-        <option>Loading</option>
-      </select>
-    </div>
-    <button id="presentButton">Present Show</button>
-    <script src="./managerBootstrap.js"></script>
-  </body>
-</html>
+*/
+Object.defineProperty(exports, "__esModule", { value: true });
+var MessageType;
+(function (MessageType) {
+    MessageType[MessageType["RequestPresentShow"] = 0] = "RequestPresentShow";
+    MessageType[MessageType["RequestNext"] = 1] = "RequestNext";
+    MessageType[MessageType["RequestPrevious"] = 2] = "RequestPrevious";
+    MessageType[MessageType["ScreenUpdated"] = 3] = "ScreenUpdated";
+})(MessageType = exports.MessageType || (exports.MessageType = {}));
+//# sourceMappingURL=message.js.map

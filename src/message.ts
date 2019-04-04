@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright (c) Bryan Hughes <bryan@nebri.us>
 
 This file is part of MDPrez.
@@ -15,28 +15,24 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with MDPrez.  If not, see <http://www.gnu.org/licenses/>.
--->
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Manager</title>
-  </head>
-  <body>
-    <h1>Manager</h1>
-    <div>
-      <span>Speaker View:</span>
-      <select id="speakerViewMonitorSelect">
-        <option>Loading</option>
-      </select>
-    </div>
-    <div>
-      <span>Audience View:</span>
-      <select id="audienceViewMonitorSelect">
-        <option>Loading</option>
-      </select>
-    </div>
-    <button id="presentButton">Present Show</button>
-    <script src="./managerBootstrap.js"></script>
-  </body>
-</html>
+*/
+
+export enum MessageType {
+  RequestPresentShow,
+  RequestNext,
+  RequestPrevious,
+  ScreenUpdated
+}
+
+export interface IMessage {
+  type: MessageType;
+}
+
+export interface IRequestPresentShowMessage extends IMessage {
+  speakerMonitor?: number;
+  audienceMonitor?: number;
+}
+
+export interface IScreenUpdatedMessage extends IMessage {
+  screens: Array<{ width: number, height: number }>;
+}
