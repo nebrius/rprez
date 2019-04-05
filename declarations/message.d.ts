@@ -1,8 +1,9 @@
 export declare enum MessageType {
-    RequestPresentShow = 0,
-    RequestNext = 1,
-    RequestPrevious = 2,
-    ScreenUpdated = 3
+    ManagerReady = 0,
+    RequestPresentShow = 1,
+    RequestNext = 2,
+    RequestPrevious = 3,
+    ScreenUpdated = 4
 }
 export interface IMessage {
     type: MessageType;
@@ -15,5 +16,6 @@ export interface IScreenUpdatedMessage extends IMessage {
     screens: Array<{
         width: number;
         height: number;
+        id: number;
     }>;
 }

@@ -18,6 +18,7 @@ along with MDPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 export enum MessageType {
+  ManagerReady,
   RequestPresentShow,
   RequestNext,
   RequestPrevious,
@@ -34,5 +35,5 @@ export interface IRequestPresentShowMessage extends IMessage {
 }
 
 export interface IScreenUpdatedMessage extends IMessage {
-  screens: Array<{ width: number, height: number }>;
+  screens: Array<{ width: number, height: number, id: number }>;
 }

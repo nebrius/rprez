@@ -18,22 +18,41 @@ along with MDPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ipcRenderer, IpcMessageEvent } from 'electron';
-import { MessageType, IRequestPresentShowMessage, IMessage } from '../../message';
+import { MessageType, IRequestPresentShowMessage, IMessage, IScreenUpdatedMessage } from '../../message';
 import { createInternalError } from '../../util';
 
-ipcRenderer.on('asynchronous-reply', (event: IpcMessageEvent, msg: IMessage) => {
+function createScreenOptions(parentName: string, screenMessage: IScreenUpdatedMessage, defaultScreen: number): void {
+  const parent = document.getElementById(parentName);
+  if (!parent) {
+    throw new Error(createInternalError(`"${parentName}" is unexpectedly null`));
+  }
+  for (const child of parent.children) {
+    parent.removeChild(child);
+  }
+  const noneOption = document.createElement('option');
+  noneOption.value = "0";
+  noneOption.innerText = 'None';
+  if (defaultScreen >= screenMessage.screens.length) {
+    noneOption.selected = true;
+  }
+  parent.appendChild(noneOption);
+  for (let i = 0; i < screenMessage.screens.length; i++) {
+    const screen = screenMessage.screens[i];
+    const option = document.createElement('option');
+    option.value = screen.id.toString();
+    option.innerText = `${i}: ${screen.width}x${screen.height}`;
+    if (i === defaultScreen) {
+      option.selected = true;
+    }
+    parent.appendChild(option);
+  }
+}
+
+ipcRenderer.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
   switch (msg.type) {
     case MessageType.ScreenUpdated:
-      const speakerViewMonitorSelect = document.getElementById('speakerViewMonitorSelect');
-      if (!speakerViewMonitorSelect) {
-        throw new Error(createInternalError('"speakerViewMonitorSelect" is unexpectedly null'));
-      }
-
-      const audienceViewMonitorSelect = document.getElementById('audienceViewMonitorSelect');
-      if (!audienceViewMonitorSelect) {
-        throw new Error(createInternalError('"audienceViewMonitorSelect" is unexpectedly null'));
-      }
-
+      createScreenOptions('speakerViewMonitorSelect', msg as IScreenUpdatedMessage, 0);
+      createScreenOptions('audienceViewMonitorSelect', msg as IScreenUpdatedMessage, 1);
       break;
     default:
       throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
@@ -52,3 +71,8 @@ if (!presentButton) {
   throw new Error(createInternalError('"presentButton" is unexpectedly null'));
 }
 presentButton.onclick = requestPresenterShow;
+
+const managerReadyMessage: IMessage = {
+  type: MessageType.ManagerReady,
+};
+ipcRenderer.send('asynchronous-message', managerReadyMessage);

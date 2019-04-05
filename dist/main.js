@@ -65,17 +65,6 @@ function createSpeakerWindow(x, y) {
         // when you should delete the corresponding element.
         presenterWindow = null;
     });
-    presenterWindow.on('show', () => {
-        if (presenterWindow === null) {
-            throw new Error(util_1.createInternalError('"presenterWindow" is unexpectedly null'));
-        }
-        const displays = getDisplays();
-        const msg = {
-            type: message_1.MessageType.ScreenUpdated,
-            screens: displays.map((display) => ({ width: display.bounds.width, height: display.bounds.height }))
-        };
-        presenterWindow.webContents.send('asynchronous-message', msg);
-    });
 }
 function createAudienceWindow(x, y) {
     // Create the browser window.
@@ -117,29 +106,50 @@ electron_1.app.on('activate', () => {
         createManagerWindow();
     }
 });
+function handleManagerReadyMessage() {
+    console.log('Manager Ready');
+    if (managerWindow === null) {
+        throw new Error(util_1.createInternalError('"managerWindow" is unexpectedly null'));
+    }
+    const displays = getDisplays();
+    const screenUpdatedMessage = {
+        type: message_1.MessageType.ScreenUpdated,
+        screens: displays.map((display) => ({
+            width: Math.floor(display.bounds.width * display.scaleFactor),
+            height: Math.floor(display.bounds.height * display.scaleFactor),
+            id: display.id
+        }))
+    };
+    managerWindow.webContents.send('asynchronous-message', screenUpdatedMessage);
+}
+function handleRequestPresentShow(presentMessage) {
+    const displays = getDisplays();
+    if (typeof presentMessage.speakerMonitor === 'number') {
+        const speakerDisplay = displays[presentMessage.speakerMonitor];
+        createSpeakerWindow(speakerDisplay.bounds.x, speakerDisplay.bounds.y);
+    }
+    if (typeof presentMessage.audienceMonitor === 'number') {
+        const audienceDisplay = displays[presentMessage.audienceMonitor];
+        createAudienceWindow(audienceDisplay.bounds.x, audienceDisplay.bounds.y);
+    }
+    // case 'request-slide-next':
+    //   const reply = { type: 'slide-next' };
+    //   if (presenterWindow) {
+    //     presenterWindow.webContents.send('asynchronous-reply', reply);
+    //   }
+    //   if (showWindow) {
+    //     showWindow.webContents.send('asynchronous-reply', reply);
+    //   }
+    //   break;
+}
 electron_1.ipcMain.on('asynchronous-message', (event, msg) => {
     switch (msg.type) {
-        case message_1.MessageType.RequestPresentShow:
-            const displays = getDisplays();
-            const presentMessage = msg;
-            if (typeof presentMessage.speakerMonitor === 'number') {
-                const speakerDisplay = displays[presentMessage.speakerMonitor];
-                createSpeakerWindow(speakerDisplay.bounds.x, speakerDisplay.bounds.y);
-            }
-            if (typeof presentMessage.audienceMonitor === 'number') {
-                const audienceDisplay = displays[presentMessage.audienceMonitor];
-                createAudienceWindow(audienceDisplay.bounds.x, audienceDisplay.bounds.y);
-            }
+        case message_1.MessageType.ManagerReady:
+            handleManagerReadyMessage();
             break;
-        // case 'request-slide-next':
-        //   const reply = { type: 'slide-next' };
-        //   if (presenterWindow) {
-        //     presenterWindow.webContents.send('asynchronous-reply', reply);
-        //   }
-        //   if (showWindow) {
-        //     showWindow.webContents.send('asynchronous-reply', reply);
-        //   }
-        //   break;
+        case message_1.MessageType.RequestPresentShow:
+            handleRequestPresentShow(msg);
+            break;
         default:
             throw new Error(util_1.createInternalError(`Received unexpected message type ${msg.type}`));
     }

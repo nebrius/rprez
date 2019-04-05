@@ -76,18 +76,6 @@ function createSpeakerWindow(x: number, y: number) {
     // when you should delete the corresponding element.
     presenterWindow = null;
   });
-
-  presenterWindow.on('show', () => {
-    if (presenterWindow === null) {
-      throw new Error(createInternalError('"presenterWindow" is unexpectedly null'));
-    }
-    const displays = getDisplays();
-    const msg: IScreenUpdatedMessage = {
-      type: MessageType.ScreenUpdated,
-      screens: displays.map((display) => ({ width: display.bounds.width, height: display.bounds.height }))
-    };
-    presenterWindow.webContents.send('asynchronous-message', msg);
-  });
 }
 
 function createAudienceWindow(x: number, y: number) {
@@ -138,30 +126,54 @@ app.on('activate', () => {
   }
 });
 
+function handleManagerReadyMessage(): void {
+  console.log('Manager Ready');
+  if (managerWindow === null) {
+    throw new Error(createInternalError('"managerWindow" is unexpectedly null'));
+  }
+  const displays = getDisplays();
+  const screenUpdatedMessage: IScreenUpdatedMessage = {
+    type: MessageType.ScreenUpdated,
+    screens: displays.map((display) => ({
+      width: Math.floor(display.bounds.width * display.scaleFactor),
+      height: Math.floor(display.bounds.height * display.scaleFactor),
+      id: display.id
+    }))
+  };
+  managerWindow.webContents.send('asynchronous-message', screenUpdatedMessage);
+}
+
+function handleRequestPresentShow(presentMessage: IRequestPresentShowMessage) {
+  const displays = getDisplays();
+  if (typeof presentMessage.speakerMonitor === 'number') {
+    const speakerDisplay = displays[presentMessage.speakerMonitor];
+    createSpeakerWindow(speakerDisplay.bounds.x, speakerDisplay.bounds.y);
+  }
+  if (typeof presentMessage.audienceMonitor === 'number') {
+    const audienceDisplay = displays[presentMessage.audienceMonitor];
+    createAudienceWindow(audienceDisplay.bounds.x, audienceDisplay.bounds.y);
+  }
+  // case 'request-slide-next':
+  //   const reply = { type: 'slide-next' };
+  //   if (presenterWindow) {
+  //     presenterWindow.webContents.send('asynchronous-reply', reply);
+  //   }
+  //   if (showWindow) {
+  //     showWindow.webContents.send('asynchronous-reply', reply);
+  //   }
+  //   break;
+}
+
 ipcMain.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
   switch (msg.type) {
-    case MessageType.RequestPresentShow:
-      const displays = getDisplays();
-      const presentMessage = (msg as IRequestPresentShowMessage);
-      if (typeof presentMessage.speakerMonitor === 'number') {
-        const speakerDisplay = displays[presentMessage.speakerMonitor];
-        createSpeakerWindow(speakerDisplay.bounds.x, speakerDisplay.bounds.y);
-      }
-      if (typeof presentMessage.audienceMonitor === 'number') {
-        const audienceDisplay = displays[presentMessage.audienceMonitor];
-        createAudienceWindow(audienceDisplay.bounds.x, audienceDisplay.bounds.y);
-      }
+    case MessageType.ManagerReady:
+      handleManagerReadyMessage();
       break;
 
-    // case 'request-slide-next':
-    //   const reply = { type: 'slide-next' };
-    //   if (presenterWindow) {
-    //     presenterWindow.webContents.send('asynchronous-reply', reply);
-    //   }
-    //   if (showWindow) {
-    //     showWindow.webContents.send('asynchronous-reply', reply);
-    //   }
-    //   break;
+    case MessageType.RequestPresentShow:
+      handleRequestPresentShow(msg);
+      break;
+
     default:
       throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
   }
