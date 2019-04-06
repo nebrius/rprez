@@ -26,10 +26,7 @@ import { createInternalError } from './util';
 // be closed automatically when the JavaScript object is garbage collected.
 let managerWindow: Electron.BrowserWindow | null = null;
 
-// TODO: this doesn't work for showing multiple windows of the same type. Need dynamic system
-let presenterWindow: Electron.BrowserWindow | null = null;
-let showWindow: Electron.BrowserWindow | null = null;
-let clockWindow: Electron.BrowserWindow | null = null;
+const presentationWindows: Electron.BrowserWindow[] = [];
 
 let screenModule: Electron.Screen | null = null;
 
@@ -61,66 +58,29 @@ function createManagerWindow() {
   });
 }
 
-function createSpeakerWindow(x: number, y: number) {
+function createPresentationWindow(type: MonitorViews, x: number, y: number): void {
   // Create the browser window.
-  presenterWindow = new BrowserWindow({ width: 800, height: 600, x, y });
+  const win = new BrowserWindow({ width: 800, height: 600, x, y });
 
   // and load the index.html of the app.
-  presenterWindow.loadFile(join(__dirname, 'ui', 'presenter', 'presenter.html'));
+  win.loadFile(join(__dirname, 'ui', 'presenter', 'presenter.html'));
 
   // Open the DevTools.
-  presenterWindow.webContents.openDevTools();
+  win.webContents.openDevTools();
 
-  presenterWindow.setFullScreen(true);
+  win.setFullScreen(true);
+  presentationWindows.push(win);
 
   // Emitted when the window is closed.
-  presenterWindow.on('closed', () => {
+  win.on('closed', () => {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    presenterWindow = null;
-  });
-}
-
-function createAudienceWindow(x: number, y: number) {
-  // Create the browser window.
-  showWindow = new BrowserWindow({ width: 800, height: 600, x, y });
-
-  // and load the index.html of the app.
-  showWindow.loadFile(join(__dirname, 'ui', 'show', 'show.html'));
-
-  // Open the DevTools.
-  showWindow.webContents.openDevTools();
-
-  showWindow.setFullScreen(true);
-
-  // Emitted when the window is closed.
-  showWindow.on('closed', () => {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    showWindow = null;
-  });
-}
-
-function createClockWindow(x: number, y: number) {
-  // Create the browser window.
-  clockWindow = new BrowserWindow({ width: 800, height: 600, x, y });
-
-  // and load the index.html of the app.
-  clockWindow.loadFile(join(__dirname, 'ui', 'clock', 'clock.html'));
-
-  // Open the DevTools.
-  clockWindow.webContents.openDevTools();
-
-  clockWindow.setFullScreen(true);
-
-  // Emitted when the window is closed.
-  clockWindow.on('closed', () => {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    clockWindow = null;
+    const winIndex = presentationWindows.indexOf(win);
+    if (winIndex === -1) {
+      throw new Error(createInternalError('Presentation window is unexepctedly missing from 2'));
+    }
+    presentationWindows.splice(winIndex, 1);
   });
 }
 
@@ -179,42 +139,21 @@ function getDisplayForId(id: number): Electron.Display {
 }
 
 function handleRequestPresentShow(presentMessage: IRequestPresentShowMessage) {
-  console.log(presentMessage);
   for (const monitorId in presentMessage.screenAssignments) {
     if (!presentMessage.screenAssignments.hasOwnProperty(monitorId)) {
       continue;
     }
     const screenAssignment = presentMessage.screenAssignments[monitorId];
     const display = getDisplayForId(parseInt(monitorId, 10));
-    switch (screenAssignment) {
-      case MonitorViews.Audience:
-        console.log(`Showing audience view on monitor ${monitorId}`);
-        createAudienceWindow(display.bounds.x, display.bounds.y);
-        break;
-      case MonitorViews.Speaker:
-        console.log(`Showing speaker view on monitor ${monitorId}`);
-        createSpeakerWindow(display.bounds.x, display.bounds.y);
-        break;
-      case MonitorViews.Clock:
-        console.log(`Showing clock view on monitor ${monitorId}`);
-        createClockWindow(display.bounds.x, display.bounds.y);
-        break;
-      case MonitorViews.None:
-        console.log(`Not showing anything on monitor ${monitorId}`);
-        break;
-    }
+    console.log(`Opening ${MonitorViews[screenAssignment]} view on monitor ` +
+      `${monitorId} (${display.bounds.width}x${display.bounds.height})`);
+    createPresentationWindow(screenAssignment, display.bounds.x, display.bounds.y);
   }
 }
 
 function handleRequestExitShow() {
-  if (presenterWindow) {
-    presenterWindow.close();
-  }
-  if (showWindow) {
-    showWindow.close();
-  }
-  if (clockWindow) {
-    clockWindow.close();
+  for (const win of presentationWindows) {
+    win.close();
   }
 }
 
@@ -225,10 +164,12 @@ ipcMain.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
       break;
 
     case MessageType.RequestPresentShow:
+      console.log('Starting presentation');
       handleRequestPresentShow(msg as IRequestPresentShowMessage);
       break;
 
     case MessageType.RequestExistShow:
+      console.log('Exiting presentation');
       handleRequestExitShow();
       break;
 
