@@ -16,7 +16,8 @@ export interface IScreenInfo {
 export declare enum MonitorViews {
     None = "None",
     Speaker = "Speaker",
-    Audience = "Audience"
+    Audience = "Audience",
+    Clock = "Clock"
 }
 export interface IScreenUpdatedMessage extends IMessage {
     screens: IScreenInfo[];

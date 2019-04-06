@@ -1,5 +1,5 @@
 {
-  "name": "mdprez",
+  "name": "RPrez",
   "version": "1.0.0",
   "description": "Markdown based presentation software",
   "main": "dist/main.js",
@@ -25,14 +25,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nebrius/mdprez.git"
+    "url": "git+https://github.com/nebrius/rprez.git"
   },
   "author": "Bryan Hughes <bryan@nebri.us>",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/nebrius/mdprez/issues"
+    "url": "https://github.com/nebrius/rprez/issues"
   },
-  "homepage": "https://github.com/nebrius/mdprez#readme",
+  "homepage": "https://github.com/nebrius/rprez#readme",
   "devDependencies": {
     "@types/node": "^11.13.0",
     "electron": "^4.1.3",
