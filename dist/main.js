@@ -133,23 +133,26 @@ function getDisplayForId(id) {
 }
 function handleRequestPresentShow(presentMessage) {
     console.log(presentMessage);
-    if (typeof presentMessage.speakerMonitor === 'number') {
-        const speakerDisplay = getDisplayForId(presentMessage.speakerMonitor);
-        createSpeakerWindow(speakerDisplay.bounds.x, speakerDisplay.bounds.y);
+    for (const monitorId in presentMessage.screenAssignments) {
+        if (!presentMessage.screenAssignments.hasOwnProperty(monitorId)) {
+            continue;
+        }
+        const screenAssignment = presentMessage.screenAssignments[monitorId];
+        const display = getDisplayForId(parseInt(monitorId, 10));
+        switch (screenAssignment) {
+            case message_1.MonitorViews.Audience:
+                console.log(`Showing audience view on monitor ${monitorId}`);
+                createAudienceWindow(display.bounds.x, display.bounds.y);
+                break;
+            case message_1.MonitorViews.Speaker:
+                console.log(`Showing speaker view on monitor ${monitorId}`);
+                createSpeakerWindow(display.bounds.x, display.bounds.y);
+                break;
+            case message_1.MonitorViews.None:
+                console.log(`Not showing anything on monitor ${monitorId}`);
+                break;
+        }
     }
-    if (typeof presentMessage.audienceMonitor === 'number') {
-        const audienceDisplay = getDisplayForId(presentMessage.audienceMonitor);
-        createAudienceWindow(audienceDisplay.bounds.x, audienceDisplay.bounds.y);
-    }
-    // case 'request-slide-next':
-    //   const reply = { type: 'slide-next' };
-    //   if (presenterWindow) {
-    //     presenterWindow.webContents.send('asynchronous-reply', reply);
-    //   }
-    //   if (showWindow) {
-    //     showWindow.webContents.send('asynchronous-reply', reply);
-    //   }
-    //   break;
 }
 electron_1.ipcMain.on('asynchronous-message', (event, msg) => {
     switch (msg.type) {

@@ -18,66 +18,89 @@ along with MDPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ipcRenderer, IpcMessageEvent } from 'electron';
-import { MessageType, IRequestPresentShowMessage, IMessage, IScreenUpdatedMessage } from '../../message';
+import {
+  MessageType,
+  IMessage,
+  IScreenUpdatedMessage,
+  IRequestPresentShowMessage,
+  IScreenInfo,
+  MonitorViews
+} from '../../message';
 import { createInternalError } from '../../util';
 
-function createScreenOptions(parentName: string, screenMessage: IScreenUpdatedMessage, defaultScreen: number): void {
-  const parent = document.getElementById(parentName);
-  if (!parent) {
-    throw new Error(createInternalError(`"${parentName}" is unexpectedly null`));
-  }
-  for (const child of parent.children) {
-    parent.removeChild(child);
-  }
-  const noneOption = document.createElement('option');
-  noneOption.value = '0';
-  noneOption.innerText = 'None';
-  if (defaultScreen >= screenMessage.screens.length) {
-    noneOption.selected = true;
-  }
-  parent.appendChild(noneOption);
-  for (let i = 0; i < screenMessage.screens.length; i++) {
-    const screen = screenMessage.screens[i];
-    const option = document.createElement('option');
-    option.value = screen.id.toString();
-    option.innerText = `${i}: ${screen.width}x${screen.height}`;
-    if (i === defaultScreen) {
-      option.selected = true;
+let screens: IScreenInfo[] = [];
+
+function createMonitorEntry(
+  parent: HTMLElement,
+  screenInfo: IScreenInfo,
+  screenIndex: number,
+  defaultOption: MonitorViews | undefined
+): void {
+  const container = document.createElement('div');
+
+  const label = document.createElement('span');
+  label.innerText = `Screen ${screenIndex} (${screenInfo.width}x${screenInfo.height})`;
+  container.appendChild(label);
+
+  const select = document.createElement('select');
+  select.setAttribute('data-screenid', screenInfo.id.toString());
+  for (const monitorView in MonitorViews) {
+    if (!MonitorViews.hasOwnProperty(monitorView)) {
+      continue;
     }
-    parent.appendChild(option);
+    const noneOption = document.createElement('option');
+    noneOption.value = monitorView;
+    noneOption.innerText = monitorView;
+    if (defaultOption === MonitorViews[monitorView]) {
+      noneOption.selected = true;
+    }
+    select.appendChild(noneOption);
   }
+  container.appendChild(select);
+
+  parent.appendChild(container);
 }
 
 ipcRenderer.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
   switch (msg.type) {
     case MessageType.ScreenUpdated:
-      createScreenOptions('speakerViewMonitorSelect', msg as IScreenUpdatedMessage, 0);
-      createScreenOptions('audienceViewMonitorSelect', msg as IScreenUpdatedMessage, 1);
+      const monitorListContainer = document.getElementById('monitorList');
+      if (!monitorListContainer) {
+        throw new Error(createInternalError('"monitorListContainer" is unexpectedly null'));
+      }
+      for (const child of monitorListContainer.childNodes) {
+        monitorListContainer.removeChild(child);
+      }
+      screens = (msg as IScreenUpdatedMessage).screens;
+      for (let i = 0; i < screens.length; i++) {
+        let defaultScreen: MonitorViews | undefined;
+        if (i === 0) {
+          defaultScreen = MonitorViews.Audience;
+        } else if (i === 1) {
+          defaultScreen = MonitorViews.Speaker;
+        }
+        createMonitorEntry(monitorListContainer, screens[i], i, defaultScreen);
+      }
       break;
     default:
       throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
   }
 });
 
-function getScreenIdFromElement(elementName: string): number | undefined {
-  const select = document.getElementById(elementName);
-  if (!select) {
-    throw new Error(createInternalError(`"${elementName}" is unexpectedly null`));
-  }
-  const value = parseInt((select as HTMLSelectElement).selectedOptions[0].value, 10);
-  if (value) {
-    return value;
-  } else {
-    return undefined;
-  }
-}
-
 function requestPresenterShow() {
-
+  const screenAssignments: { [ id: number ]: MonitorViews } = {};
+  const monitorListElement = document.getElementById('monitorList');
+  if (!monitorListElement) {
+    throw new Error(createInternalError('"monitorListElement" is unexpectedly null'));
+  }
+  for (const monitorSelect of document.querySelectorAll('#monitorList select')) {
+    const monitorView = (monitorSelect as HTMLSelectElement).selectedOptions[0].value as MonitorViews;
+    const monitorId = parseInt(monitorSelect.getAttribute('data-screenid') as string, 10);
+    screenAssignments[monitorId] = monitorView;
+  }
   const message: IRequestPresentShowMessage = {
     type: MessageType.RequestPresentShow,
-    speakerMonitor: getScreenIdFromElement('speakerViewMonitorSelect'),
-    audienceMonitor: getScreenIdFromElement('audienceViewMonitorSelect')
+    screenAssignments
   };
   ipcRenderer.send('asynchronous-message', message);
 }

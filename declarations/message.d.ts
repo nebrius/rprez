@@ -8,14 +8,21 @@ export declare enum MessageType {
 export interface IMessage {
     type: MessageType;
 }
-export interface IRequestPresentShowMessage extends IMessage {
-    speakerMonitor?: number;
-    audienceMonitor?: number;
+export interface IScreenInfo {
+    width: number;
+    height: number;
+    id: number;
+}
+export declare enum MonitorViews {
+    None = "None",
+    Speaker = "Speaker",
+    Audience = "Audience"
 }
 export interface IScreenUpdatedMessage extends IMessage {
-    screens: Array<{
-        width: number;
-        height: number;
-        id: number;
-    }>;
+    screens: IScreenInfo[];
+}
+export interface IRequestPresentShowMessage extends IMessage {
+    screenAssignments: {
+        [id: number]: MonitorViews;
+    };
 }

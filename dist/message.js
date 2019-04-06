@@ -26,4 +26,10 @@ var MessageType;
     MessageType[MessageType["RequestPrevious"] = 3] = "RequestPrevious";
     MessageType[MessageType["ScreenUpdated"] = 4] = "ScreenUpdated";
 })(MessageType = exports.MessageType || (exports.MessageType = {}));
+var MonitorViews;
+(function (MonitorViews) {
+    MonitorViews["None"] = "None";
+    MonitorViews["Speaker"] = "Speaker";
+    MonitorViews["Audience"] = "Audience";
+})(MonitorViews = exports.MonitorViews || (exports.MonitorViews = {}));
 //# sourceMappingURL=message.js.map

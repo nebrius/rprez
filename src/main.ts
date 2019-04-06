@@ -19,7 +19,7 @@ along with MDPrez.  If not, see <http://www.gnu.org/licenses/>.
 
 import { app, BrowserWindow, ipcMain, IpcMessageEvent } from 'electron';
 import { join } from 'path';
-import { MessageType, IMessage, IRequestPresentShowMessage, IScreenUpdatedMessage } from './message';
+import { MessageType, IMessage, IRequestPresentShowMessage, IScreenUpdatedMessage, MonitorViews } from './message';
 import { createInternalError } from './util';
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -155,23 +155,26 @@ function getDisplayForId(id: number): Electron.Display {
 
 function handleRequestPresentShow(presentMessage: IRequestPresentShowMessage) {
   console.log(presentMessage);
-  if (typeof presentMessage.speakerMonitor === 'number') {
-    const speakerDisplay = getDisplayForId(presentMessage.speakerMonitor);
-    createSpeakerWindow(speakerDisplay.bounds.x, speakerDisplay.bounds.y);
+  for (const monitorId in presentMessage.screenAssignments) {
+    if (!presentMessage.screenAssignments.hasOwnProperty(monitorId)) {
+      continue;
+    }
+    const screenAssignment = presentMessage.screenAssignments[monitorId];
+    const display = getDisplayForId(parseInt(monitorId, 10));
+    switch (screenAssignment) {
+      case MonitorViews.Audience:
+        console.log(`Showing audience view on monitor ${monitorId}`);
+        createAudienceWindow(display.bounds.x, display.bounds.y);
+        break;
+      case MonitorViews.Speaker:
+        console.log(`Showing speaker view on monitor ${monitorId}`);
+        createSpeakerWindow(display.bounds.x, display.bounds.y);
+        break;
+      case MonitorViews.None:
+        console.log(`Not showing anything on monitor ${monitorId}`);
+        break;
+    }
   }
-  if (typeof presentMessage.audienceMonitor === 'number') {
-    const audienceDisplay = getDisplayForId(presentMessage.audienceMonitor);
-    createAudienceWindow(audienceDisplay.bounds.x, audienceDisplay.bounds.y);
-  }
-  // case 'request-slide-next':
-  //   const reply = { type: 'slide-next' };
-  //   if (presenterWindow) {
-  //     presenterWindow.webContents.send('asynchronous-reply', reply);
-  //   }
-  //   if (showWindow) {
-  //     showWindow.webContents.send('asynchronous-reply', reply);
-  //   }
-  //   break;
 }
 
 ipcMain.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
@@ -181,7 +184,7 @@ ipcMain.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
       break;
 
     case MessageType.RequestPresentShow:
-      handleRequestPresentShow(msg);
+      handleRequestPresentShow(msg as IRequestPresentShowMessage);
       break;
 
     default:
