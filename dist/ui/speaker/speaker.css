@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright (c) Bryan Hughes <bryan@nebri.us>
 
 This file is part of RPrez.
@@ -15,26 +15,40 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
--->
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Speaker</title>
-    <link rel="stylesheet" type="text/css" href="./speaker.css" />
-  </head>
-  <body>
-    <div id="speaker-container">
-      <div id="speaker-currentSlide">
-        Current Slide
-      </div>
-      <div id="speaker-nextSlide">
-        Next Slide
-      </div>
-      <div id="speaker-notes">
-        Speaker Notes
-      </div>
-    </div>
-    <script src="./speakerBootstrap.js"></script>
-  </body>
-</html>
+*/
+
+body {
+  background-color: black;
+  padding: 0px;
+  margin: 0px;
+}
+
+#speaker-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 65% 35%;
+  grid-template-areas:
+    "currentSlide notes"
+    "nextSlide notes";
+}
+
+#speaker-currentSlide {
+  grid-area: currentSlide;
+  padding: 10px;
+  color: white;
+}
+
+#speaker-nextSlide {
+  grid-area: nextSlide;
+  padding: 10px;
+  color: white;
+}
+
+#speaker-notes {
+  grid-area: notes;
+  padding: 10px;
+  color: white;
+}
