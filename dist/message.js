@@ -24,7 +24,7 @@ var MessageType;
     MessageType[MessageType["RequestPresentShow"] = 1] = "RequestPresentShow";
     MessageType[MessageType["RequestExistShow"] = 2] = "RequestExistShow";
     MessageType[MessageType["RequestNextSlide"] = 3] = "RequestNextSlide";
-    MessageType[MessageType["RequestPrevious"] = 4] = "RequestPrevious";
+    MessageType[MessageType["RequestPreviousSlide"] = 4] = "RequestPreviousSlide";
     MessageType[MessageType["ScreenUpdated"] = 5] = "ScreenUpdated";
 })(MessageType = exports.MessageType || (exports.MessageType = {}));
 var MonitorViews;

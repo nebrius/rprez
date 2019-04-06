@@ -22,7 +22,7 @@ export enum MessageType {
   RequestPresentShow,
   RequestExistShow,
   RequestNextSlide,
-  RequestPrevious,
+  RequestPreviousSlide,
   ScreenUpdated
 }
 

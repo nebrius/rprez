@@ -3,7 +3,7 @@ export declare enum MessageType {
     RequestPresentShow = 1,
     RequestExistShow = 2,
     RequestNextSlide = 3,
-    RequestPrevious = 4,
+    RequestPreviousSlide = 4,
     ScreenUpdated = 5
 }
 export interface IMessage {
