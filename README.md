@@ -6,7 +6,7 @@ This project came to fruition thanks to some conversations and insight from the 
 
 RPrez does two things very differently from existing presentation software:
 
-- This project separates the creation of a presentation and the delivery of a presentation into two separate steps. This project only handles the delivery of a presentation, and you can use other tools to create the slides.
+- This project separates the creation of a presentation and the delivery of a presentation into two separate steps. This project only handles the delivery of a presentation, and you can use other tools to create the slides (such as markdown-based presentation tools).
 - This project also reverses the normal "presenter view" style of setup. In this project, you're presented a list of monitors, and can assign any view you want to any monitor.
     - Current views include "Audience" (aka just the slide), "Speaker" (traditional presenter view with notes, next slide, etc.), and "Clock" (a large countdown, replacing the need for a separate countdown timer). In the future I'd also like to add captioning and even language translation.
 

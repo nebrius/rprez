@@ -17,36 +17,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export enum MessageType {
-  ManagerReady,
-  RequestPresentShow,
-  RequestExistShow,
-  RequestNextSlide,
-  RequestPrevious,
-  ScreenUpdated
-}
-
-export interface IMessage {
-  type: MessageType;
-}
-
-export interface IScreenInfo {
-  width: number;
-  height: number;
-  id: number;
-}
-
-export enum MonitorViews {
-  None = 'None',
-  Speaker = 'Speaker',
-  Audience = 'Audience',
-  Clock = 'Clock'
-}
-
-export interface IScreenUpdatedMessage extends IMessage {
-  screens: IScreenInfo[];
-}
-
-export interface IRequestPresentShowMessage extends IMessage {
-  screenAssignments: { [ id: number ]: MonitorViews };
-}
+// A little hacky, but we have to call TypeScript files as module. It can't
+// be top-level, so we use this little indirection to make sure that the TS files
+// are indeed called as a module (i.e. module, exports, and module.exports exist)
+require('./presenter.js');

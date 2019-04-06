@@ -25,6 +25,7 @@ const util_1 = require("./util");
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let managerWindow = null;
+// TODO: this doesn't work for showing multiple windows of the same type. Need dynamic system
 let presenterWindow = null;
 let showWindow = null;
 let clockWindow = null;
@@ -175,6 +176,17 @@ function handleRequestPresentShow(presentMessage) {
         }
     }
 }
+function handleRequestExitShow() {
+    if (presenterWindow) {
+        presenterWindow.close();
+    }
+    if (showWindow) {
+        showWindow.close();
+    }
+    if (clockWindow) {
+        clockWindow.close();
+    }
+}
 electron_1.ipcMain.on('asynchronous-message', (event, msg) => {
     switch (msg.type) {
         case message_1.MessageType.ManagerReady:
@@ -182,6 +194,9 @@ electron_1.ipcMain.on('asynchronous-message', (event, msg) => {
             break;
         case message_1.MessageType.RequestPresentShow:
             handleRequestPresentShow(msg);
+            break;
+        case message_1.MessageType.RequestExistShow:
+            handleRequestExitShow();
             break;
         default:
             throw new Error(util_1.createInternalError(`Received unexpected message type ${msg.type}`));

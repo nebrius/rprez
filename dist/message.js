@@ -22,9 +22,10 @@ var MessageType;
 (function (MessageType) {
     MessageType[MessageType["ManagerReady"] = 0] = "ManagerReady";
     MessageType[MessageType["RequestPresentShow"] = 1] = "RequestPresentShow";
-    MessageType[MessageType["RequestNext"] = 2] = "RequestNext";
-    MessageType[MessageType["RequestPrevious"] = 3] = "RequestPrevious";
-    MessageType[MessageType["ScreenUpdated"] = 4] = "ScreenUpdated";
+    MessageType[MessageType["RequestExistShow"] = 2] = "RequestExistShow";
+    MessageType[MessageType["RequestNextSlide"] = 3] = "RequestNextSlide";
+    MessageType[MessageType["RequestPrevious"] = 4] = "RequestPrevious";
+    MessageType[MessageType["ScreenUpdated"] = 5] = "ScreenUpdated";
 })(MessageType = exports.MessageType || (exports.MessageType = {}));
 var MonitorViews;
 (function (MonitorViews) {

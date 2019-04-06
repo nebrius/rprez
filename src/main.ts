@@ -25,6 +25,8 @@ import { createInternalError } from './util';
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let managerWindow: Electron.BrowserWindow | null = null;
+
+// TODO: this doesn't work for showing multiple windows of the same type. Need dynamic system
 let presenterWindow: Electron.BrowserWindow | null = null;
 let showWindow: Electron.BrowserWindow | null = null;
 let clockWindow: Electron.BrowserWindow | null = null;
@@ -204,6 +206,18 @@ function handleRequestPresentShow(presentMessage: IRequestPresentShowMessage) {
   }
 }
 
+function handleRequestExitShow() {
+  if (presenterWindow) {
+    presenterWindow.close();
+  }
+  if (showWindow) {
+    showWindow.close();
+  }
+  if (clockWindow) {
+    clockWindow.close();
+  }
+}
+
 ipcMain.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
   switch (msg.type) {
     case MessageType.ManagerReady:
@@ -212,6 +226,10 @@ ipcMain.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
 
     case MessageType.RequestPresentShow:
       handleRequestPresentShow(msg as IRequestPresentShowMessage);
+      break;
+
+    case MessageType.RequestExistShow:
+      handleRequestExitShow();
       break;
 
     default:

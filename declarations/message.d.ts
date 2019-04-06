@@ -1,9 +1,10 @@
 export declare enum MessageType {
     ManagerReady = 0,
     RequestPresentShow = 1,
-    RequestNext = 2,
-    RequestPrevious = 3,
-    ScreenUpdated = 4
+    RequestExistShow = 2,
+    RequestNextSlide = 3,
+    RequestPrevious = 4,
+    ScreenUpdated = 5
 }
 export interface IMessage {
     type: MessageType;

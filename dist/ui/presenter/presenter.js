@@ -17,4 +17,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
+Object.defineProperty(exports, "__esModule", { value: true });
+const electron_1 = require("electron");
+const message_1 = require("../../message");
+document.onkeyup = () => {
+    const message = {
+        type: message_1.MessageType.RequestExistShow
+    };
+    electron_1.ipcRenderer.send('asynchronous-message', message);
+};
 //# sourceMappingURL=presenter.js.map

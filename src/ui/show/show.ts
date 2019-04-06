@@ -16,3 +16,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+import { ipcRenderer } from 'electron';
+import { MessageType, IMessage } from '../../message';
+
+document.onkeyup = () => {
+  const message: IMessage = {
+    type: MessageType.RequestExistShow
+  };
+  ipcRenderer.send('asynchronous-message', message);
+};
