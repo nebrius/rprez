@@ -63,7 +63,8 @@ function createPresentationWindow(type: MonitorViews, x: number, y: number): voi
   const win = new BrowserWindow({ width: 800, height: 600, x, y });
 
   // and load the index.html of the app.
-  win.loadFile(join(__dirname, 'ui', 'presenter', 'presenter.html'));
+  const filebase = MonitorViews[type].toLowerCase();
+  win.loadFile(join(__dirname, 'ui', filebase, `${filebase}.html`));
 
   // Open the DevTools.
   win.webContents.openDevTools();

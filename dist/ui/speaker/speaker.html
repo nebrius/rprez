@@ -1,4 +1,4 @@
-/*
+<!--
 Copyright (c) Bryan Hughes <bryan@nebri.us>
 
 This file is part of RPrez.
@@ -15,9 +15,15 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-// A little hacky, but we have to call TypeScript files as module. It can't
-// be top-level, so we use this little indirection to make sure that the TS files
-// are indeed called as a module (i.e. module, exports, and module.exports exist)
-require('./presenter.js');
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Speaker</title>
+    <script src="./speakerBootstrap.js"></script>
+  </head>
+  <body>
+    <h1>Speaker</h1>
+  </body>
+</html>

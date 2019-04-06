@@ -53,7 +53,8 @@ function createPresentationWindow(type, x, y) {
     // Create the browser window.
     const win = new electron_1.BrowserWindow({ width: 800, height: 600, x, y });
     // and load the index.html of the app.
-    win.loadFile(path_1.join(__dirname, 'ui', 'presenter', 'presenter.html'));
+    const filebase = message_1.MonitorViews[type].toLowerCase();
+    win.loadFile(path_1.join(__dirname, 'ui', filebase, `${filebase}.html`));
     // Open the DevTools.
     win.webContents.openDevTools();
     win.setFullScreen(true);
@@ -142,9 +143,11 @@ electron_1.ipcMain.on('asynchronous-message', (event, msg) => {
             handleManagerReadyMessage();
             break;
         case message_1.MessageType.RequestPresentShow:
+            console.log('Starting presentation');
             handleRequestPresentShow(msg);
             break;
         case message_1.MessageType.RequestExistShow:
+            console.log('Exiting presentation');
             handleRequestExitShow();
             break;
         default:
