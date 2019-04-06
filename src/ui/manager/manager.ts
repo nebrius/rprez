@@ -30,7 +30,7 @@ function createScreenOptions(parentName: string, screenMessage: IScreenUpdatedMe
     parent.removeChild(child);
   }
   const noneOption = document.createElement('option');
-  noneOption.value = "0";
+  noneOption.value = '0';
   noneOption.innerText = 'None';
   if (defaultScreen >= screenMessage.screens.length) {
     noneOption.selected = true;
@@ -59,9 +59,25 @@ ipcRenderer.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) =
   }
 });
 
+function getScreenIdFromElement(elementName: string): number | undefined {
+  const select = document.getElementById(elementName);
+  if (!select) {
+    throw new Error(createInternalError(`"${elementName}" is unexpectedly null`));
+  }
+  const value = parseInt((select as HTMLSelectElement).selectedOptions[0].value, 10);
+  if (value) {
+    return value;
+  } else {
+    return undefined;
+  }
+}
+
 function requestPresenterShow() {
+
   const message: IRequestPresentShowMessage = {
     type: MessageType.RequestPresentShow,
+    speakerMonitor: getScreenIdFromElement('speakerViewMonitorSelect'),
+    audienceMonitor: getScreenIdFromElement('audienceViewMonitorSelect')
   };
   ipcRenderer.send('asynchronous-message', message);
 }

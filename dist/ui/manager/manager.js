@@ -30,6 +30,7 @@ function createScreenOptions(parentName, screenMessage, defaultScreen) {
         parent.removeChild(child);
     }
     const noneOption = document.createElement('option');
+    noneOption.value = '0';
     noneOption.innerText = 'None';
     if (defaultScreen >= screenMessage.screens.length) {
         noneOption.selected = true;
@@ -56,9 +57,24 @@ electron_1.ipcRenderer.on('asynchronous-message', (event, msg) => {
             throw new Error(util_1.createInternalError(`Received unexpected message type ${msg.type}`));
     }
 });
+function getScreenIdFromElement(elementName) {
+    const select = document.getElementById(elementName);
+    if (!select) {
+        throw new Error(util_1.createInternalError(`"${elementName}" is unexpectedly null`));
+    }
+    const value = parseInt(select.selectedOptions[0].value, 10);
+    if (value) {
+        return value;
+    }
+    else {
+        return undefined;
+    }
+}
 function requestPresenterShow() {
     const message = {
         type: message_1.MessageType.RequestPresentShow,
+        speakerMonitor: getScreenIdFromElement('speakerViewMonitorSelect'),
+        audienceMonitor: getScreenIdFromElement('audienceViewMonitorSelect')
     };
     electron_1.ipcRenderer.send('asynchronous-message', message);
 }

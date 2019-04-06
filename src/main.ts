@@ -143,14 +143,24 @@ function handleManagerReadyMessage(): void {
   managerWindow.webContents.send('asynchronous-message', screenUpdatedMessage);
 }
 
-function handleRequestPresentShow(presentMessage: IRequestPresentShowMessage) {
+function getDisplayForId(id: number): Electron.Display {
   const displays = getDisplays();
+  for (const display of displays) {
+    if (display.id === id) {
+      return display;
+    }
+  }
+  throw new Error(createInternalError(`Could not find display for id ${id}`));
+}
+
+function handleRequestPresentShow(presentMessage: IRequestPresentShowMessage) {
+  console.log(presentMessage);
   if (typeof presentMessage.speakerMonitor === 'number') {
-    const speakerDisplay = displays[presentMessage.speakerMonitor];
+    const speakerDisplay = getDisplayForId(presentMessage.speakerMonitor);
     createSpeakerWindow(speakerDisplay.bounds.x, speakerDisplay.bounds.y);
   }
   if (typeof presentMessage.audienceMonitor === 'number') {
-    const audienceDisplay = displays[presentMessage.audienceMonitor];
+    const audienceDisplay = getDisplayForId(presentMessage.audienceMonitor);
     createAudienceWindow(audienceDisplay.bounds.x, audienceDisplay.bounds.y);
   }
   // case 'request-slide-next':
