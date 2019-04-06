@@ -2,7 +2,7 @@
 
 A(n eventually) markdown based presentation software. This project separates the creation of a presentation with the delivery of a presentation, and (so far?) this project only handles the delivery of presentation. It's name will probably change because I'm bad at naming things.
 
-This project came to fruition thanks to some conversations and insight from the amazing @nnja! You should check out her other work.
+This project came to fruition thanks to some conversations and insight from the amazing [@nnja](https://github.com/nnja)! You should check out her other work.
 
 This project is still very early in its development, documentation coming soon!
 
