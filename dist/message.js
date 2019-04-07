@@ -23,10 +23,11 @@ var MessageType;
     MessageType[MessageType["ManagerReady"] = 0] = "ManagerReady";
     MessageType[MessageType["ScreenUpdated"] = 1] = "ScreenUpdated";
     MessageType[MessageType["RequestLoadPresentation"] = 2] = "RequestLoadPresentation";
-    MessageType[MessageType["RequestPresentShow"] = 3] = "RequestPresentShow";
-    MessageType[MessageType["RequestExistShow"] = 4] = "RequestExistShow";
-    MessageType[MessageType["RequestNextSlide"] = 5] = "RequestNextSlide";
-    MessageType[MessageType["RequestPreviousSlide"] = 6] = "RequestPreviousSlide";
+    MessageType[MessageType["ProjectLoaded"] = 3] = "ProjectLoaded";
+    MessageType[MessageType["RequestPresentShow"] = 4] = "RequestPresentShow";
+    MessageType[MessageType["RequestExistShow"] = 5] = "RequestExistShow";
+    MessageType[MessageType["RequestNextSlide"] = 6] = "RequestNextSlide";
+    MessageType[MessageType["RequestPreviousSlide"] = 7] = "RequestPreviousSlide";
 })(MessageType = exports.MessageType || (exports.MessageType = {}));
 var MonitorViews;
 (function (MonitorViews) {

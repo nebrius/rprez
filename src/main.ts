@@ -29,7 +29,8 @@ import {
   IScreenUpdatedMessage,
   MonitorViews,
   IProject,
-  ProjectSchema
+  ProjectSchema,
+  IProjectLoaded
 } from './message';
 import { createInternalError } from './util';
 
@@ -159,6 +160,7 @@ function handleRequestLoadPresentation(loadMessage: IRequestLoadPresentationMess
       try {
         presentationProject = JSON.parse(data.toString());
       } catch (e) {
+        // TODO: display error in the UI
         console.error(`Could not parse project file ${loadMessage.filename}`);
         console.error(e.message);
         return;
@@ -170,8 +172,16 @@ function handleRequestLoadPresentation(loadMessage: IRequestLoadPresentationMess
         console.error(results.errors.join('\n'));
         return;
       }
+      if (managerWindow === null) {
+        throw new Error(createInternalError('"managerWindow" is unexpectedly null'));
+      }
       currentProject = presentationProject;
+      const message: IProjectLoaded = {
+        type: MessageType.ProjectLoaded,
+        project: presentationProject
+      };
       console.log(currentProject);
+      managerWindow.webContents.send('asynchronous-message', message);
     });
   });
 }

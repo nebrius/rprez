@@ -2,10 +2,11 @@ export declare enum MessageType {
     ManagerReady = 0,
     ScreenUpdated = 1,
     RequestLoadPresentation = 2,
-    RequestPresentShow = 3,
-    RequestExistShow = 4,
-    RequestNextSlide = 5,
-    RequestPreviousSlide = 6
+    ProjectLoaded = 3,
+    RequestPresentShow = 4,
+    RequestExistShow = 5,
+    RequestNextSlide = 6,
+    RequestPreviousSlide = 7
 }
 export interface IMessage {
     type: MessageType;
@@ -31,6 +32,9 @@ export interface IRequestPresentShowMessage extends IMessage {
 }
 export interface IRequestLoadPresentationMessage extends IMessage {
     filename: string;
+}
+export interface IProjectLoaded extends IMessage {
+    project: IProject;
 }
 export interface IProjectSlide {
     slide: string;

@@ -83,6 +83,11 @@ ipcRenderer.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) =
         createMonitorEntry(monitorListContainer, screens[i], i, defaultScreen);
       }
       break;
+
+    case MessageType.ProjectLoaded:
+      console.log(msg);
+      break;
+
     default:
       throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
   }

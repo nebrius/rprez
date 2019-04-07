@@ -134,6 +134,7 @@ function handleRequestLoadPresentation(loadMessage) {
                 presentationProject = JSON.parse(data.toString());
             }
             catch (e) {
+                // TODO: display error in the UI
                 console.error(`Could not parse project file ${loadMessage.filename}`);
                 console.error(e.message);
                 return;
@@ -145,8 +146,16 @@ function handleRequestLoadPresentation(loadMessage) {
                 console.error(results.errors.join('\n'));
                 return;
             }
+            if (managerWindow === null) {
+                throw new Error(util_1.createInternalError('"managerWindow" is unexpectedly null'));
+            }
             currentProject = presentationProject;
+            const message = {
+                type: message_1.MessageType.ProjectLoaded,
+                project: presentationProject
+            };
             console.log(currentProject);
+            managerWindow.webContents.send('asynchronous-message', message);
         });
     });
 }

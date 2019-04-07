@@ -66,6 +66,9 @@ electron_1.ipcRenderer.on('asynchronous-message', (event, msg) => {
                 createMonitorEntry(monitorListContainer, screens[i], i, defaultScreen);
             }
             break;
+        case message_1.MessageType.ProjectLoaded:
+            console.log(msg);
+            break;
         default:
             throw new Error(util_1.createInternalError(`Received unexpected message type ${msg.type}`));
     }

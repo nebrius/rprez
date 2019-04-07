@@ -21,6 +21,7 @@ export enum MessageType {
   ManagerReady,
   ScreenUpdated,
   RequestLoadPresentation,
+  ProjectLoaded,
   RequestPresentShow,
   RequestExistShow,
   RequestNextSlide,
@@ -54,6 +55,10 @@ export interface IRequestPresentShowMessage extends IMessage {
 
 export interface IRequestLoadPresentationMessage extends IMessage {
   filename: string;
+}
+
+export interface IProjectLoaded extends IMessage {
+  project: IProject;
 }
 
 export interface IProjectSlide {
