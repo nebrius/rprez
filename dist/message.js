@@ -21,11 +21,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var MessageType;
 (function (MessageType) {
     MessageType[MessageType["ManagerReady"] = 0] = "ManagerReady";
-    MessageType[MessageType["RequestPresentShow"] = 1] = "RequestPresentShow";
-    MessageType[MessageType["RequestExistShow"] = 2] = "RequestExistShow";
-    MessageType[MessageType["RequestNextSlide"] = 3] = "RequestNextSlide";
-    MessageType[MessageType["RequestPreviousSlide"] = 4] = "RequestPreviousSlide";
-    MessageType[MessageType["ScreenUpdated"] = 5] = "ScreenUpdated";
+    MessageType[MessageType["ScreenUpdated"] = 1] = "ScreenUpdated";
+    MessageType[MessageType["RequestLoadPresentation"] = 2] = "RequestLoadPresentation";
+    MessageType[MessageType["RequestPresentShow"] = 3] = "RequestPresentShow";
+    MessageType[MessageType["RequestExistShow"] = 4] = "RequestExistShow";
+    MessageType[MessageType["RequestNextSlide"] = 5] = "RequestNextSlide";
+    MessageType[MessageType["RequestPreviousSlide"] = 6] = "RequestPreviousSlide";
 })(MessageType = exports.MessageType || (exports.MessageType = {}));
 var MonitorViews;
 (function (MonitorViews) {

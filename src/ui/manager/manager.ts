@@ -23,6 +23,7 @@ import {
   IMessage,
   IScreenUpdatedMessage,
   IRequestPresentShowMessage,
+  IRequestLoadPresentationMessage,
   IScreenInfo,
   MonitorViews
 } from '../../message';
@@ -87,6 +88,22 @@ ipcRenderer.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) =
   }
 });
 
+function selectPresentationFile() {
+  const selectedFile = document.getElementById('presentationInput');
+  if (!selectedFile) {
+    throw new Error(createInternalError('"selectedFile" is unexpectedly null'));
+  }
+  const filenames = (selectedFile as HTMLInputElement).files;
+  if (!filenames) {
+    throw new Error(createInternalError('"filenames" is unexpectedly null'));
+  }
+  const message: IRequestLoadPresentationMessage = {
+    type: MessageType.RequestLoadPresentation,
+    filename: filenames[0].path
+  };
+  ipcRenderer.send('asynchronous-message', message);
+}
+
 function requestPresenterShow() {
   const screenAssignments: { [ id: number ]: MonitorViews } = {};
   const monitorListElement = document.getElementById('monitorList');
@@ -104,6 +121,12 @@ function requestPresenterShow() {
   };
   ipcRenderer.send('asynchronous-message', message);
 }
+
+const presentationInput = document.getElementById('presentationInput');
+if (!presentationInput) {
+  throw new Error(createInternalError('"presentationInput" is unexpectedly null'));
+}
+presentationInput.onchange = selectPresentationFile;
 
 const presentButton = document.getElementById('presentButton');
 if (!presentButton) {

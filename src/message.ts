@@ -19,11 +19,12 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 
 export enum MessageType {
   ManagerReady,
+  ScreenUpdated,
+  RequestLoadPresentation,
   RequestPresentShow,
   RequestExistShow,
   RequestNextSlide,
-  RequestPreviousSlide,
-  ScreenUpdated
+  RequestPreviousSlide
 }
 
 export interface IMessage {
@@ -49,4 +50,8 @@ export interface IScreenUpdatedMessage extends IMessage {
 
 export interface IRequestPresentShowMessage extends IMessage {
   screenAssignments: { [ id: number ]: MonitorViews };
+}
+
+export interface IRequestLoadPresentationMessage extends IMessage {
+  filename: string;
 }

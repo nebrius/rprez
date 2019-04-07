@@ -111,6 +111,9 @@ function handleManagerReadyMessage() {
     };
     managerWindow.webContents.send('asynchronous-message', screenUpdatedMessage);
 }
+function handleRequestLoadPresentation(loadMessage) {
+    console.log(loadMessage.filename);
+}
 function getDisplayForId(id) {
     const displays = getDisplays();
     for (const display of displays) {
@@ -141,6 +144,9 @@ electron_1.ipcMain.on('asynchronous-message', (event, msg) => {
     switch (msg.type) {
         case message_1.MessageType.ManagerReady:
             handleManagerReadyMessage();
+            break;
+        case message_1.MessageType.RequestLoadPresentation:
+            handleRequestLoadPresentation(msg);
             break;
         case message_1.MessageType.RequestPresentShow:
             console.log('Starting presentation');

@@ -70,6 +70,21 @@ electron_1.ipcRenderer.on('asynchronous-message', (event, msg) => {
             throw new Error(util_1.createInternalError(`Received unexpected message type ${msg.type}`));
     }
 });
+function selectPresentationFile() {
+    const selectedFile = document.getElementById('presentationInput');
+    if (!selectedFile) {
+        throw new Error(util_1.createInternalError('"selectedFile" is unexpectedly null'));
+    }
+    const filenames = selectedFile.files;
+    if (!filenames) {
+        throw new Error(util_1.createInternalError('"filenames" is unexpectedly null'));
+    }
+    const message = {
+        type: message_1.MessageType.RequestLoadPresentation,
+        filename: filenames[0].path
+    };
+    electron_1.ipcRenderer.send('asynchronous-message', message);
+}
 function requestPresenterShow() {
     const screenAssignments = {};
     const monitorListElement = document.getElementById('monitorList');
@@ -87,6 +102,11 @@ function requestPresenterShow() {
     };
     electron_1.ipcRenderer.send('asynchronous-message', message);
 }
+const presentationInput = document.getElementById('presentationInput');
+if (!presentationInput) {
+    throw new Error(util_1.createInternalError('"presentationInput" is unexpectedly null'));
+}
+presentationInput.onchange = selectPresentationFile;
 const presentButton = document.getElementById('presentButton');
 if (!presentButton) {
     throw new Error(util_1.createInternalError('"presentButton" is unexpectedly null'));

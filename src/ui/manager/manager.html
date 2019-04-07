@@ -21,11 +21,17 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
   <head>
     <meta charset="UTF-8">
     <title>Manager</title>
+    <link rel="stylesheet" type="text/css" href="./manager.css" />
   </head>
   <body>
-    <h1>Manager</h1>
-    <div id="monitorList">Loading...</div>
-    <button id="presentButton">Present Show</button>
+    <h1>RPres</h1>
+    <div id="presentationView">
+      <div id="monitorList">Loading...</div>
+      <button id="presentButton">Present Show</button>
+    </div>
+    <div id="loadView">
+      <input type="file" id="presentationInput" accept="application/json" />
+    </div>
     <script src="./managerBootstrap.js"></script>
   </body>
 </html>

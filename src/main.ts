@@ -19,7 +19,14 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 
 import { app, BrowserWindow, ipcMain, IpcMessageEvent } from 'electron';
 import { join } from 'path';
-import { MessageType, IMessage, IRequestPresentShowMessage, IScreenUpdatedMessage, MonitorViews } from './message';
+import {
+  MessageType,
+  IMessage,
+  IRequestLoadPresentationMessage,
+  IRequestPresentShowMessage,
+  IScreenUpdatedMessage,
+  MonitorViews
+} from './message';
 import { createInternalError } from './util';
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -129,6 +136,10 @@ function handleManagerReadyMessage(): void {
   managerWindow.webContents.send('asynchronous-message', screenUpdatedMessage);
 }
 
+function handleRequestLoadPresentation(loadMessage: IRequestLoadPresentationMessage): void {
+  console.log(loadMessage.filename);
+}
+
 function getDisplayForId(id: number): Electron.Display {
   const displays = getDisplays();
   for (const display of displays) {
@@ -162,6 +173,10 @@ ipcMain.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
   switch (msg.type) {
     case MessageType.ManagerReady:
       handleManagerReadyMessage();
+      break;
+
+    case MessageType.RequestLoadPresentation:
+      handleRequestLoadPresentation(msg as IRequestLoadPresentationMessage);
       break;
 
     case MessageType.RequestPresentShow:
