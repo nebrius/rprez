@@ -17,6 +17,20 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { ipcRenderer, IpcMessageEvent } from 'electron';
 import { connectKeyHandlers } from '../keyHandlers';
+import { MessageType, IMessage, ICurrentSlideUpdatedMessage } from '../../message';
+import { createInternalError } from '../../util';
 
 connectKeyHandlers();
+
+ipcRenderer.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
+  switch (msg.type) {
+    case MessageType.currentSlideUpdated:
+      console.log(`Slide changed to ${(msg as ICurrentSlideUpdatedMessage).currentSlideIndex}`);
+      break;
+
+    default:
+      throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
+  }
+});

@@ -18,7 +18,7 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { exists, readFile } from 'fs';
-import { join } from 'path';
+import { join, dirname, resolve } from 'path';
 import { app, BrowserWindow, ipcMain, IpcMessageEvent } from 'electron';
 import { Validator } from 'jsonschema';
 import {
@@ -27,6 +27,7 @@ import {
   IRequestLoadPresentationMessage,
   IRequestPresentShowMessage,
   IScreenUpdatedMessage,
+  ICurrentSlideUpdatedMessage,
   MonitorViews,
   IProject,
   ProjectSchema,
@@ -41,6 +42,7 @@ let managerWindow: Electron.BrowserWindow | null = null;
 const presentationWindows: Electron.BrowserWindow[] = [];
 let screenModule: Electron.Screen | null = null;
 let currentProject: IProject | null = null;
+let currentSlide: number = 0;
 
 function getDisplays() {
   if (screenModule === null) {
@@ -175,12 +177,18 @@ function handleRequestLoadPresentation(loadMessage: IRequestLoadPresentationMess
       if (managerWindow === null) {
         throw new Error(createInternalError('"managerWindow" is unexpectedly null'));
       }
+      const projectDir = dirname(loadMessage.filename);
+      presentationProject.slides = presentationProject.slides.map((slide) => ({
+        slide: resolve(projectDir, slide.slide),
+        notes: slide.notes && resolve(projectDir, slide.notes)
+      }));
+      console.log(projectDir);
       currentProject = presentationProject;
+      currentSlide = 0;
       const message: IProjectLoaded = {
         type: MessageType.ProjectLoaded,
         project: presentationProject
       };
-      console.log(currentProject);
       managerWindow.webContents.send('asynchronous-message', message);
     });
   });
@@ -207,6 +215,7 @@ function handleRequestPresentShow(presentMessage: IRequestPresentShowMessage) {
     console.log(`Opening ${MonitorViews[screenAssignment]} view on monitor ` +
       `${monitorId} (${display.bounds.width}x${display.bounds.height})`);
     createPresentationWindow(screenAssignment, display.bounds.x, display.bounds.y);
+    setTimeout(sendSlideUpdatedMessage, 1000);
   }
 }
 
@@ -214,6 +223,42 @@ function handleRequestExitShow() {
   console.log('Exiting presentation');
   for (const win of presentationWindows) {
     win.close();
+  }
+}
+
+function sendSlideUpdatedMessage() {
+  if (currentProject === null) {
+    throw new Error(createInternalError('"currentProject" is unexpectedly null'));
+  }
+  const message: ICurrentSlideUpdatedMessage = {
+    type: MessageType.currentSlideUpdated,
+    currentSlideIndex: currentSlide,
+    currentSlideUrl: currentProject.slides[currentSlide].slide,
+    currentNotesUrl: currentProject.slides[currentSlide].notes,
+    nextSlideUrl: currentProject.slides[currentSlide + 1] && currentProject.slides[currentSlide + 1].slide
+  };
+  for (const win of presentationWindows) {
+    win.webContents.send('asynchronous-message', message);
+  }
+}
+
+function handleRequestNextSlide() {
+  if (!currentProject) {
+    return;
+  }
+  if (currentSlide < currentProject.slides.length - 1) {
+    currentSlide++;
+    sendSlideUpdatedMessage();
+  }
+}
+
+function handleRequestPreviousSlide() {
+  if (!currentProject) {
+    return;
+  }
+  if (currentSlide > 0) {
+    currentSlide--;
+    sendSlideUpdatedMessage();
   }
 }
 
@@ -233,6 +278,14 @@ ipcMain.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
 
     case MessageType.RequestExistShow:
       handleRequestExitShow();
+      break;
+
+    case MessageType.RequestNextSlide:
+      handleRequestNextSlide();
+      break;
+
+    case MessageType.RequestPreviousSlide:
+      handleRequestPreviousSlide();
       break;
 
     default:

@@ -30,6 +30,7 @@ let managerWindow = null;
 const presentationWindows = [];
 let screenModule = null;
 let currentProject = null;
+let currentSlide = 0;
 function getDisplays() {
     if (screenModule === null) {
         throw util_1.createInternalError(`"screenModule" is null but shouldn't be`);
@@ -149,12 +150,18 @@ function handleRequestLoadPresentation(loadMessage) {
             if (managerWindow === null) {
                 throw new Error(util_1.createInternalError('"managerWindow" is unexpectedly null'));
             }
+            const projectDir = path_1.dirname(loadMessage.filename);
+            presentationProject.slides = presentationProject.slides.map((slide) => ({
+                slide: path_1.resolve(projectDir, slide.slide),
+                notes: slide.notes && path_1.resolve(projectDir, slide.notes)
+            }));
+            console.log(projectDir);
             currentProject = presentationProject;
+            currentSlide = 0;
             const message = {
                 type: message_1.MessageType.ProjectLoaded,
                 project: presentationProject
             };
-            console.log(currentProject);
             managerWindow.webContents.send('asynchronous-message', message);
         });
     });
@@ -179,12 +186,46 @@ function handleRequestPresentShow(presentMessage) {
         console.log(`Opening ${message_1.MonitorViews[screenAssignment]} view on monitor ` +
             `${monitorId} (${display.bounds.width}x${display.bounds.height})`);
         createPresentationWindow(screenAssignment, display.bounds.x, display.bounds.y);
+        setTimeout(sendSlideUpdatedMessage, 1000);
     }
 }
 function handleRequestExitShow() {
     console.log('Exiting presentation');
     for (const win of presentationWindows) {
         win.close();
+    }
+}
+function sendSlideUpdatedMessage() {
+    if (currentProject === null) {
+        throw new Error(util_1.createInternalError('"currentProject" is unexpectedly null'));
+    }
+    const message = {
+        type: message_1.MessageType.currentSlideUpdated,
+        currentSlideIndex: currentSlide,
+        currentSlideUrl: currentProject.slides[currentSlide].slide,
+        currentNotesUrl: currentProject.slides[currentSlide].notes,
+        nextSlideUrl: currentProject.slides[currentSlide + 1] && currentProject.slides[currentSlide + 1].slide
+    };
+    for (const win of presentationWindows) {
+        win.webContents.send('asynchronous-message', message);
+    }
+}
+function handleRequestNextSlide() {
+    if (!currentProject) {
+        return;
+    }
+    if (currentSlide < currentProject.slides.length - 1) {
+        currentSlide++;
+        sendSlideUpdatedMessage();
+    }
+}
+function handleRequestPreviousSlide() {
+    if (!currentProject) {
+        return;
+    }
+    if (currentSlide > 0) {
+        currentSlide--;
+        sendSlideUpdatedMessage();
     }
 }
 electron_1.ipcMain.on('asynchronous-message', (event, msg) => {
@@ -200,6 +241,12 @@ electron_1.ipcMain.on('asynchronous-message', (event, msg) => {
             break;
         case message_1.MessageType.RequestExistShow:
             handleRequestExitShow();
+            break;
+        case message_1.MessageType.RequestNextSlide:
+            handleRequestNextSlide();
+            break;
+        case message_1.MessageType.RequestPreviousSlide:
+            handleRequestPreviousSlide();
             break;
         default:
             throw new Error(util_1.createInternalError(`Received unexpected message type ${msg.type}`));

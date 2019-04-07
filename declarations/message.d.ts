@@ -6,7 +6,8 @@ export declare enum MessageType {
     RequestPresentShow = 4,
     RequestExistShow = 5,
     RequestNextSlide = 6,
-    RequestPreviousSlide = 7
+    RequestPreviousSlide = 7,
+    currentSlideUpdated = 8
 }
 export interface IMessage {
     type: MessageType;
@@ -35,6 +36,12 @@ export interface IRequestLoadPresentationMessage extends IMessage {
 }
 export interface IProjectLoaded extends IMessage {
     project: IProject;
+}
+export interface ICurrentSlideUpdatedMessage extends IMessage {
+    currentSlideIndex: number;
+    currentSlideUrl: string;
+    currentNotesUrl: string;
+    nextSlideUrl?: string;
 }
 export interface IProjectSlide {
     slide: string;

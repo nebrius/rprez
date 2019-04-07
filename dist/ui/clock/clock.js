@@ -18,6 +18,18 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
+const electron_1 = require("electron");
 const keyHandlers_1 = require("../keyHandlers");
+const message_1 = require("../../message");
+const util_1 = require("../../util");
 keyHandlers_1.connectKeyHandlers();
+electron_1.ipcRenderer.on('asynchronous-message', (event, msg) => {
+    switch (msg.type) {
+        case message_1.MessageType.currentSlideUpdated:
+            console.log(`Slide changed to ${msg.currentSlideIndex}`);
+            break;
+        default:
+            throw new Error(util_1.createInternalError(`Received unexpected message type ${msg.type}`));
+    }
+});
 //# sourceMappingURL=clock.js.map

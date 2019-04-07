@@ -67,6 +67,16 @@ electron_1.ipcRenderer.on('asynchronous-message', (event, msg) => {
             }
             break;
         case message_1.MessageType.ProjectLoaded:
+            const presentationView = document.getElementById('presentationView');
+            if (!presentationView) {
+                throw new Error(util_1.createInternalError('presentationView is unexpectedly null'));
+            }
+            const loadView = document.getElementById('loadView');
+            if (!loadView) {
+                throw new Error(util_1.createInternalError('loadView is unexpectedly null'));
+            }
+            presentationView.style.display = 'inherit';
+            loadView.style.display = 'none';
             console.log(msg);
             break;
         default:

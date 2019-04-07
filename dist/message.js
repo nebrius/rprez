@@ -28,6 +28,7 @@ var MessageType;
     MessageType[MessageType["RequestExistShow"] = 5] = "RequestExistShow";
     MessageType[MessageType["RequestNextSlide"] = 6] = "RequestNextSlide";
     MessageType[MessageType["RequestPreviousSlide"] = 7] = "RequestPreviousSlide";
+    MessageType[MessageType["currentSlideUpdated"] = 8] = "currentSlideUpdated";
 })(MessageType = exports.MessageType || (exports.MessageType = {}));
 var MonitorViews;
 (function (MonitorViews) {
