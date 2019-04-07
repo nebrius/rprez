@@ -35,4 +35,25 @@ var MonitorViews;
     MonitorViews["Audience"] = "Audience";
     MonitorViews["Clock"] = "Clock";
 })(MonitorViews = exports.MonitorViews || (exports.MonitorViews = {}));
+exports.ProjectSchema = {
+    type: 'object',
+    properties: {
+        slides: {
+            type: 'array',
+            items: {
+                type: 'object',
+                properties: {
+                    slide: {
+                        type: 'string'
+                    },
+                    notes: {
+                        type: 'string'
+                    }
+                },
+                required: ['slide']
+            }
+        }
+    },
+    required: ['slides']
+};
 //# sourceMappingURL=message.js.map

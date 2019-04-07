@@ -32,3 +32,31 @@ export interface IRequestPresentShowMessage extends IMessage {
 export interface IRequestLoadPresentationMessage extends IMessage {
     filename: string;
 }
+export interface IProjectSlide {
+    slide: string;
+    notes: string;
+}
+export interface IProject {
+    slides: IProjectSlide[];
+}
+export declare const ProjectSchema: {
+    type: string;
+    properties: {
+        slides: {
+            type: string;
+            items: {
+                type: string;
+                properties: {
+                    slide: {
+                        type: string;
+                    };
+                    notes: {
+                        type: string;
+                    };
+                };
+                required: string[];
+            };
+        };
+    };
+    required: string[];
+};

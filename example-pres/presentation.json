@@ -1,7 +1,7 @@
 {
   "slides": [
-    "./slides/1",
-    "./slides/2",
-    "./slides/3"
+    { "slidessss": "./slides/1.html", "notes": "./slides/1.notes.html" },
+    { "slide": "./slides/2.html" },
+    { "slide": "./slides/3.html", "notes": "./slides/3.notes.html" }
   ]
 }

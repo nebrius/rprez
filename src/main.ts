@@ -17,15 +17,19 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { app, BrowserWindow, ipcMain, IpcMessageEvent } from 'electron';
+import { exists, readFile } from 'fs';
 import { join } from 'path';
+import { app, BrowserWindow, ipcMain, IpcMessageEvent } from 'electron';
+import { Validator } from 'jsonschema';
 import {
   MessageType,
   IMessage,
   IRequestLoadPresentationMessage,
   IRequestPresentShowMessage,
   IScreenUpdatedMessage,
-  MonitorViews
+  MonitorViews,
+  IProject,
+  ProjectSchema
 } from './message';
 import { createInternalError } from './util';
 
@@ -34,8 +38,8 @@ import { createInternalError } from './util';
 let managerWindow: Electron.BrowserWindow | null = null;
 
 const presentationWindows: Electron.BrowserWindow[] = [];
-
 let screenModule: Electron.Screen | null = null;
+let currentProject: IProject | null = null;
 
 function getDisplays() {
   if (screenModule === null) {
@@ -137,7 +141,39 @@ function handleManagerReadyMessage(): void {
 }
 
 function handleRequestLoadPresentation(loadMessage: IRequestLoadPresentationMessage): void {
-  console.log(loadMessage.filename);
+  console.log(`Loading presentation at ${loadMessage.filename}`);
+  exists(loadMessage.filename, (presentationFileExists) => {
+    if (!presentationFileExists) {
+      // TODO: display error in the UI
+      console.error(`Presentation file ${loadMessage.filename} does not exist`);
+      return;
+    }
+    readFile(loadMessage.filename, (err, data) => {
+      if (err) {
+        // TODO: display error in the UI
+        console.error(`Unable to read presentation file ${loadMessage.filename}`);
+        console.error(err);
+        return;
+      }
+      let presentationProject: IProject;
+      try {
+        presentationProject = JSON.parse(data.toString());
+      } catch (e) {
+        console.error(`Could not parse project file ${loadMessage.filename}`);
+        console.error(e.message);
+        return;
+      }
+      const results = (new Validator()).validate(presentationProject, ProjectSchema);
+      if (!results.valid) {
+        // TODO: display error in the UI
+        console.error('Invalid project file:');
+        console.error(results.errors.join('\n'));
+        return;
+      }
+      currentProject = presentationProject;
+      console.log(currentProject);
+    });
+  });
 }
 
 function getDisplayForId(id: number): Electron.Display {
@@ -151,6 +187,7 @@ function getDisplayForId(id: number): Electron.Display {
 }
 
 function handleRequestPresentShow(presentMessage: IRequestPresentShowMessage) {
+  console.log('Starting presentation');
   for (const monitorId in presentMessage.screenAssignments) {
     if (!presentMessage.screenAssignments.hasOwnProperty(monitorId)) {
       continue;
@@ -164,6 +201,7 @@ function handleRequestPresentShow(presentMessage: IRequestPresentShowMessage) {
 }
 
 function handleRequestExitShow() {
+  console.log('Exiting presentation');
   for (const win of presentationWindows) {
     win.close();
   }
@@ -180,12 +218,10 @@ ipcMain.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
       break;
 
     case MessageType.RequestPresentShow:
-      console.log('Starting presentation');
       handleRequestPresentShow(msg as IRequestPresentShowMessage);
       break;
 
     case MessageType.RequestExistShow:
-      console.log('Exiting presentation');
       handleRequestExitShow();
       break;
 
