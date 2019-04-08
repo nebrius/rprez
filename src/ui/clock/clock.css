@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright (c) Bryan Hughes <bryan@nebri.us>
 
 This file is part of RPrez.
@@ -15,16 +15,23 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
--->
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Clock</title>
-    <link rel="stylesheet" type="text/css" href="./clock.css" />
-  </head>
-  <body>
-      <span id="clock-elapsedTime">00:00:00</span>
-    <script src="./clockBootstrap.js"></script>
-  </body>
-</html>
+*/
+
+body {
+  background-color: black;
+  padding: 0px;
+  margin: 0px;
+}
+
+#clock-elapsedTime {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: white;
+  font-size: 300pt;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}

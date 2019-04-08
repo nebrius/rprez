@@ -31,7 +31,8 @@ import {
   MonitorViews,
   IProject,
   ProjectSchema,
-  IProjectLoaded
+  IProjectLoadedMessage,
+  ITimerUpdatedMessage
 } from './message';
 import { createInternalError } from './util';
 
@@ -186,7 +187,7 @@ function handleRequestLoadPresentation(loadMessage: IRequestLoadPresentationMess
       console.log(projectDir);
       currentProject = presentationProject;
       currentSlide = 0;
-      const message: IProjectLoaded = {
+      const message: IProjectLoadedMessage = {
         type: MessageType.ProjectLoaded,
         project: presentationProject
       };
@@ -232,7 +233,7 @@ function sendSlideUpdatedMessage() {
     throw new Error(createInternalError('"currentProject" is unexpectedly null'));
   }
   const message: ICurrentSlideUpdatedMessage = {
-    type: MessageType.currentSlideUpdated,
+    type: MessageType.CurrentSlideUpdated,
     currentSlideIndex: currentSlide,
     currentSlideUrl: currentProject.slides[currentSlide].slide,
     currentNotesUrl: currentProject.slides[currentSlide].notes,
@@ -243,6 +244,8 @@ function sendSlideUpdatedMessage() {
   }
 }
 
+let sideHasBeenChanged = false;
+
 function handleRequestNextSlide() {
   if (!currentProject) {
     return;
@@ -250,6 +253,10 @@ function handleRequestNextSlide() {
   if (currentSlide < currentProject.slides.length - 1) {
     currentSlide++;
     sendSlideUpdatedMessage();
+    if (!sideHasBeenChanged) {
+      sideHasBeenChanged = true;
+      handleRequestStartTimer();
+    }
   }
 }
 
@@ -260,6 +267,41 @@ function handleRequestPreviousSlide() {
   if (currentSlide > 0) {
     currentSlide--;
     sendSlideUpdatedMessage();
+  }
+}
+
+let elapsedTime = 0;
+let timerInterval: NodeJS.Timer;
+
+function handleRequestStartTimer() {
+  let previousTime = Date.now();
+  timerInterval = setInterval(() => {
+    const currentTime = Date.now();
+    elapsedTime += currentTime - previousTime;
+    const timerUpdatedMessage: ITimerUpdatedMessage = {
+      type: MessageType.TimerUpdated,
+      elapsedTime
+    };
+    for (const win of presentationWindows) {
+      win.webContents.send('asynchronous-message', timerUpdatedMessage);
+    }
+    previousTime = currentTime;
+  }, 100);
+  const message: IMessage = {
+    type: MessageType.TimerStarted
+  };
+  for (const win of presentationWindows) {
+    win.webContents.send('asynchronous-message', message);
+  }
+}
+
+function handleRequestPauseTimer() {
+  clearInterval(timerInterval);
+  const message: IMessage = {
+    type: MessageType.TimerPaused
+  };
+  for (const win of presentationWindows) {
+    win.webContents.send('asynchronous-message', message);
   }
 }
 
@@ -287,6 +329,14 @@ ipcMain.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
 
     case MessageType.RequestPreviousSlide:
       handleRequestPreviousSlide();
+      break;
+
+    case MessageType.RequestStartTimer:
+      handleRequestStartTimer();
+      break;
+
+    case MessageType.RequestPauseTimer:
+      handleRequestPauseTimer();
       break;
 
     default:

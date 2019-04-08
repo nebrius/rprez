@@ -33,7 +33,7 @@ if (!currentSlideIframe.contentWindow) {
 keyHandlers_1.connectKeyHandlers(currentSlideIframe.contentWindow.document);
 electron_1.ipcRenderer.on('asynchronous-message', (event, msg) => {
     switch (msg.type) {
-        case message_1.MessageType.currentSlideUpdated:
+        case message_1.MessageType.CurrentSlideUpdated:
             const currentSlideUpdatedMessage = msg;
             currentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
             console.log(`Slide changed to ${msg.currentSlideIndex}`);

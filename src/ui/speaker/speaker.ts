@@ -19,8 +19,8 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 
 import { ipcRenderer, IpcMessageEvent } from 'electron';
 import { connectKeyHandlers } from '../keyHandlers';
-import { MessageType, IMessage, ICurrentSlideUpdatedMessage } from '../../message';
-import { createInternalError } from '../../util';
+import { MessageType, IMessage, ICurrentSlideUpdatedMessage, ITimerUpdatedMessage } from '../../message';
+import { createInternalError, numToString } from '../../util';
 
 connectKeyHandlers(document);
 
@@ -54,16 +54,45 @@ if (!notesIframe.contentWindow) {
 }
 connectKeyHandlers(notesIframe.contentWindow.document);
 
+const elapsedTimeLabel = document.getElementById('speaker-elapsedTime');
+if (!elapsedTimeLabel) {
+  throw new Error(createInternalError('elapsedTimeLabel is unexpectedly null'));
+}
+
+const clockControlButton = document.getElementById('speaker-clockControl');
+if (!clockControlButton) {
+  throw new Error(createInternalError('clockControlButton is unexpectedly null'));
+}
+clockControlButton.onclick = () => {
+  const message: IMessage = {
+    type: clockControlButton.innerText === '⏯' ? MessageType.RequestStartTimer : MessageType.RequestPauseTimer
+  };
+  ipcRenderer.send('asynchronous-message', message);
+};
+
 ipcRenderer.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
   switch (msg.type) {
-    case MessageType.currentSlideUpdated: {
+    case MessageType.CurrentSlideUpdated:
       const currentSlideUpdatedMessage = msg as ICurrentSlideUpdatedMessage;
       currentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
       nextSlideIframe.src = currentSlideUpdatedMessage.nextSlideUrl || '';
       notesIframe.src = currentSlideUpdatedMessage.currentNotesUrl;
       console.log(`Slide changed to ${(msg as ICurrentSlideUpdatedMessage).currentSlideIndex}`);
       break;
-    }
+
+    case MessageType.TimerUpdated:
+      const time = new Date((msg as ITimerUpdatedMessage).elapsedTime);
+      elapsedTimeLabel.innerText =
+        `${numToString(time.getUTCHours())}:${numToString(time.getUTCMinutes())}:${numToString(time.getUTCSeconds())}`;
+      break;
+
+    case MessageType.TimerStarted:
+      clockControlButton.innerText = '⏸';
+      break;
+
+    case MessageType.TimerPaused:
+      clockControlButton.innerText = '⏯';
+      break;
 
     default:
       throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));

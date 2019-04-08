@@ -28,7 +28,12 @@ var MessageType;
     MessageType[MessageType["RequestExistShow"] = 5] = "RequestExistShow";
     MessageType[MessageType["RequestNextSlide"] = 6] = "RequestNextSlide";
     MessageType[MessageType["RequestPreviousSlide"] = 7] = "RequestPreviousSlide";
-    MessageType[MessageType["currentSlideUpdated"] = 8] = "currentSlideUpdated";
+    MessageType[MessageType["CurrentSlideUpdated"] = 8] = "CurrentSlideUpdated";
+    MessageType[MessageType["TimerUpdated"] = 9] = "TimerUpdated";
+    MessageType[MessageType["TimerStarted"] = 10] = "TimerStarted";
+    MessageType[MessageType["TimerPaused"] = 11] = "TimerPaused";
+    MessageType[MessageType["RequestStartTimer"] = 12] = "RequestStartTimer";
+    MessageType[MessageType["RequestPauseTimer"] = 13] = "RequestPauseTimer";
 })(MessageType = exports.MessageType || (exports.MessageType = {}));
 var MonitorViews;
 (function (MonitorViews) {

@@ -20,3 +20,11 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 export function createInternalError(msg: string): string {
   return `Internal Error: ${msg}. This is a bug, please report it at https://github.com/nebrius/RPrez.`;
 }
+
+export function numToString(num: number): string {
+  let convertedNum = num.toString();
+  if (convertedNum.length === 1) {
+    convertedNum = '0' + convertedNum;
+  }
+  return convertedNum;
+}

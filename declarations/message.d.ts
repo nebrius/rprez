@@ -7,7 +7,12 @@ export declare enum MessageType {
     RequestExistShow = 5,
     RequestNextSlide = 6,
     RequestPreviousSlide = 7,
-    currentSlideUpdated = 8
+    CurrentSlideUpdated = 8,
+    TimerUpdated = 9,
+    TimerStarted = 10,
+    TimerPaused = 11,
+    RequestStartTimer = 12,
+    RequestPauseTimer = 13
 }
 export interface IMessage {
     type: MessageType;
@@ -34,8 +39,11 @@ export interface IRequestPresentShowMessage extends IMessage {
 export interface IRequestLoadPresentationMessage extends IMessage {
     filename: string;
 }
-export interface IProjectLoaded extends IMessage {
+export interface IProjectLoadedMessage extends IMessage {
     project: IProject;
+}
+export interface ITimerUpdatedMessage extends IMessage {
+    elapsedTime: number;
 }
 export interface ICurrentSlideUpdatedMessage extends IMessage {
     currentSlideIndex: number;

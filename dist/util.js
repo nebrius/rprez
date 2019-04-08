@@ -22,4 +22,12 @@ function createInternalError(msg) {
     return `Internal Error: ${msg}. This is a bug, please report it at https://github.com/nebrius/RPrez.`;
 }
 exports.createInternalError = createInternalError;
+function numToString(num) {
+    let convertedNum = num.toString();
+    if (convertedNum.length === 1) {
+        convertedNum = '0' + convertedNum;
+    }
+    return convertedNum;
+}
+exports.numToString = numToString;
 //# sourceMappingURL=util.js.map

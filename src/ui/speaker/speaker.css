@@ -54,6 +54,23 @@ iframe {
   color: white;
   padding: 10px;
   border-bottom: 1px solid gray;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+}
+
+#speaker-elapsedTime {
+  font-size: 42pt;
+  font-style: bold;
+  flex-grow: 1;
+}
+
+#speaker-clockControl {
+  width: 100px;
+  height: 100px;
+  font-size: 42pt;
+  background-color: transparent;
+  border: none;
 }
 
 #speaker-currentSlide {

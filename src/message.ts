@@ -26,7 +26,12 @@ export enum MessageType {
   RequestExistShow,
   RequestNextSlide,
   RequestPreviousSlide,
-  currentSlideUpdated
+  CurrentSlideUpdated,
+  TimerUpdated,
+  TimerStarted,
+  TimerPaused,
+  RequestStartTimer,
+  RequestPauseTimer
 }
 
 export interface IMessage {
@@ -58,8 +63,12 @@ export interface IRequestLoadPresentationMessage extends IMessage {
   filename: string;
 }
 
-export interface IProjectLoaded extends IMessage {
+export interface IProjectLoadedMessage extends IMessage {
   project: IProject;
+}
+
+export interface ITimerUpdatedMessage extends IMessage {
+  elapsedTime: number;
 }
 
 export interface ICurrentSlideUpdatedMessage extends IMessage {

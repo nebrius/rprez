@@ -36,7 +36,7 @@ connectKeyHandlers(currentSlideIframe.contentWindow.document);
 
 ipcRenderer.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
   switch (msg.type) {
-    case MessageType.currentSlideUpdated:
+    case MessageType.CurrentSlideUpdated:
       const currentSlideUpdatedMessage = msg as ICurrentSlideUpdatedMessage;
       currentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
       console.log(`Slide changed to ${(msg as ICurrentSlideUpdatedMessage).currentSlideIndex}`);

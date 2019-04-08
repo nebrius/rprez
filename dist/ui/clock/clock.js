@@ -23,13 +23,17 @@ const keyHandlers_1 = require("../keyHandlers");
 const message_1 = require("../../message");
 const util_1 = require("../../util");
 keyHandlers_1.connectKeyHandlers(document);
+const elapsedTimeLabel = document.getElementById('clock-elapsedTime');
+if (!elapsedTimeLabel) {
+    throw new Error(util_1.createInternalError('elapsedTimeLabel is unexpectedly null'));
+}
 electron_1.ipcRenderer.on('asynchronous-message', (event, msg) => {
     switch (msg.type) {
-        case message_1.MessageType.currentSlideUpdated:
-            console.log(`Slide changed to ${msg.currentSlideIndex}`);
+        case message_1.MessageType.TimerUpdated:
+            const time = new Date(msg.elapsedTime);
+            elapsedTimeLabel.innerText =
+                `${util_1.numToString(time.getUTCHours())}:${util_1.numToString(time.getUTCMinutes())}:${util_1.numToString(time.getUTCSeconds())}`;
             break;
-        default:
-            throw new Error(util_1.createInternalError(`Received unexpected message type ${msg.type}`));
     }
 });
 //# sourceMappingURL=clock.js.map

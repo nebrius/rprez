@@ -201,7 +201,7 @@ function sendSlideUpdatedMessage() {
         throw new Error(util_1.createInternalError('"currentProject" is unexpectedly null'));
     }
     const message = {
-        type: message_1.MessageType.currentSlideUpdated,
+        type: message_1.MessageType.CurrentSlideUpdated,
         currentSlideIndex: currentSlide,
         currentSlideUrl: currentProject.slides[currentSlide].slide,
         currentNotesUrl: currentProject.slides[currentSlide].notes,
@@ -211,6 +211,7 @@ function sendSlideUpdatedMessage() {
         win.webContents.send('asynchronous-message', message);
     }
 }
+let sideHasBeenChanged = false;
 function handleRequestNextSlide() {
     if (!currentProject) {
         return;
@@ -218,6 +219,10 @@ function handleRequestNextSlide() {
     if (currentSlide < currentProject.slides.length - 1) {
         currentSlide++;
         sendSlideUpdatedMessage();
+        if (!sideHasBeenChanged) {
+            sideHasBeenChanged = true;
+            handleRequestStartTimer();
+        }
     }
 }
 function handleRequestPreviousSlide() {
@@ -227,6 +232,38 @@ function handleRequestPreviousSlide() {
     if (currentSlide > 0) {
         currentSlide--;
         sendSlideUpdatedMessage();
+    }
+}
+let elapsedTime = 0;
+let timerInterval;
+function handleRequestStartTimer() {
+    let previousTime = Date.now();
+    timerInterval = setInterval(() => {
+        const currentTime = Date.now();
+        elapsedTime += currentTime - previousTime;
+        const timerUpdatedMessage = {
+            type: message_1.MessageType.TimerUpdated,
+            elapsedTime
+        };
+        for (const win of presentationWindows) {
+            win.webContents.send('asynchronous-message', timerUpdatedMessage);
+        }
+        previousTime = currentTime;
+    }, 100);
+    const message = {
+        type: message_1.MessageType.TimerStarted
+    };
+    for (const win of presentationWindows) {
+        win.webContents.send('asynchronous-message', message);
+    }
+}
+function handleRequestPauseTimer() {
+    clearInterval(timerInterval);
+    const message = {
+        type: message_1.MessageType.TimerPaused
+    };
+    for (const win of presentationWindows) {
+        win.webContents.send('asynchronous-message', message);
     }
 }
 electron_1.ipcMain.on('asynchronous-message', (event, msg) => {
@@ -248,6 +285,12 @@ electron_1.ipcMain.on('asynchronous-message', (event, msg) => {
             break;
         case message_1.MessageType.RequestPreviousSlide:
             handleRequestPreviousSlide();
+            break;
+        case message_1.MessageType.RequestStartTimer:
+            handleRequestStartTimer();
+            break;
+        case message_1.MessageType.RequestPauseTimer:
+            handleRequestPauseTimer();
             break;
         default:
             throw new Error(util_1.createInternalError(`Received unexpected message type ${msg.type}`));
