@@ -22,10 +22,20 @@ const electron_1 = require("electron");
 const keyHandlers_1 = require("../keyHandlers");
 const message_1 = require("../../message");
 const util_1 = require("../../util");
-keyHandlers_1.connectKeyHandlers();
+keyHandlers_1.connectKeyHandlers(document);
+const currentSlideIframe = document.getElementById('audience-currentSlide-iframe');
+if (!currentSlideIframe) {
+    throw new Error(util_1.createInternalError('currentSlideIframe is unexpectedly null'));
+}
+if (!currentSlideIframe.contentWindow) {
+    throw new Error(util_1.createInternalError('currentSlideIframe.contentWindow is unexpectedly null'));
+}
+keyHandlers_1.connectKeyHandlers(currentSlideIframe.contentWindow.document);
 electron_1.ipcRenderer.on('asynchronous-message', (event, msg) => {
     switch (msg.type) {
         case message_1.MessageType.currentSlideUpdated:
+            const currentSlideUpdatedMessage = msg;
+            currentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
             console.log(`Slide changed to ${msg.currentSlideIndex}`);
             break;
         default:

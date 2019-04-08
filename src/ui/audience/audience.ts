@@ -22,11 +22,23 @@ import { connectKeyHandlers } from '../keyHandlers';
 import { MessageType, IMessage, ICurrentSlideUpdatedMessage } from '../../message';
 import { createInternalError } from '../../util';
 
-connectKeyHandlers();
+connectKeyHandlers(document);
+
+const currentSlideIframe: HTMLIFrameElement | null =
+  document.getElementById('audience-currentSlide-iframe') as HTMLIFrameElement | null;
+if (!currentSlideIframe) {
+  throw new Error(createInternalError('currentSlideIframe is unexpectedly null'));
+}
+if (!currentSlideIframe.contentWindow) {
+  throw new Error(createInternalError('currentSlideIframe.contentWindow is unexpectedly null'));
+}
+connectKeyHandlers(currentSlideIframe.contentWindow.document);
 
 ipcRenderer.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
   switch (msg.type) {
     case MessageType.currentSlideUpdated:
+      const currentSlideUpdatedMessage = msg as ICurrentSlideUpdatedMessage;
+      currentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
       console.log(`Slide changed to ${(msg as ICurrentSlideUpdatedMessage).currentSlideIndex}`);
       break;
 

@@ -20,8 +20,8 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 import { ipcRenderer } from 'electron';
 import { MessageType, IMessage } from '../message';
 
-export function connectKeyHandlers() {
-  document.onkeyup = (e) => {
+export function connectKeyHandlers(element: HTMLDocument) {
+  element.onkeyup = (e) => {
     switch (e.key) {
       case 'Escape': {
         const message: IMessage = {

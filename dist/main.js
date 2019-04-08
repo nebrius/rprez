@@ -62,6 +62,7 @@ function createPresentationWindow(type, x, y) {
     // Open the DevTools.
     win.webContents.openDevTools();
     win.setFullScreen(true);
+    win.setMenu(null);
     presentationWindows.push(win);
     // Emitted when the window is closed.
     win.on('closed', () => {

@@ -1,1 +1,1 @@
-export declare function connectKeyHandlers(): void;
+export declare function connectKeyHandlers(element: HTMLDocument): void;

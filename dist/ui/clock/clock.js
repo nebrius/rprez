@@ -22,7 +22,7 @@ const electron_1 = require("electron");
 const keyHandlers_1 = require("../keyHandlers");
 const message_1 = require("../../message");
 const util_1 = require("../../util");
-keyHandlers_1.connectKeyHandlers();
+keyHandlers_1.connectKeyHandlers(document);
 electron_1.ipcRenderer.on('asynchronous-message', (event, msg) => {
     switch (msg.type) {
         case message_1.MessageType.currentSlideUpdated:

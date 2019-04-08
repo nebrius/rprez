@@ -22,7 +22,7 @@ import { connectKeyHandlers } from '../keyHandlers';
 import { MessageType, IMessage, ICurrentSlideUpdatedMessage } from '../../message';
 import { createInternalError } from '../../util';
 
-connectKeyHandlers();
+connectKeyHandlers(document);
 
 ipcRenderer.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
   switch (msg.type) {

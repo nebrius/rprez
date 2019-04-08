@@ -22,23 +22,37 @@ import { connectKeyHandlers } from '../keyHandlers';
 import { MessageType, IMessage, ICurrentSlideUpdatedMessage } from '../../message';
 import { createInternalError } from '../../util';
 
-connectKeyHandlers();
+connectKeyHandlers(document);
 
 const currentSlideIframe: HTMLIFrameElement | null =
   document.getElementById('speaker-currentSlide-iframe') as HTMLIFrameElement | null;
 if (!currentSlideIframe) {
   throw new Error(createInternalError('currentSlideIframe is unexpectedly null'));
 }
+if (!currentSlideIframe.contentWindow) {
+  throw new Error(createInternalError('currentSlideIframe.contentWindow is unexpectedly null'));
+}
+connectKeyHandlers(currentSlideIframe.contentWindow.document);
+
 const nextSlideIframe: HTMLIFrameElement | null =
   document.getElementById('speaker-nextSlide-iframe') as HTMLIFrameElement | null;
 if (!nextSlideIframe) {
   throw new Error(createInternalError('nextSlideIframe is unexpectedly null'));
 }
+if (!nextSlideIframe.contentWindow) {
+  throw new Error(createInternalError('nextSlideIframe.contentWindow is unexpectedly null'));
+}
+connectKeyHandlers(nextSlideIframe.contentWindow.document);
+
 const notesIframe: HTMLIFrameElement | null =
   document.getElementById('speaker-notes-iframe') as HTMLIFrameElement | null;
 if (!notesIframe) {
   throw new Error(createInternalError('notesIframe is unexpectedly null'));
 }
+if (!notesIframe.contentWindow) {
+  throw new Error(createInternalError('notesIframe.contentWindow is unexpectedly null'));
+}
+connectKeyHandlers(notesIframe.contentWindow.document);
 
 ipcRenderer.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
   switch (msg.type) {
@@ -47,9 +61,6 @@ ipcRenderer.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) =
       currentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
       nextSlideIframe.src = currentSlideUpdatedMessage.nextSlideUrl || '';
       notesIframe.src = currentSlideUpdatedMessage.currentNotesUrl;
-      console.log(currentSlideIframe.src);
-      console.log(nextSlideIframe.src);
-      console.log(notesIframe.src);
       console.log(`Slide changed to ${(msg as ICurrentSlideUpdatedMessage).currentSlideIndex}`);
       break;
     }

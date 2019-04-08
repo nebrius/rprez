@@ -20,8 +20,8 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const message_1 = require("../message");
-function connectKeyHandlers() {
-    document.onkeyup = (e) => {
+function connectKeyHandlers(element) {
+    element.onkeyup = (e) => {
         switch (e.key) {
             case 'Escape': {
                 const message = {
