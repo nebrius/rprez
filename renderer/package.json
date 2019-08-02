@@ -1,0 +1,41 @@
+{
+  "name": "rprez-renderer",
+  "version": "1.0.0",
+  "description": "Markdown based presentation software",
+  "main": "dist/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prebuild": "tslint 'src/**/*.ts'",
+    "build": "tsc",
+    "postbuild": "glopy renderer"
+  },
+  "config": {
+    "glopy": {
+      "renderer": [
+        "./src",
+        "./dist",
+        [
+          "**/*.css",
+          "**/*.html",
+          "**/*.js"
+        ]
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nebrius/rprez.git"
+  },
+  "author": "Bryan Hughes <bryan@nebri.us>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/nebrius/rprez/issues"
+  },
+  "homepage": "https://github.com/nebrius/rprez#readme",
+  "devDependencies": {
+    "glopy": "0.0.3",
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {}
+}
