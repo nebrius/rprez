@@ -16,9 +16,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { connectKeyHandlers } from '../keyHandlers';
-// import { MessageType, IMessage, ICurrentSlideUpdatedMessage } from '../common/message';
-import { createInternalError } from '../common/util';
+import { connectKeyHandlers } from '../keyHandlers.js';
+import { MessageType } from '../common/message.js';
+import { createInternalError } from '../common/util.js';
+import { addMessageListener } from '../messaging.js';
 connectKeyHandlers(document);
 const currentSlideIframe = document.getElementById('audience-currentSlide-iframe');
 if (!currentSlideIframe) {
@@ -30,15 +31,16 @@ if (!currentSlideIframe.contentWindow) {
 if (!currentSlideIframe.contentWindow.document) {
     throw new Error(createInternalError('currentSlideIframe.contentWindow.document is unexpectedly null/undefined'));
 }
-// ipcRenderer.on('asynchronous-message', (event: IpcRendererEvent, msg: IMessage) => {
-//   switch (msg.type) {
-//     case MessageType.CurrentSlideUpdated:
-//       const currentSlideUpdatedMessage = msg as ICurrentSlideUpdatedMessage;
-//       currentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
-//       console.log(`Slide changed to ${(msg as ICurrentSlideUpdatedMessage).currentSlideIndex}`);
-//       break;
-//     default:
-//       throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
-//   }
-// });
+connectKeyHandlers(currentSlideIframe.contentWindow.document);
+addMessageListener((msg) => {
+    switch (msg.type) {
+        case MessageType.CurrentSlideUpdated:
+            const currentSlideUpdatedMessage = msg;
+            currentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
+            console.log(`Slide changed to ${msg.currentSlideIndex}`);
+            break;
+        default:
+            throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
+    }
+});
 //# sourceMappingURL=audience.js.map

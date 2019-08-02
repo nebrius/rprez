@@ -19,6 +19,7 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 
 export enum MessageType {
   ManagerReady,
+  PresentationWindowReady,
   ScreenUpdated,
   RequestLoadPresentation,
   ProjectLoaded,

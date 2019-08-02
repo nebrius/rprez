@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { join } from 'path';
 import { BrowserWindow } from 'electron';
 import { createInternalError, PORT } from './common/util';
 import { MonitorViews } from './common/message';
@@ -77,7 +76,7 @@ export function createPresentationWindow(type: MonitorViews, x: number, y: numbe
 
   // and load the index.html of the app.
   const filebase = MonitorViews[type].toLowerCase();
-  win.loadFile(join(__dirname, 'ui', filebase, `${filebase}.html`));
+  win.loadURL(`http://localhost:${PORT}/rprez/${filebase}/${filebase}.html`);
 
   // Open the DevTools.
   win.webContents.openDevTools();

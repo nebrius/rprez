@@ -17,9 +17,10 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { connectKeyHandlers } from '../keyHandlers';
-// import { MessageType, IMessage, ITimerUpdatedMessage } from '../common/message';
-import { createInternalError/*, numToString*/ } from '../common/util';
+import { connectKeyHandlers } from '../keyHandlers.js';
+import { MessageType, ITimerUpdatedMessage } from '../common/message.js';
+import { createInternalError, numToString } from '../common/util.js';
+import { addMessageListener } from '../messaging.js';
 
 connectKeyHandlers(document);
 
@@ -28,12 +29,12 @@ if (!elapsedTimeLabel) {
   throw new Error(createInternalError('elapsedTimeLabel is unexpectedly null'));
 }
 
-// ipcRenderer.on('asynchronous-message', (event: IpcRendererEvent, msg: IMessage) => {
-//   switch (msg.type) {
-//     case MessageType.TimerUpdated:
-//       const time = new Date((msg as ITimerUpdatedMessage).elapsedTime);
-//       elapsedTimeLabel.innerText =
-//       `${numToString(time.getUTCHours())}:${numToString(time.getUTCMinutes())}:${numToString(time.getUTCSeconds())}`;
-//       break;
-//   }
-// });
+addMessageListener((msg) => {
+  switch (msg.type) {
+    case MessageType.TimerUpdated:
+      const time = new Date((msg as ITimerUpdatedMessage).elapsedTime);
+      elapsedTimeLabel.innerText =
+      `${numToString(time.getUTCHours())}:${numToString(time.getUTCMinutes())}:${numToString(time.getUTCSeconds())}`;
+      break;
+  }
+});

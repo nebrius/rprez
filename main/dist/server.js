@@ -32,26 +32,31 @@ const app = express();
 app.use('/rprez', express.static(path_1.join(__dirname, '../../renderer/dist/')));
 const httpServer = http_1.createServer(app);
 const webSocketServer = new ws_1.Server({ server: httpServer });
+let managerConnection;
+const presentationWindowConnections = [];
 function sendMessageToManager(msg) {
-    // if (managerWindow === null) {
-    //   throw new Error(createInternalError('"managerWindow" is unexpectedly null'));
-    // }
-    // managerWindow.webContents.send('asynchronous-message', msg);
+    if (!managerConnection) {
+        throw new Error(util_1.createInternalError('"managerWindow" is unexpectedly null'));
+    }
+    managerConnection.send(JSON.stringify(msg));
 }
 exports.sendMessageToManager = sendMessageToManager;
 function sendMessageToPresentationWindows(msg) {
-    // for (const win of presentationWindows) {
-    //   win.webContents.send('asynchronous-message', msg);
-    // }
+    for (const connection of presentationWindowConnections) {
+        connection.send(JSON.stringify(msg));
+    }
 }
 exports.sendMessageToPresentationWindows = sendMessageToPresentationWindows;
-webSocketServer.on('connection', (wsClient, request) => {
-    console.log(request);
+webSocketServer.on('connection', (wsClient) => {
     wsClient.on('message', (msg) => {
         const parsedMessage = JSON.parse(msg.toString());
         switch (parsedMessage.type) {
             case message_1.MessageType.ManagerReady:
+                managerConnection = wsClient;
                 manager_1.handleManagerReadyMessage();
+                break;
+            case message_1.MessageType.PresentationWindowReady:
+                presentationWindowConnections.push(wsClient);
                 break;
             case message_1.MessageType.RequestLoadPresentation:
                 presentation_1.handleRequestLoadPresentation(parsedMessage);

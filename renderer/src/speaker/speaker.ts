@@ -17,9 +17,10 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { connectKeyHandlers } from '../keyHandlers';
-// import { MessageType, IMessage, ICurrentSlideUpdatedMessage, ITimerUpdatedMessage } from '../common/message';
-import { createInternalError/*, numToString*/ } from '../common/util';
+import { connectKeyHandlers } from '../keyHandlers.js';
+import { MessageType, IMessage, ICurrentSlideUpdatedMessage, ITimerUpdatedMessage } from '../common/message.js';
+import { createInternalError, numToString } from '../common/util.js';
+import { addMessageListener, sendMessage } from '../messaging.js';
 
 connectKeyHandlers(document);
 
@@ -63,37 +64,37 @@ if (!clockControlButton) {
   throw new Error(createInternalError('clockControlButton is unexpectedly null'));
 }
 clockControlButton.onclick = () => {
-  // const message: IMessage = {
-  //   type: clockControlButton.innerText === '⏯' ? MessageType.RequestStartTimer : MessageType.RequestPauseTimer
-  // };
-  // ipcRenderer.send('asynchronous-message', message);
+  const message: IMessage = {
+    type: clockControlButton.innerText === '⏯' ? MessageType.RequestStartTimer : MessageType.RequestPauseTimer
+  };
+  sendMessage(message);
 };
 
-// ipcRenderer.on('asynchronous-message', (event: IpcRendererEvent, msg: IMessage) => {
-//   switch (msg.type) {
-//     case MessageType.CurrentSlideUpdated:
-//       const currentSlideUpdatedMessage = msg as ICurrentSlideUpdatedMessage;
-//       currentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
-//       nextSlideIframe.src = currentSlideUpdatedMessage.nextSlideUrl || '';
-//       notesIframe.src = currentSlideUpdatedMessage.currentNotesUrl;
-//       console.log(`Slide changed to ${(msg as ICurrentSlideUpdatedMessage).currentSlideIndex}`);
-//       break;
+addMessageListener((msg) => {
+  switch (msg.type) {
+    case MessageType.CurrentSlideUpdated:
+      const currentSlideUpdatedMessage = msg as ICurrentSlideUpdatedMessage;
+      currentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
+      nextSlideIframe.src = currentSlideUpdatedMessage.nextSlideUrl || '';
+      notesIframe.src = currentSlideUpdatedMessage.currentNotesUrl;
+      console.log(`Slide changed to ${(msg as ICurrentSlideUpdatedMessage).currentSlideIndex}`);
+      break;
 
-//     case MessageType.TimerUpdated:
-//       const time = new Date((msg as ITimerUpdatedMessage).elapsedTime);
-//       elapsedTimeLabel.innerText =
-//       `${numToString(time.getUTCHours())}:${numToString(time.getUTCMinutes())}:${numToString(time.getUTCSeconds())}`;
-//       break;
+    case MessageType.TimerUpdated:
+      const time = new Date((msg as ITimerUpdatedMessage).elapsedTime);
+      elapsedTimeLabel.innerText =
+      `${numToString(time.getUTCHours())}:${numToString(time.getUTCMinutes())}:${numToString(time.getUTCSeconds())}`;
+      break;
 
-//     case MessageType.TimerStarted:
-//       clockControlButton.innerText = '⏸';
-//       break;
+    case MessageType.TimerStarted:
+      clockControlButton.innerText = '⏸';
+      break;
 
-//     case MessageType.TimerPaused:
-//       clockControlButton.innerText = '⏯';
-//       break;
+    case MessageType.TimerPaused:
+      clockControlButton.innerText = '⏯';
+      break;
 
-//     default:
-//       throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
-//   }
-// });
+    default:
+      throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
+  }
+});

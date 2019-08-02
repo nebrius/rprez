@@ -18,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-const path_1 = require("path");
 const electron_1 = require("electron");
 const util_1 = require("./common/util");
 const message_1 = require("./common/message");
@@ -68,7 +67,7 @@ function createPresentationWindow(type, x, y) {
     const win = new electron_1.BrowserWindow({ width: 800, height: 600, x, y });
     // and load the index.html of the app.
     const filebase = message_1.MonitorViews[type].toLowerCase();
-    win.loadFile(path_1.join(__dirname, 'ui', filebase, `${filebase}.html`));
+    win.loadURL(`http://localhost:${util_1.PORT}/rprez/${filebase}/${filebase}.html`);
     // Open the DevTools.
     win.webContents.openDevTools();
     // win.setFullScreen(true);

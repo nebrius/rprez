@@ -45,26 +45,33 @@ app.use('/rprez', express.static(join(__dirname, '../../renderer/dist/')));
 const httpServer = createServer(app);
 const webSocketServer = new Server({ server: httpServer });
 
+let managerConnection: any;
+const presentationWindowConnections: any[] = [];
+
 export function sendMessageToManager(msg: IMessage): void {
-  // if (managerWindow === null) {
-  //   throw new Error(createInternalError('"managerWindow" is unexpectedly null'));
-  // }
-  // managerWindow.webContents.send('asynchronous-message', msg);
+  if (!managerConnection) {
+    throw new Error(createInternalError('"managerWindow" is unexpectedly null'));
+  }
+  managerConnection.send(JSON.stringify(msg));
 }
 
 export function sendMessageToPresentationWindows(msg: IMessage): void {
-  // for (const win of presentationWindows) {
-  //   win.webContents.send('asynchronous-message', msg);
-  // }
+  for (const connection of presentationWindowConnections) {
+    connection.send(JSON.stringify(msg));
+  }
 }
 
-webSocketServer.on('connection', (wsClient, request) => {
-  console.log(request);
+webSocketServer.on('connection', (wsClient) => {
   wsClient.on('message', (msg) => {
     const parsedMessage: IMessage = JSON.parse(msg.toString());
     switch (parsedMessage.type) {
       case MessageType.ManagerReady:
+        managerConnection = wsClient;
         handleManagerReadyMessage();
+        break;
+
+      case MessageType.PresentationWindowReady:
+        presentationWindowConnections.push(wsClient);
         break;
 
       case MessageType.RequestLoadPresentation:
