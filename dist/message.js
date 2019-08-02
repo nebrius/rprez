@@ -34,6 +34,7 @@ var MessageType;
     MessageType[MessageType["TimerPaused"] = 11] = "TimerPaused";
     MessageType[MessageType["RequestStartTimer"] = 12] = "RequestStartTimer";
     MessageType[MessageType["RequestPauseTimer"] = 13] = "RequestPauseTimer";
+    MessageType["KeyPressed"] = "KeyPressed";
 })(MessageType = exports.MessageType || (exports.MessageType = {}));
 var MonitorViews;
 (function (MonitorViews) {

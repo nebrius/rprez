@@ -28,9 +28,11 @@ if (!currentSlideIframe) {
     throw new Error(util_1.createInternalError('currentSlideIframe is unexpectedly null'));
 }
 if (!currentSlideIframe.contentWindow) {
-    throw new Error(util_1.createInternalError('currentSlideIframe.contentWindow is unexpectedly null'));
+    throw new Error(util_1.createInternalError('currentSlideIframe.contentWindow is unexpectedly null/undefined'));
 }
-keyHandlers_1.connectKeyHandlers(currentSlideIframe.contentWindow.document);
+if (!currentSlideIframe.contentWindow.document) {
+    throw new Error(util_1.createInternalError('currentSlideIframe.contentWindow.document is unexpectedly null/undefined'));
+}
 electron_1.ipcRenderer.on('asynchronous-message', (event, msg) => {
     switch (msg.type) {
         case message_1.MessageType.CurrentSlideUpdated:

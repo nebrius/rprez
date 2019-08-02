@@ -17,7 +17,20 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// A little hacky, but we have to call TypeScript files as module. It can't
-// be top-level, so we use this little indirection to make sure that the TS files
-// are indeed called as a module (i.e. module, exports, and module.exports exist)
-require('./manager.js');
+import { getDisplays } from '../windows';
+import { IScreenUpdatedMessage, MessageType } from '../message';
+import { sendMessageToManager } from '../server';
+
+export function handleManagerReadyMessage(): void {
+  console.log('Manager Ready');
+  const displays = getDisplays();
+  const screenUpdatedMessage: IScreenUpdatedMessage = {
+    type: MessageType.ScreenUpdated,
+    screens: displays.map((display) => ({
+      width: Math.floor(display.bounds.width * display.scaleFactor),
+      height: Math.floor(display.bounds.height * display.scaleFactor),
+      id: display.id
+    }))
+  };
+  sendMessageToManager(screenUpdatedMessage);
+}

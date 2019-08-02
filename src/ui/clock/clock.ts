@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ipcRenderer, IpcMessageEvent } from 'electron';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { connectKeyHandlers } from '../keyHandlers';
 import { MessageType, IMessage, ITimerUpdatedMessage } from '../../message';
 import { createInternalError, numToString } from '../../util';
@@ -29,7 +29,7 @@ if (!elapsedTimeLabel) {
   throw new Error(createInternalError('elapsedTimeLabel is unexpectedly null'));
 }
 
-ipcRenderer.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
+ipcRenderer.on('asynchronous-message', (event: IpcRendererEvent, msg: IMessage) => {
   switch (msg.type) {
     case MessageType.TimerUpdated:
       const time = new Date((msg as ITimerUpdatedMessage).elapsedTime);

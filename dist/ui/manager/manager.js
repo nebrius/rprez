@@ -18,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-const electron_1 = require("electron");
 const message_1 = require("../../message");
 const util_1 = require("../../util");
 let screens = [];
@@ -44,8 +43,24 @@ function createMonitorEntry(parent, screenInfo, screenIndex, defaultOption) {
     container.appendChild(select);
     parent.appendChild(container);
 }
-electron_1.ipcRenderer.on('asynchronous-message', (event, msg) => {
-    switch (msg.type) {
+const connection = new WebSocket('ws://localhost:3000/ws');
+let isConnected = false;
+connection.addEventListener('open', () => {
+    console.log('Connected to bridging server');
+    isConnected = true;
+});
+connection.addEventListener('error', (err) => {
+    console.error(`Could not connect to bridging server: ${err}`);
+});
+function sendMessage(msg) {
+    if (!isConnected) {
+        throw new Error('Tried to send message before connection is available');
+    }
+    connection.send(JSON.stringify(msg));
+}
+connection.addEventListener('message', (msg) => {
+    const parsedMessage = JSON.parse(msg.data);
+    switch (parsedMessage.type) {
         case message_1.MessageType.ScreenUpdated:
             const monitorListContainer = document.getElementById('monitorList');
             if (!monitorListContainer) {
@@ -54,7 +69,7 @@ electron_1.ipcRenderer.on('asynchronous-message', (event, msg) => {
             for (const child of monitorListContainer.childNodes) {
                 monitorListContainer.removeChild(child);
             }
-            screens = msg.screens;
+            screens = parsedMessage.screens;
             for (let i = 0; i < screens.length; i++) {
                 let defaultScreen;
                 if (i === 0) {
@@ -77,10 +92,9 @@ electron_1.ipcRenderer.on('asynchronous-message', (event, msg) => {
             }
             presentationView.style.display = 'inherit';
             loadView.style.display = 'none';
-            console.log(msg);
             break;
         default:
-            throw new Error(util_1.createInternalError(`Received unexpected message type ${msg.type}`));
+            throw new Error(util_1.createInternalError(`Received unexpected message type ${parsedMessage.type}`));
     }
 });
 function selectPresentationFile() {
@@ -96,7 +110,7 @@ function selectPresentationFile() {
         type: message_1.MessageType.RequestLoadPresentation,
         filename: filenames[0].path
     };
-    electron_1.ipcRenderer.send('asynchronous-message', message);
+    sendMessage(message);
 }
 function requestPresenterShow() {
     const screenAssignments = {};
@@ -113,7 +127,7 @@ function requestPresenterShow() {
         type: message_1.MessageType.RequestPresentShow,
         screenAssignments
     };
-    electron_1.ipcRenderer.send('asynchronous-message', message);
+    sendMessage(message);
 }
 const presentationInput = document.getElementById('presentationInput');
 if (!presentationInput) {
@@ -128,5 +142,5 @@ presentButton.onclick = requestPresenterShow;
 const managerReadyMessage = {
     type: message_1.MessageType.ManagerReady,
 };
-electron_1.ipcRenderer.send('asynchronous-message', managerReadyMessage);
+sendMessage(managerReadyMessage);
 //# sourceMappingURL=manager.js.map

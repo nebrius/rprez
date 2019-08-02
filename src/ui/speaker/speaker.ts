@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ipcRenderer, IpcMessageEvent } from 'electron';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { connectKeyHandlers } from '../keyHandlers';
 import { MessageType, IMessage, ICurrentSlideUpdatedMessage, ITimerUpdatedMessage } from '../../message';
 import { createInternalError, numToString } from '../../util';
@@ -70,7 +70,7 @@ clockControlButton.onclick = () => {
   ipcRenderer.send('asynchronous-message', message);
 };
 
-ipcRenderer.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
+ipcRenderer.on('asynchronous-message', (event: IpcRendererEvent, msg: IMessage) => {
   switch (msg.type) {
     case MessageType.CurrentSlideUpdated:
       const currentSlideUpdatedMessage = msg as ICurrentSlideUpdatedMessage;

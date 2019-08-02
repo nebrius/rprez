@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ipcRenderer, IpcMessageEvent } from 'electron';
 import {
   MessageType,
   IMessage,
@@ -62,8 +61,26 @@ function createMonitorEntry(
   parent.appendChild(container);
 }
 
-ipcRenderer.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
-  switch (msg.type) {
+const connection = new WebSocket('ws://localhost:3000/ws');
+let isConnected = false;
+connection.addEventListener('open', () => {
+  console.log('Connected to bridging server');
+  isConnected = true;
+});
+connection.addEventListener('error', (err) => {
+  console.error(`Could not connect to bridging server: ${err}`);
+});
+
+function sendMessage(msg: IMessage) {
+  if (!isConnected) {
+    throw new Error('Tried to send message before connection is available');
+  }
+  connection.send(JSON.stringify(msg));
+}
+
+connection.addEventListener('message', (msg) => {
+  const parsedMessage = JSON.parse(msg.data);
+  switch (parsedMessage.type) {
     case MessageType.ScreenUpdated:
       const monitorListContainer = document.getElementById('monitorList');
       if (!monitorListContainer) {
@@ -72,7 +89,7 @@ ipcRenderer.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) =
       for (const child of monitorListContainer.childNodes) {
         monitorListContainer.removeChild(child);
       }
-      screens = (msg as IScreenUpdatedMessage).screens;
+      screens = (parsedMessage as IScreenUpdatedMessage).screens;
       for (let i = 0; i < screens.length; i++) {
         let defaultScreen: MonitorViews | undefined;
         if (i === 0) {
@@ -95,11 +112,10 @@ ipcRenderer.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) =
       }
       presentationView.style.display = 'inherit';
       loadView.style.display = 'none';
-      console.log(msg);
       break;
 
     default:
-      throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
+      throw new Error(createInternalError(`Received unexpected message type ${parsedMessage.type}`));
   }
 });
 
@@ -116,7 +132,7 @@ function selectPresentationFile() {
     type: MessageType.RequestLoadPresentation,
     filename: filenames[0].path
   };
-  ipcRenderer.send('asynchronous-message', message);
+  sendMessage(message);
 }
 
 function requestPresenterShow() {
@@ -134,7 +150,7 @@ function requestPresenterShow() {
     type: MessageType.RequestPresentShow,
     screenAssignments
   };
-  ipcRenderer.send('asynchronous-message', message);
+  sendMessage(message);
 }
 
 const presentationInput = document.getElementById('presentationInput');
@@ -152,4 +168,4 @@ presentButton.onclick = requestPresenterShow;
 const managerReadyMessage: IMessage = {
   type: MessageType.ManagerReady,
 };
-ipcRenderer.send('asynchronous-message', managerReadyMessage);
+sendMessage(managerReadyMessage);

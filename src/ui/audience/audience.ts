@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ipcRenderer, IpcMessageEvent } from 'electron';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { connectKeyHandlers } from '../keyHandlers';
 import { MessageType, IMessage, ICurrentSlideUpdatedMessage } from '../../message';
 import { createInternalError } from '../../util';
@@ -30,11 +30,13 @@ if (!currentSlideIframe) {
   throw new Error(createInternalError('currentSlideIframe is unexpectedly null'));
 }
 if (!currentSlideIframe.contentWindow) {
-  throw new Error(createInternalError('currentSlideIframe.contentWindow is unexpectedly null'));
+  throw new Error(createInternalError('currentSlideIframe.contentWindow is unexpectedly null/undefined'));
 }
-connectKeyHandlers(currentSlideIframe.contentWindow.document);
+if (!currentSlideIframe.contentWindow.document) {
+  throw new Error(createInternalError('currentSlideIframe.contentWindow.document is unexpectedly null/undefined'));
+}
 
-ipcRenderer.on('asynchronous-message', (event: IpcMessageEvent, msg: IMessage) => {
+ipcRenderer.on('asynchronous-message', (event: IpcRendererEvent, msg: IMessage) => {
   switch (msg.type) {
     case MessageType.CurrentSlideUpdated:
       const currentSlideUpdatedMessage = msg as ICurrentSlideUpdatedMessage;

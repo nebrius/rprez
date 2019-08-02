@@ -31,7 +31,8 @@ export enum MessageType {
   TimerStarted,
   TimerPaused,
   RequestStartTimer,
-  RequestPauseTimer
+  RequestPauseTimer,
+  KeyPressed = 'KeyPressed'
 }
 
 export interface IMessage {
