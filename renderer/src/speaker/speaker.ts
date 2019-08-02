@@ -32,7 +32,6 @@ if (!currentSlideIframe) {
 if (!currentSlideIframe.contentWindow) {
   throw new Error(createInternalError('currentSlideIframe.contentWindow is unexpectedly null'));
 }
-connectKeyHandlers(currentSlideIframe.contentWindow.document);
 
 const nextSlideIframe: HTMLIFrameElement | null =
   document.getElementById('speaker-nextSlide-iframe') as HTMLIFrameElement | null;
@@ -42,7 +41,6 @@ if (!nextSlideIframe) {
 if (!nextSlideIframe.contentWindow) {
   throw new Error(createInternalError('nextSlideIframe.contentWindow is unexpectedly null'));
 }
-connectKeyHandlers(nextSlideIframe.contentWindow.document);
 
 const notesIframe: HTMLIFrameElement | null =
   document.getElementById('speaker-notes-iframe') as HTMLIFrameElement | null;
@@ -52,7 +50,6 @@ if (!notesIframe) {
 if (!notesIframe.contentWindow) {
   throw new Error(createInternalError('notesIframe.contentWindow is unexpectedly null'));
 }
-connectKeyHandlers(notesIframe.contentWindow.document);
 
 const elapsedTimeLabel = document.getElementById('speaker-elapsedTime');
 if (!elapsedTimeLabel) {
