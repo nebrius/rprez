@@ -17,16 +17,22 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { dirname } from 'path';
 import { promisify } from 'util';
 import { exists, promises } from 'fs';
 const { readFile } = promises;
 import { Validator } from 'jsonschema';
 import { MessageType, IProject, ICurrentSlideUpdatedMessage, ProjectSchema } from './common/message';
 import { createInternalError } from './common/util';
-import { sendMessageToPresentationWindows } from './server';
+import { sendMessageToPresentationWindows, setProjectDirectory } from './server';
 
+let currentProjectDirectory: string;
 let currentProject: IProject | null = null;
 let currentSlide: number = 0;
+
+export function getCurrentProjectDirectory(): string {
+  return currentProjectDirectory;
+}
 
 export function getCurrentProject(): IProject | null {
   return currentProject;
@@ -55,6 +61,14 @@ export async function loadProject(pathToProjectFile: string): Promise<IProject> 
   if (!results.valid) {
     throw new Error(`Invalid project file ${pathToProjectFile}:\n${results.errors.join('\n')}`);
   }
+
+  currentProjectDirectory = dirname(pathToProjectFile);
+  setProjectDirectory(currentProjectDirectory);
+
+  (currentProject as IProject).slides = (currentProject as IProject).slides.map((slide) => ({
+    slide: `/presentation/${slide.slide}`,
+    notes: slide.notes && `/presentation/${slide.notes}`
+  }));
 
   return currentProject as IProject;
 }

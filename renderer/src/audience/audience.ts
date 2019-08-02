@@ -18,9 +18,9 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { connectKeyHandlers } from '../keyHandlers.js';
-import { MessageType, ICurrentSlideUpdatedMessage } from '../common/message.js';
+import { MessageType, IMessage, ICurrentSlideUpdatedMessage } from '../common/message.js';
 import { createInternalError } from '../common/util.js';
-import { addMessageListener } from '../messaging.js';
+import { addMessageListener, sendMessage } from '../messaging.js';
 
 connectKeyHandlers(document);
 
@@ -49,3 +49,8 @@ addMessageListener((msg) => {
       throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
   }
 });
+
+const presentationWindowReadyMessage: IMessage = {
+  type: MessageType.PresentationWindowReady,
+};
+sendMessage(presentationWindowReadyMessage);

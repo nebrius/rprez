@@ -49,5 +49,8 @@ export function sendMessage(msg: IMessage) {
 }
 
 export function addMessageListener(cb: (msg: IMessage) => void): void {
-  connection.addEventListener('message', (msg) => cb(JSON.parse(msg.data)));
+  connection.addEventListener('message', (msg) => {
+    console.log(`Received message: ${msg.data}`);
+    cb(JSON.parse(msg.data));
+  });
 }

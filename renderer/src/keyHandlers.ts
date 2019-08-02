@@ -17,35 +17,36 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// import { MessageType, IMessage } from '../common/message';
+import { MessageType, IMessage } from './common/message.js';
+import { sendMessage } from './messaging.js';
 
 export function connectKeyHandlers(element: HTMLDocument) {
   element.onkeyup = (e) => {
     switch (e.key) {
       case 'Escape': {
-        // const message: IMessage = {
-        //   type: MessageType.RequestExistShow
-        // };
-        // ipcRenderer.send('asynchronous-message', message);
+        const message: IMessage = {
+          type: MessageType.RequestExistShow
+        };
+        sendMessage(message);
         break;
       }
       case 'ArrowRight':
       case ' ':
       case 'd':
       case 'PageUp': {
-        // const message: IMessage = {
-        //   type: MessageType.RequestNextSlide
-        // };
-        // ipcRenderer.send('asynchronous-message', message);
+        const message: IMessage = {
+          type: MessageType.RequestNextSlide
+        };
+        sendMessage(message);
         break;
       }
       case 'ArrowLeft':
       case 'a':
       case 'PageDown': {
-        // const message: IMessage = {
-        //   type: MessageType.RequestPreviousSlide
-        // };
-        // ipcRenderer.send('asynchronous-message', message);
+        const message: IMessage = {
+          type: MessageType.RequestPreviousSlide
+        };
+        sendMessage(message);
         break;
       }
     }

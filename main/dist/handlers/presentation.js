@@ -18,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-const path_1 = require("path");
 const message_1 = require("../common/message");
 const project_1 = require("../project");
 const windows_1 = require("../windows");
@@ -34,11 +33,6 @@ async function handleRequestLoadPresentation(loadMessage) {
         console.error(err);
         return;
     }
-    const projectDir = path_1.dirname(loadMessage.filename);
-    presentationProject.slides = presentationProject.slides.map((slide) => ({
-        slide: path_1.resolve(projectDir, slide.slide),
-        notes: slide.notes && path_1.resolve(projectDir, slide.notes)
-    }));
     project_1.setSlideNumber(0);
     const message = {
         type: message_1.MessageType.ProjectLoaded,

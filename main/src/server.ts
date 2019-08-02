@@ -61,6 +61,10 @@ export function sendMessageToPresentationWindows(msg: IMessage): void {
   }
 }
 
+export function setProjectDirectory(dir: string): void {
+  app.use('/presentation', express.static(dir));
+}
+
 webSocketServer.on('connection', (wsClient) => {
   wsClient.on('message', (msg) => {
     const parsedMessage: IMessage = JSON.parse(msg.toString());

@@ -47,6 +47,10 @@ function sendMessageToPresentationWindows(msg) {
     }
 }
 exports.sendMessageToPresentationWindows = sendMessageToPresentationWindows;
+function setProjectDirectory(dir) {
+    app.use('/presentation', express.static(dir));
+}
+exports.setProjectDirectory = setProjectDirectory;
 webSocketServer.on('connection', (wsClient) => {
     wsClient.on('message', (msg) => {
         const parsedMessage = JSON.parse(msg.toString());

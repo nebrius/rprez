@@ -43,6 +43,9 @@ export function sendMessage(msg) {
     }
 }
 export function addMessageListener(cb) {
-    connection.addEventListener('message', (msg) => cb(JSON.parse(msg.data)));
+    connection.addEventListener('message', (msg) => {
+        console.log(`Received message: ${msg.data}`);
+        cb(JSON.parse(msg.data));
+    });
 }
 //# sourceMappingURL=messaging.js.map

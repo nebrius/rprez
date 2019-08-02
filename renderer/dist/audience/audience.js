@@ -19,7 +19,7 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 import { connectKeyHandlers } from '../keyHandlers.js';
 import { MessageType } from '../common/message.js';
 import { createInternalError } from '../common/util.js';
-import { addMessageListener } from '../messaging.js';
+import { addMessageListener, sendMessage } from '../messaging.js';
 connectKeyHandlers(document);
 const currentSlideIframe = document.getElementById('audience-currentSlide-iframe');
 if (!currentSlideIframe) {
@@ -43,4 +43,8 @@ addMessageListener((msg) => {
             throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
     }
 });
+const presentationWindowReadyMessage = {
+    type: MessageType.PresentationWindowReady,
+};
+sendMessage(presentationWindowReadyMessage);
 //# sourceMappingURL=audience.js.map

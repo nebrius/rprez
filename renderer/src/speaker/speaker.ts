@@ -98,3 +98,8 @@ addMessageListener((msg) => {
       throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
   }
 });
+
+const presentationWindowReadyMessage: IMessage = {
+  type: MessageType.PresentationWindowReady,
+};
+sendMessage(presentationWindowReadyMessage);

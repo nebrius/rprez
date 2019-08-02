@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { dirname, resolve } from 'path';
 import {
   MessageType,
   IRequestLoadPresentationMessage,
@@ -41,11 +40,6 @@ export async function handleRequestLoadPresentation(loadMessage: IRequestLoadPre
     return;
   }
 
-  const projectDir = dirname(loadMessage.filename);
-  presentationProject.slides = presentationProject.slides.map((slide) => ({
-    slide: resolve(projectDir, slide.slide),
-    notes: slide.notes && resolve(projectDir, slide.notes)
-  }));
   setSlideNumber(0);
   const message: IProjectLoadedMessage = {
     type: MessageType.ProjectLoaded,

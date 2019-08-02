@@ -83,4 +83,8 @@ addMessageListener((msg) => {
             throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
     }
 });
+const presentationWindowReadyMessage = {
+    type: MessageType.PresentationWindowReady,
+};
+sendMessage(presentationWindowReadyMessage);
 //# sourceMappingURL=speaker.js.map

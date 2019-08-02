@@ -19,7 +19,7 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 import { connectKeyHandlers } from '../keyHandlers.js';
 import { MessageType } from '../common/message.js';
 import { createInternalError, numToString } from '../common/util.js';
-import { addMessageListener } from '../messaging.js';
+import { addMessageListener, sendMessage } from '../messaging.js';
 connectKeyHandlers(document);
 const elapsedTimeLabel = document.getElementById('clock-elapsedTime');
 if (!elapsedTimeLabel) {
@@ -34,4 +34,8 @@ addMessageListener((msg) => {
             break;
     }
 });
+const presentationWindowReadyMessage = {
+    type: MessageType.PresentationWindowReady,
+};
+sendMessage(presentationWindowReadyMessage);
 //# sourceMappingURL=clock.js.map

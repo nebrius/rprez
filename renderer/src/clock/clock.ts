@@ -18,9 +18,9 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { connectKeyHandlers } from '../keyHandlers.js';
-import { MessageType, ITimerUpdatedMessage } from '../common/message.js';
+import { MessageType, IMessage, ITimerUpdatedMessage } from '../common/message.js';
 import { createInternalError, numToString } from '../common/util.js';
-import { addMessageListener } from '../messaging.js';
+import { addMessageListener, sendMessage } from '../messaging.js';
 
 connectKeyHandlers(document);
 
@@ -38,3 +38,8 @@ addMessageListener((msg) => {
       break;
   }
 });
+
+const presentationWindowReadyMessage: IMessage = {
+  type: MessageType.PresentationWindowReady,
+};
+sendMessage(presentationWindowReadyMessage);

@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
+const path_1 = require("path");
 const util_1 = require("util");
 const fs_1 = require("fs");
 const { readFile } = fs_1.promises;
@@ -25,8 +26,13 @@ const jsonschema_1 = require("jsonschema");
 const message_1 = require("./common/message");
 const util_2 = require("./common/util");
 const server_1 = require("./server");
+let currentProjectDirectory;
 let currentProject = null;
 let currentSlide = 0;
+function getCurrentProjectDirectory() {
+    return currentProjectDirectory;
+}
+exports.getCurrentProjectDirectory = getCurrentProjectDirectory;
 function getCurrentProject() {
     return currentProject;
 }
@@ -53,6 +59,12 @@ async function loadProject(pathToProjectFile) {
     if (!results.valid) {
         throw new Error(`Invalid project file ${pathToProjectFile}:\n${results.errors.join('\n')}`);
     }
+    currentProjectDirectory = path_1.dirname(pathToProjectFile);
+    server_1.setProjectDirectory(currentProjectDirectory);
+    currentProject.slides = currentProject.slides.map((slide) => ({
+        slide: `/presentation/${slide.slide}`,
+        notes: slide.notes && `/presentation/${slide.notes}`
+    }));
     return currentProject;
 }
 exports.loadProject = loadProject;
