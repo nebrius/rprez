@@ -36,6 +36,15 @@ addMessageListener((msg) => {
       elapsedTimeLabel.innerText =
       `${numToString(time.getUTCHours())}:${numToString(time.getUTCMinutes())}:${numToString(time.getUTCSeconds())}`;
       break;
+
+      case MessageType.CurrentSlideUpdated:
+      case MessageType.TimerStarted:
+      case MessageType.TimerPaused:
+        // Do nothing
+        break;
+
+      default:
+        throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
   }
 });
 

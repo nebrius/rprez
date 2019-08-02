@@ -45,6 +45,12 @@ addMessageListener((msg) => {
       console.log(`Slide changed to ${(msg as ICurrentSlideUpdatedMessage).currentSlideIndex}`);
       break;
 
+    case MessageType.TimerUpdated:
+    case MessageType.TimerStarted:
+    case MessageType.TimerPaused:
+      // Do nothing
+      break;
+
     default:
       throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
   }

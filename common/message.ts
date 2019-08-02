@@ -18,21 +18,21 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 export enum MessageType {
-  ManagerReady,
-  PresentationWindowReady,
-  ScreenUpdated,
-  RequestLoadPresentation,
-  ProjectLoaded,
-  RequestPresentShow,
-  RequestExistShow,
-  RequestNextSlide,
-  RequestPreviousSlide,
-  CurrentSlideUpdated,
-  TimerUpdated,
-  TimerStarted,
-  TimerPaused,
-  RequestStartTimer,
-  RequestPauseTimer,
+  ManagerReady = 'ManagerReady',
+  PresentationWindowReady = 'PresentationWindowReady',
+  ScreenUpdated = 'ScreenUpdated',
+  RequestLoadPresentation = 'RequestLoadPresentation',
+  ProjectLoaded = 'ProjectLoaded',
+  RequestPresentShow = 'RequestPresentShow',
+  RequestExistShow = 'RequestExistShow',
+  RequestNextSlide = 'RequestNextSlide',
+  RequestPreviousSlide = 'RequestPreviousSlide',
+  CurrentSlideUpdated = 'CurrentSlideUpdated',
+  TimerUpdated = 'TimerUpdated',
+  TimerStarted = 'TimerStarted',
+  TimerPaused = 'TimerPaused',
+  RequestStartTimer = 'RequestStartTimer',
+  RequestPauseTimer = 'RequestPauseTimer',
   KeyPressed = 'KeyPressed'
 }
 

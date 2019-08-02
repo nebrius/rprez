@@ -18,21 +18,21 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 export var MessageType;
 (function (MessageType) {
-    MessageType[MessageType["ManagerReady"] = 0] = "ManagerReady";
-    MessageType[MessageType["PresentationWindowReady"] = 1] = "PresentationWindowReady";
-    MessageType[MessageType["ScreenUpdated"] = 2] = "ScreenUpdated";
-    MessageType[MessageType["RequestLoadPresentation"] = 3] = "RequestLoadPresentation";
-    MessageType[MessageType["ProjectLoaded"] = 4] = "ProjectLoaded";
-    MessageType[MessageType["RequestPresentShow"] = 5] = "RequestPresentShow";
-    MessageType[MessageType["RequestExistShow"] = 6] = "RequestExistShow";
-    MessageType[MessageType["RequestNextSlide"] = 7] = "RequestNextSlide";
-    MessageType[MessageType["RequestPreviousSlide"] = 8] = "RequestPreviousSlide";
-    MessageType[MessageType["CurrentSlideUpdated"] = 9] = "CurrentSlideUpdated";
-    MessageType[MessageType["TimerUpdated"] = 10] = "TimerUpdated";
-    MessageType[MessageType["TimerStarted"] = 11] = "TimerStarted";
-    MessageType[MessageType["TimerPaused"] = 12] = "TimerPaused";
-    MessageType[MessageType["RequestStartTimer"] = 13] = "RequestStartTimer";
-    MessageType[MessageType["RequestPauseTimer"] = 14] = "RequestPauseTimer";
+    MessageType["ManagerReady"] = "ManagerReady";
+    MessageType["PresentationWindowReady"] = "PresentationWindowReady";
+    MessageType["ScreenUpdated"] = "ScreenUpdated";
+    MessageType["RequestLoadPresentation"] = "RequestLoadPresentation";
+    MessageType["ProjectLoaded"] = "ProjectLoaded";
+    MessageType["RequestPresentShow"] = "RequestPresentShow";
+    MessageType["RequestExistShow"] = "RequestExistShow";
+    MessageType["RequestNextSlide"] = "RequestNextSlide";
+    MessageType["RequestPreviousSlide"] = "RequestPreviousSlide";
+    MessageType["CurrentSlideUpdated"] = "CurrentSlideUpdated";
+    MessageType["TimerUpdated"] = "TimerUpdated";
+    MessageType["TimerStarted"] = "TimerStarted";
+    MessageType["TimerPaused"] = "TimerPaused";
+    MessageType["RequestStartTimer"] = "RequestStartTimer";
+    MessageType["RequestPauseTimer"] = "RequestPauseTimer";
     MessageType["KeyPressed"] = "KeyPressed";
 })(MessageType || (MessageType = {}));
 export var MonitorViews;
