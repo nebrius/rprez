@@ -14,8 +14,13 @@ To play with it now, run these commands:
 
 ```bash
 git clone https://github.com/nebrius/rprez.git
-cd rprez
+cd rprez/renderer
 npm install
+npm run build
+
+cd ../main
+npm install
+npm run build
 npm start
 ```
 
