@@ -28,7 +28,6 @@ if (!currentSlideIframe) {
 if (!currentSlideIframe.contentWindow) {
     throw new Error(createInternalError('currentSlideIframe.contentWindow is unexpectedly null'));
 }
-connectKeyHandlers(currentSlideIframe.contentWindow.document);
 const nextSlideIframe = document.getElementById('speaker-nextSlide-iframe');
 if (!nextSlideIframe) {
     throw new Error(createInternalError('nextSlideIframe is unexpectedly null'));
@@ -36,7 +35,6 @@ if (!nextSlideIframe) {
 if (!nextSlideIframe.contentWindow) {
     throw new Error(createInternalError('nextSlideIframe.contentWindow is unexpectedly null'));
 }
-connectKeyHandlers(nextSlideIframe.contentWindow.document);
 const notesIframe = document.getElementById('speaker-notes-iframe');
 if (!notesIframe) {
     throw new Error(createInternalError('notesIframe is unexpectedly null'));
@@ -44,7 +42,6 @@ if (!notesIframe) {
 if (!notesIframe.contentWindow) {
     throw new Error(createInternalError('notesIframe.contentWindow is unexpectedly null'));
 }
-connectKeyHandlers(notesIframe.contentWindow.document);
 const elapsedTimeLabel = document.getElementById('speaker-elapsedTime');
 if (!elapsedTimeLabel) {
     throw new Error(createInternalError('elapsedTimeLabel is unexpectedly null'));
@@ -79,8 +76,6 @@ addMessageListener((msg) => {
         case MessageType.TimerPaused:
             clockControlButton.innerText = '⏯';
             break;
-        default:
-            throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
     }
 });
 const presentationWindowReadyMessage = {

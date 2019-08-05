@@ -28,12 +28,14 @@ const manager_1 = require("./handlers/manager");
 const presentation_1 = require("./handlers/presentation");
 const navigation_1 = require("./handlers/navigation");
 const timer_1 = require("./handlers/timer");
+const client_1 = require("./handlers/client");
 const app = express();
 app.use('/rprez', express.static(path_1.join(__dirname, '../../renderer/dist/')));
 const httpServer = http_1.createServer(app);
 const webSocketServer = new ws_1.Server({ server: httpServer });
 let managerConnection;
-const presentationWindowConnections = [];
+const presentationWindowConnections = new Map();
+const clientWindowConnections = new Map();
 function sendMessageToManager(msg) {
     if (!managerConnection) {
         throw new Error(util_1.createInternalError('"managerWindow" is unexpectedly null'));
@@ -42,11 +44,17 @@ function sendMessageToManager(msg) {
 }
 exports.sendMessageToManager = sendMessageToManager;
 function sendMessageToPresentationWindows(msg) {
-    for (const connection of presentationWindowConnections) {
+    for (const [connection] of presentationWindowConnections) {
         connection.send(JSON.stringify(msg));
     }
 }
 exports.sendMessageToPresentationWindows = sendMessageToPresentationWindows;
+function sendMessageToClientWindows(msg) {
+    for (const [connection] of clientWindowConnections) {
+        connection.send(JSON.stringify(msg));
+    }
+}
+exports.sendMessageToClientWindows = sendMessageToClientWindows;
 function setProjectDirectory(dir) {
     app.use('/presentation', express.static(dir));
 }
@@ -60,7 +68,7 @@ webSocketServer.on('connection', (wsClient) => {
                 manager_1.handleManagerReadyMessage();
                 break;
             case message_1.MessageType.PresentationWindowReady:
-                presentationWindowConnections.push(wsClient);
+                presentationWindowConnections.set(wsClient, true);
                 break;
             case message_1.MessageType.RequestLoadPresentation:
                 presentation_1.handleRequestLoadPresentation(parsedMessage);
@@ -83,9 +91,19 @@ webSocketServer.on('connection', (wsClient) => {
             case message_1.MessageType.RequestPauseTimer:
                 timer_1.handleRequestPauseTimer();
                 break;
+            case message_1.MessageType.ClientWindowReady:
+                clientWindowConnections.set(wsClient, true);
+                break;
+            case message_1.MessageType.ClientMessage:
+                client_1.handleClientMessage(parsedMessage);
+                break;
             default:
                 throw new Error(util_1.createInternalError(`Received unexpected message type ${parsedMessage.type}`));
         }
+    });
+    wsClient.on('close', () => {
+        presentationWindowConnections.delete(wsClient);
+        clientWindowConnections.delete(wsClient);
     });
 });
 httpServer.listen(util_1.PORT, () => {

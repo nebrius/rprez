@@ -90,9 +90,6 @@ addMessageListener((msg) => {
     case MessageType.TimerPaused:
       clockControlButton.innerText = '⏯';
       break;
-
-    default:
-      throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
   }
 });
 

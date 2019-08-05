@@ -22,6 +22,7 @@ var MessageType;
 (function (MessageType) {
     MessageType["ManagerReady"] = "ManagerReady";
     MessageType["PresentationWindowReady"] = "PresentationWindowReady";
+    MessageType["ClientWindowReady"] = "ClientWindowReady";
     MessageType["ScreenUpdated"] = "ScreenUpdated";
     MessageType["RequestLoadPresentation"] = "RequestLoadPresentation";
     MessageType["ProjectLoaded"] = "ProjectLoaded";
@@ -35,7 +36,7 @@ var MessageType;
     MessageType["TimerPaused"] = "TimerPaused";
     MessageType["RequestStartTimer"] = "RequestStartTimer";
     MessageType["RequestPauseTimer"] = "RequestPauseTimer";
-    MessageType["KeyPressed"] = "KeyPressed";
+    MessageType["ClientMessage"] = "ClientMessage";
 })(MessageType = exports.MessageType || (exports.MessageType = {}));
 var MonitorViews;
 (function (MonitorViews) {

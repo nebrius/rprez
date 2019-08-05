@@ -20,6 +20,7 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 export enum MessageType {
   ManagerReady = 'ManagerReady',
   PresentationWindowReady = 'PresentationWindowReady',
+  ClientWindowReady = 'ClientWindowReady',
   ScreenUpdated = 'ScreenUpdated',
   RequestLoadPresentation = 'RequestLoadPresentation',
   ProjectLoaded = 'ProjectLoaded',
@@ -33,7 +34,7 @@ export enum MessageType {
   TimerPaused = 'TimerPaused',
   RequestStartTimer = 'RequestStartTimer',
   RequestPauseTimer = 'RequestPauseTimer',
-  KeyPressed = 'KeyPressed'
+  ClientMessage = 'ClientMessage'
 }
 
 export interface IMessage {

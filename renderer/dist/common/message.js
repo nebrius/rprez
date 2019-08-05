@@ -20,6 +20,7 @@ export var MessageType;
 (function (MessageType) {
     MessageType["ManagerReady"] = "ManagerReady";
     MessageType["PresentationWindowReady"] = "PresentationWindowReady";
+    MessageType["ClientWindowReady"] = "ClientWindowReady";
     MessageType["ScreenUpdated"] = "ScreenUpdated";
     MessageType["RequestLoadPresentation"] = "RequestLoadPresentation";
     MessageType["ProjectLoaded"] = "ProjectLoaded";
@@ -33,7 +34,7 @@ export var MessageType;
     MessageType["TimerPaused"] = "TimerPaused";
     MessageType["RequestStartTimer"] = "RequestStartTimer";
     MessageType["RequestPauseTimer"] = "RequestPauseTimer";
-    MessageType["KeyPressed"] = "KeyPressed";
+    MessageType["ClientMessage"] = "ClientMessage";
 })(MessageType || (MessageType = {}));
 export var MonitorViews;
 (function (MonitorViews) {

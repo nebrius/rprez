@@ -39,13 +39,6 @@ addMessageListener((msg) => {
             currentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
             console.log(`Slide changed to ${msg.currentSlideIndex}`);
             break;
-        case MessageType.TimerUpdated:
-        case MessageType.TimerStarted:
-        case MessageType.TimerPaused:
-            // Do nothing
-            break;
-        default:
-            throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
     }
 });
 const presentationWindowReadyMessage = {

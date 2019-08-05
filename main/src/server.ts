@@ -38,6 +38,7 @@ import {
 } from './handlers/presentation';
 import { handleRequestNextSlide, handleRequestPreviousSlide } from './handlers/navigation';
 import { handleRequestStartTimer, handleRequestPauseTimer } from './handlers/timer';
+import { handleClientMessage } from './handlers/client';
 
 const app = express();
 app.use('/rprez', express.static(join(__dirname, '../../renderer/dist/')));
@@ -45,8 +46,14 @@ app.use('/rprez', express.static(join(__dirname, '../../renderer/dist/')));
 const httpServer = createServer(app);
 const webSocketServer = new Server({ server: httpServer });
 
+// The browser version collides with the ws version, and ws doesn't expose this interface, booo.
+interface IWebSocket {
+  send(msg: string): void;
+}
+
 let managerConnection: any;
-const presentationWindowConnections: any[] = [];
+const presentationWindowConnections = new Map<IWebSocket, boolean>();
+const clientWindowConnections = new Map<IWebSocket, boolean>();
 
 export function sendMessageToManager(msg: IMessage): void {
   if (!managerConnection) {
@@ -56,7 +63,13 @@ export function sendMessageToManager(msg: IMessage): void {
 }
 
 export function sendMessageToPresentationWindows(msg: IMessage): void {
-  for (const connection of presentationWindowConnections) {
+  for (const [ connection ] of presentationWindowConnections) {
+    connection.send(JSON.stringify(msg));
+  }
+}
+
+export function sendMessageToClientWindows(msg: IMessage): void {
+  for (const [ connection ] of clientWindowConnections) {
     connection.send(JSON.stringify(msg));
   }
 }
@@ -75,7 +88,7 @@ webSocketServer.on('connection', (wsClient) => {
         break;
 
       case MessageType.PresentationWindowReady:
-        presentationWindowConnections.push(wsClient);
+        presentationWindowConnections.set(wsClient, true);
         break;
 
       case MessageType.RequestLoadPresentation:
@@ -106,9 +119,21 @@ webSocketServer.on('connection', (wsClient) => {
         handleRequestPauseTimer();
         break;
 
+      case MessageType.ClientWindowReady:
+        clientWindowConnections.set(wsClient, true);
+        break;
+
+      case MessageType.ClientMessage:
+        handleClientMessage(parsedMessage);
+        break;
+
       default:
         throw new Error(createInternalError(`Received unexpected message type ${parsedMessage.type}`));
     }
+  });
+  wsClient.on('close', () => {
+    presentationWindowConnections.delete(wsClient);
+    clientWindowConnections.delete(wsClient);
   });
 });
 

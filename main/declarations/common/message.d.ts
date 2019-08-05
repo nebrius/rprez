@@ -1,6 +1,7 @@
 export declare enum MessageType {
     ManagerReady = "ManagerReady",
     PresentationWindowReady = "PresentationWindowReady",
+    ClientWindowReady = "ClientWindowReady",
     ScreenUpdated = "ScreenUpdated",
     RequestLoadPresentation = "RequestLoadPresentation",
     ProjectLoaded = "ProjectLoaded",
@@ -14,7 +15,7 @@ export declare enum MessageType {
     TimerPaused = "TimerPaused",
     RequestStartTimer = "RequestStartTimer",
     RequestPauseTimer = "RequestPauseTimer",
-    KeyPressed = "KeyPressed"
+    ClientMessage = "ClientMessage"
 }
 export interface IMessage {
     type: MessageType;
