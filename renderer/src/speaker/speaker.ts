@@ -24,48 +24,43 @@ import { addMessageListener, sendMessage } from '../messaging.js';
 
 connectKeyHandlers(document);
 
-const currentSlideIframe: HTMLIFrameElement | null =
-  document.getElementById('speaker-currentSlide-iframe') as HTMLIFrameElement | null;
-if (!currentSlideIframe) {
-  throw new Error(createInternalError('currentSlideIframe is unexpectedly null'));
-}
-if (!currentSlideIframe.contentWindow) {
-  throw new Error(createInternalError('currentSlideIframe.contentWindow is unexpectedly null'));
-}
-
-const nextSlideIframe: HTMLIFrameElement | null =
-  document.getElementById('speaker-nextSlide-iframe') as HTMLIFrameElement | null;
-if (!nextSlideIframe) {
-  throw new Error(createInternalError('nextSlideIframe is unexpectedly null'));
-}
-if (!nextSlideIframe.contentWindow) {
-  throw new Error(createInternalError('nextSlideIframe.contentWindow is unexpectedly null'));
+function getElement(name: string): HTMLElement {
+  const element = document.getElementById(name);
+  if (!element) {
+    throw new Error(createInternalError(`${name} is unexpectedly null`));
+  }
+  return element;
 }
 
-const notesIframe: HTMLIFrameElement | null =
-  document.getElementById('speaker-notes-iframe') as HTMLIFrameElement | null;
-if (!notesIframe) {
-  throw new Error(createInternalError('notesIframe is unexpectedly null'));
-}
-if (!notesIframe.contentWindow) {
-  throw new Error(createInternalError('notesIframe.contentWindow is unexpectedly null'));
+function enforceAspectRation(element: HTMLElement): HTMLElement {
+  const computedStyle = window.getComputedStyle(element);
+  element.style.height = parseFloat(computedStyle.width || '0px') * 9 / 16 + 'px';
+  return element;
 }
 
-const elapsedTimeLabel = document.getElementById('speaker-elapsedTime');
-if (!elapsedTimeLabel) {
-  throw new Error(createInternalError('elapsedTimeLabel is unexpectedly null'));
-}
+const currentSlideIframe = enforceAspectRation(getElement('speaker-currentSlide-iframe')) as HTMLIFrameElement;
+const nextSlideIframe = enforceAspectRation(getElement('speaker-nextSlide-iframe')) as HTMLIFrameElement;
+const notesIframe = getElement('speaker-notes-iframe') as HTMLIFrameElement;
 
-const clockControlButton = document.getElementById('speaker-clockControl');
-if (!clockControlButton) {
-  throw new Error(createInternalError('clockControlButton is unexpectedly null'));
-}
+const slideCountLabel = getElement('speaker-slideCount');
+const elapsedTimeLabel = getElement('speaker-elapsedTime');
+const clockTimeLabel = getElement('speaker-clockTime');
+
+const clockControlButton = getElement('speaker-clockControl');
 clockControlButton.onclick = () => {
   const message: IMessage = {
     type: clockControlButton.innerText === '⏯' ? MessageType.RequestStartTimer : MessageType.RequestPauseTimer
   };
   sendMessage(message);
 };
+
+function formateDate(time: Date): string {
+  return `${numToString(time.getUTCHours())}:${numToString(time.getUTCMinutes())}:${numToString(time.getUTCSeconds())}`;
+}
+
+setInterval(() => {
+  clockTimeLabel.innerText = formateDate(new Date());
+}, 1000);
 
 addMessageListener((msg) => {
   switch (msg.type) {
@@ -74,13 +69,14 @@ addMessageListener((msg) => {
       currentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
       nextSlideIframe.src = currentSlideUpdatedMessage.nextSlideUrl || '';
       notesIframe.src = currentSlideUpdatedMessage.currentNotesUrl;
+      slideCountLabel.innerText =
+        `${currentSlideUpdatedMessage.currentSlideIndex}/${currentSlideUpdatedMessage.numSlides}`;
       console.log(`Slide changed to ${(msg as ICurrentSlideUpdatedMessage).currentSlideIndex}`);
       break;
 
     case MessageType.TimerUpdated:
       const time = new Date((msg as ITimerUpdatedMessage).elapsedTime);
-      elapsedTimeLabel.innerText =
-      `${numToString(time.getUTCHours())}:${numToString(time.getUTCMinutes())}:${numToString(time.getUTCSeconds())}`;
+      elapsedTimeLabel.innerText = formateDate(time);
       break;
 
     case MessageType.TimerStarted:
