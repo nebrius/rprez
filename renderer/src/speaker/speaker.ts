@@ -32,14 +32,8 @@ function getElement(name: string): HTMLElement {
   return element;
 }
 
-function enforceAspectRation(element: HTMLElement): HTMLElement {
-  const computedStyle = window.getComputedStyle(element);
-  element.style.height = parseFloat(computedStyle.width || '0px') * 9 / 16 + 'px';
-  return element;
-}
-
-const currentSlideIframe = enforceAspectRation(getElement('speaker-currentSlide-iframe')) as HTMLIFrameElement;
-const nextSlideIframe = enforceAspectRation(getElement('speaker-nextSlide-iframe')) as HTMLIFrameElement;
+const currentSlideIframe = getElement('speaker-currentSlide-iframe') as HTMLIFrameElement;
+const nextSlideIframe = getElement('speaker-nextSlide-iframe') as HTMLIFrameElement;
 const notesIframe = getElement('speaker-notes-iframe') as HTMLIFrameElement;
 
 const slideCountLabel = getElement('speaker-slideCount');
