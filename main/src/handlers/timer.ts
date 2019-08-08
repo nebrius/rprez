@@ -24,16 +24,17 @@ let elapsedTime = 0;
 let timerInterval: NodeJS.Timer;
 
 export function handleRequestStartTimer() {
+  clearInterval(timerInterval);
   let previousTime = Date.now();
   timerInterval = setInterval(() => {
     const currentTime = Date.now();
     elapsedTime += currentTime - previousTime;
+    previousTime = currentTime;
     const timerUpdatedMessage: ITimerUpdatedMessage = {
       type: MessageType.TimerUpdated,
       elapsedTime
     };
     sendMessageToPresentationWindows(timerUpdatedMessage);
-    previousTime = currentTime;
   }, 100);
   const message: IMessage = {
     type: MessageType.TimerStarted

@@ -81,6 +81,7 @@ export function createPresentationWindow(type: MonitorViews, x: number, y: numbe
   // Open the DevTools.
   win.webContents.openDevTools();
 
+  win.maximize();
   // win.setFullScreen(true);
   win.setMenu(null);
   presentationWindows.push(win);

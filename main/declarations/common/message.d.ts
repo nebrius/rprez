@@ -50,6 +50,7 @@ export interface ITimerUpdatedMessage extends IMessage {
 }
 export interface ICurrentSlideUpdatedMessage extends IMessage {
     currentSlideIndex: number;
+    numSlides: number;
     currentSlideUrl: string;
     currentNotesUrl: string;
     nextSlideUrl?: string;

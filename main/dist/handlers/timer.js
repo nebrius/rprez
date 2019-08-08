@@ -23,16 +23,17 @@ const server_1 = require("../server");
 let elapsedTime = 0;
 let timerInterval;
 function handleRequestStartTimer() {
+    clearInterval(timerInterval);
     let previousTime = Date.now();
     timerInterval = setInterval(() => {
         const currentTime = Date.now();
         elapsedTime += currentTime - previousTime;
+        previousTime = currentTime;
         const timerUpdatedMessage = {
             type: message_1.MessageType.TimerUpdated,
             elapsedTime
         };
         server_1.sendMessageToPresentationWindows(timerUpdatedMessage);
-        previousTime = currentTime;
     }, 100);
     const message = {
         type: message_1.MessageType.TimerStarted

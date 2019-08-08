@@ -70,6 +70,7 @@ function createPresentationWindow(type, x, y) {
     win.loadURL(`http://localhost:${util_1.PORT}/rprez/${filebase}/${filebase}.html`);
     // Open the DevTools.
     win.webContents.openDevTools();
+    win.maximize();
     // win.setFullScreen(true);
     win.setMenu(null);
     presentationWindows.push(win);
