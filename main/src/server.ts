@@ -38,7 +38,7 @@ import {
 } from './handlers/presentation';
 import { handleRequestNextSlide, handleRequestPreviousSlide } from './handlers/navigation';
 import { handleRequestStartTimer, handleRequestPauseTimer } from './handlers/timer';
-import { handleClientMessage } from './handlers/client';
+import { handleClientWindowReady, handleClientMessage } from './handlers/client';
 
 const app = express();
 app.use('/rprez', express.static(join(__dirname, '../../renderer/dist/')));
@@ -121,6 +121,7 @@ webSocketServer.on('connection', (wsClient) => {
 
       case MessageType.ClientWindowReady:
         clientWindowConnections.set(wsClient, true);
+        handleClientWindowReady(parsedMessage);
         break;
 
       case MessageType.ClientMessage:

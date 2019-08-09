@@ -89,6 +89,7 @@ iframe {
 }
 
 #speaker-currentSlide {
+  position: relative;
   grid-area: currentSlide;
   color: white;
   padding: 10px;
@@ -112,14 +113,20 @@ iframe {
   padding: 10px;
 }
 
-#speaker-currentSlide-iframe {
-  height: 100%;
-  width: 100%;
+#speaker-currentSlide-iframe-1, #speaker-currentSlide-iframe-2 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
 }
 
-#speaker-nextSlide-iframe {
-  height: 100%;
-  width: 100%;
+#speaker-nextSlide-iframe-1, #speaker-nextSlide-iframe-2 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
 }
 
 #speaker-notes-iframe {

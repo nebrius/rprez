@@ -28,13 +28,15 @@ function getElement(name) {
     }
     return element;
 }
-function enforceAspectRation(element) {
-    const computedStyle = window.getComputedStyle(element);
-    element.style.height = parseFloat(computedStyle.width || '0px') * 9 / 16 + 'px';
-    return element;
-}
-const currentSlideIframe = enforceAspectRation(getElement('speaker-currentSlide-iframe'));
-const nextSlideIframe = enforceAspectRation(getElement('speaker-nextSlide-iframe'));
+const currentSlideIframe1 = getElement('speaker-currentSlide-iframe-1');
+const currentSlideIframe2 = getElement('speaker-currentSlide-iframe-2');
+const nextSlideIframe1 = getElement('speaker-nextSlide-iframe-1');
+const nextSlideIframe2 = getElement('speaker-nextSlide-iframe-2');
+let currentIFRame = 1;
+let frontCurrrentSlideIframe;
+let backCurrentSlideIFrame;
+let frontNextSlideIframe;
+let backNextSlideIFrame;
 const notesIframe = getElement('speaker-notes-iframe');
 const slideCountLabel = getElement('speaker-slideCount');
 const elapsedTimeLabel = getElement('speaker-elapsedTime');
@@ -56,12 +58,32 @@ addMessageListener((msg) => {
     switch (msg.type) {
         case MessageType.CurrentSlideUpdated:
             const currentSlideUpdatedMessage = msg;
-            currentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
-            nextSlideIframe.src = currentSlideUpdatedMessage.nextSlideUrl || '';
-            notesIframe.src = currentSlideUpdatedMessage.currentNotesUrl;
+            if (currentIFRame === 1) {
+                currentIFRame = 2;
+                frontCurrrentSlideIframe = currentSlideIframe2;
+                backCurrentSlideIFrame = currentSlideIframe1;
+                frontNextSlideIframe = nextSlideIframe2;
+                backNextSlideIFrame = nextSlideIframe1;
+            }
+            else {
+                currentIFRame = 1;
+                frontCurrrentSlideIframe = currentSlideIframe1;
+                backCurrentSlideIFrame = currentSlideIframe2;
+                frontNextSlideIframe = nextSlideIframe1;
+                backNextSlideIFrame = nextSlideIframe2;
+            }
+            frontCurrrentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
+            frontNextSlideIframe.src = currentSlideUpdatedMessage.nextSlideUrl || '';
+            notesIframe.src = currentSlideUpdatedMessage.currentNotesUrl || '';
             slideCountLabel.innerText =
                 `${currentSlideUpdatedMessage.currentSlideIndex}/${currentSlideUpdatedMessage.numSlides}`;
             console.log(`Slide changed to ${msg.currentSlideIndex}`);
+            break;
+        case MessageType.ClientWindowReady:
+            frontCurrrentSlideIframe.style.zIndex = '1';
+            backCurrentSlideIFrame.style.zIndex = '0';
+            frontNextSlideIframe.style.zIndex = '1';
+            backNextSlideIFrame.style.zIndex = '0';
             break;
         case MessageType.TimerUpdated:
             const time = new Date(msg.elapsedTime);

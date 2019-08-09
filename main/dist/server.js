@@ -93,6 +93,7 @@ webSocketServer.on('connection', (wsClient) => {
                 break;
             case message_1.MessageType.ClientWindowReady:
                 clientWindowConnections.set(wsClient, true);
+                client_1.handleClientWindowReady(parsedMessage);
                 break;
             case message_1.MessageType.ClientMessage:
                 client_1.handleClientMessage(parsedMessage);

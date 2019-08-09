@@ -19,6 +19,10 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 const server_1 = require("../server");
+function handleClientWindowReady(msg) {
+    server_1.sendMessageToPresentationWindows(msg);
+}
+exports.handleClientWindowReady = handleClientWindowReady;
 function handleClientMessage(msg) {
     server_1.sendMessageToClientWindows(msg);
 }

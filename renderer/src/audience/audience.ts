@@ -24,25 +24,41 @@ import { addMessageListener, sendMessage } from '../messaging.js';
 
 connectKeyHandlers(document);
 
-const currentSlideIframe: HTMLIFrameElement | null =
-  document.getElementById('audience-currentSlide-iframe') as HTMLIFrameElement | null;
-if (!currentSlideIframe) {
-  throw new Error(createInternalError('currentSlideIframe is unexpectedly null'));
+function getIFrame(id: string): HTMLIFrameElement {
+  const iframe: HTMLIFrameElement | null = document.getElementById(id) as HTMLIFrameElement | null;
+  if (!iframe) {
+    throw new Error(createInternalError('iframe is unexpectedly null'));
+  }
+  return iframe;
 }
-if (!currentSlideIframe.contentWindow) {
-  throw new Error(createInternalError('currentSlideIframe.contentWindow is unexpectedly null/undefined'));
-}
-if (!currentSlideIframe.contentWindow.document) {
-  throw new Error(createInternalError('currentSlideIframe.contentWindow.document is unexpectedly null/undefined'));
-}
-connectKeyHandlers(currentSlideIframe.contentWindow.document);
+
+const iframe1 = getIFrame('audience-currentSlide-iframe-1');
+const iframe2 = getIFrame('audience-currentSlide-iframe-2');
+let currentIFRame = 1;
+
+let frontIframe: HTMLIFrameElement;
+let backIFrame: HTMLIFrameElement;
 
 addMessageListener((msg) => {
   switch (msg.type) {
     case MessageType.CurrentSlideUpdated:
       const currentSlideUpdatedMessage = msg as ICurrentSlideUpdatedMessage;
-      currentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
+      if (currentIFRame === 1) {
+        currentIFRame = 2;
+        frontIframe = iframe2;
+        backIFrame = iframe1;
+      } else {
+        currentIFRame = 1;
+        frontIframe = iframe1;
+        backIFrame = iframe2;
+      }
+      frontIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
       console.log(`Slide changed to ${(msg as ICurrentSlideUpdatedMessage).currentSlideIndex}`);
+      break;
+
+    case MessageType.ClientWindowReady:
+      frontIframe.style.zIndex = '1';
+      backIFrame.style.zIndex = '0';
       break;
   }
 });
