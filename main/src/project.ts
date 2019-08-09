@@ -79,7 +79,7 @@ export function sendSlideUpdatedMessage() {
   }
   const message: ICurrentSlideUpdatedMessage = {
     type: MessageType.CurrentSlideUpdated,
-    currentSlideIndex: currentSlide,
+    currentSlideIndex: currentSlide + 1, // Need 1 based, not 0 based index
     numSlides: currentProject.slides.length,
     currentSlideUrl: currentProject.slides[currentSlide].slide,
     currentNotesUrl: currentProject.slides[currentSlide].notes,

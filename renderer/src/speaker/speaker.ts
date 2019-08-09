@@ -49,7 +49,7 @@ clockControlButton.onclick = () => {
 };
 
 function formateDate(time: Date): string {
-  return `${numToString(time.getUTCHours())}:${numToString(time.getUTCMinutes())}:${numToString(time.getUTCSeconds())}`;
+  return `${numToString(time.getHours())}:${numToString(time.getMinutes())}:${numToString(time.getSeconds())}`;
 }
 
 setInterval(() => {

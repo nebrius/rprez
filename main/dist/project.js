@@ -74,7 +74,7 @@ function sendSlideUpdatedMessage() {
     }
     const message = {
         type: message_1.MessageType.CurrentSlideUpdated,
-        currentSlideIndex: currentSlide,
+        currentSlideIndex: currentSlide + 1,
         numSlides: currentProject.slides.length,
         currentSlideUrl: currentProject.slides[currentSlide].slide,
         currentNotesUrl: currentProject.slides[currentSlide].notes,
