@@ -48,4 +48,3 @@ export function addMessageListener(cb) {
         cb(JSON.parse(msg.data));
     });
 }
-//# sourceMappingURL=messaging.js.map

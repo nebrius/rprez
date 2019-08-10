@@ -38,4 +38,3 @@ const presentationWindowReadyMessage = {
     type: MessageType.PresentationWindowReady,
 };
 sendMessage(presentationWindowReadyMessage);
-//# sourceMappingURL=clock.js.map

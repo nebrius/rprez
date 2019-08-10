@@ -126,4 +126,3 @@ const managerReadyMessage = {
     type: MessageType.ManagerReady,
 };
 sendMessage(managerReadyMessage);
-//# sourceMappingURL=manager.js.map

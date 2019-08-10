@@ -50,4 +50,3 @@ export function connectKeyHandlers(element) {
         }
     };
 }
-//# sourceMappingURL=keyHandlers.js.map

@@ -52,6 +52,10 @@ function formateDate(time: Date): string {
   return `${numToString(time.getHours())}:${numToString(time.getMinutes())}:${numToString(time.getSeconds())}`;
 }
 
+function formateDateUTC(time: Date): string {
+  return `${numToString(time.getUTCHours())}:${numToString(time.getUTCMinutes())}:${numToString(time.getUTCSeconds())}`;
+}
+
 setInterval(() => {
   clockTimeLabel.innerText = formateDate(new Date());
 }, 1000);
@@ -62,7 +66,7 @@ addMessageListener((msg) => {
       const currentSlideUpdatedMessage = msg as ICurrentSlideUpdatedMessage;
       currentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
       nextSlideIframe.src = currentSlideUpdatedMessage.nextSlideUrl || '';
-      notesIframe.src = currentSlideUpdatedMessage.currentNotesUrl;
+      notesIframe.src = currentSlideUpdatedMessage.currentNotesUrl || '';
       slideCountLabel.innerText =
         `${currentSlideUpdatedMessage.currentSlideIndex}/${currentSlideUpdatedMessage.numSlides}`;
       console.log(`Slide changed to ${(msg as ICurrentSlideUpdatedMessage).currentSlideIndex}`);
@@ -70,7 +74,7 @@ addMessageListener((msg) => {
 
     case MessageType.TimerUpdated:
       const time = new Date((msg as ITimerUpdatedMessage).elapsedTime);
-      elapsedTimeLabel.innerText = formateDate(time);
+      elapsedTimeLabel.innerText = formateDateUTC(time);
       break;
 
     case MessageType.TimerStarted:

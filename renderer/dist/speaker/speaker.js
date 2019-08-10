@@ -44,6 +44,9 @@ clockControlButton.onclick = () => {
 function formateDate(time) {
     return `${numToString(time.getHours())}:${numToString(time.getMinutes())}:${numToString(time.getSeconds())}`;
 }
+function formateDateUTC(time) {
+    return `${numToString(time.getUTCHours())}:${numToString(time.getUTCMinutes())}:${numToString(time.getUTCSeconds())}`;
+}
 setInterval(() => {
     clockTimeLabel.innerText = formateDate(new Date());
 }, 1000);
@@ -53,14 +56,14 @@ addMessageListener((msg) => {
             const currentSlideUpdatedMessage = msg;
             currentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
             nextSlideIframe.src = currentSlideUpdatedMessage.nextSlideUrl || '';
-            notesIframe.src = currentSlideUpdatedMessage.currentNotesUrl;
+            notesIframe.src = currentSlideUpdatedMessage.currentNotesUrl || '';
             slideCountLabel.innerText =
                 `${currentSlideUpdatedMessage.currentSlideIndex}/${currentSlideUpdatedMessage.numSlides}`;
             console.log(`Slide changed to ${msg.currentSlideIndex}`);
             break;
         case MessageType.TimerUpdated:
             const time = new Date(msg.elapsedTime);
-            elapsedTimeLabel.innerText = formateDate(time);
+            elapsedTimeLabel.innerText = formateDateUTC(time);
             break;
         case MessageType.TimerStarted:
             clockControlButton.innerText = '⏸';
@@ -74,4 +77,3 @@ const presentationWindowReadyMessage = {
     type: MessageType.PresentationWindowReady,
 };
 sendMessage(presentationWindowReadyMessage);
-//# sourceMappingURL=speaker.js.map

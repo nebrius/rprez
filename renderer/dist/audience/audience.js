@@ -60,4 +60,3 @@ const presentationWindowReadyMessage = {
     type: MessageType.PresentationWindowReady,
 };
 sendMessage(presentationWindowReadyMessage);
-//# sourceMappingURL=audience.js.map

@@ -64,4 +64,3 @@ export const ProjectSchema = {
     },
     required: ['slides']
 };
-//# sourceMappingURL=message.js.map

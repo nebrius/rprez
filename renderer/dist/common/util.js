@@ -27,4 +27,3 @@ export function numToString(num) {
     }
     return convertedNum;
 }
-//# sourceMappingURL=util.js.map
