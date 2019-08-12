@@ -70,7 +70,7 @@ export async function createManagerWindow() {
 
 // Presentation window methods
 
-export function createPresentationWindow(type: MonitorViews, x: number, y: number): void {
+export function createPresentationWindow(type: MonitorViews, x: number, y: number, developerMode: boolean): void {
   // Create the browser window.
   const win = new BrowserWindow({ width: 800, height: 600, x, y });
 
@@ -78,11 +78,13 @@ export function createPresentationWindow(type: MonitorViews, x: number, y: numbe
   const filebase = MonitorViews[type].toLowerCase();
   win.loadURL(`http://localhost:${PORT}/rprez/${filebase}/${filebase}.html`);
 
-  // Open the DevTools.
-  win.webContents.openDevTools();
+  if (developerMode) {
+    win.webContents.openDevTools();
+    win.maximize();
+  } else {
+    win.setFullScreen(true);
+  }
 
-  win.maximize();
-  // win.setFullScreen(true);
   win.setMenu(null);
   presentationWindows.push(win);
 

@@ -124,6 +124,10 @@ function requestPresenterShow() {
   if (!monitorListElement) {
     throw new Error(createInternalError('"monitorListElement" is unexpectedly null'));
   }
+  const developerModeCheckboxElement = document.getElementById('developerModeCheckbox');
+  if (!developerModeCheckboxElement) {
+    throw new Error(createInternalError('"developerModeCheckboxElement" is unexpectedly null'));
+  }
   for (const monitorSelect of document.querySelectorAll('#monitorList select')) {
     const monitorView = (monitorSelect as HTMLSelectElement).selectedOptions[0].value as MonitorViews;
     const monitorId = parseInt(monitorSelect.getAttribute('data-screenid') as string, 10);
@@ -131,6 +135,7 @@ function requestPresenterShow() {
   }
   const message: IRequestPresentShowMessage = {
     type: MessageType.RequestPresentShow,
+    developerMode: (developerModeCheckboxElement as HTMLInputElement).checked,
     screenAssignments
   };
   sendMessage(message);

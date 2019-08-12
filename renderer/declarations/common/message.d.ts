@@ -38,6 +38,7 @@ export interface IRequestPresentShowMessage extends IMessage {
     screenAssignments: {
         [id: number]: MonitorViews;
     };
+    developerMode: boolean;
 }
 export interface IRequestLoadPresentationMessage extends IMessage {
     filename: string;

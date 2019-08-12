@@ -62,16 +62,19 @@ async function createManagerWindow() {
 }
 exports.createManagerWindow = createManagerWindow;
 // Presentation window methods
-function createPresentationWindow(type, x, y) {
+function createPresentationWindow(type, x, y, developerMode) {
     // Create the browser window.
     const win = new electron_1.BrowserWindow({ width: 800, height: 600, x, y });
     // and load the index.html of the app.
     const filebase = message_1.MonitorViews[type].toLowerCase();
     win.loadURL(`http://localhost:${util_1.PORT}/rprez/${filebase}/${filebase}.html`);
-    // Open the DevTools.
-    win.webContents.openDevTools();
-    win.maximize();
-    // win.setFullScreen(true);
+    if (developerMode) {
+        win.webContents.openDevTools();
+        win.maximize();
+    }
+    else {
+        win.setFullScreen(true);
+    }
     win.setMenu(null);
     presentationWindows.push(win);
     // Emitted when the window is closed.

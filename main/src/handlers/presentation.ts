@@ -58,7 +58,7 @@ export function handleRequestPresentShow(presentMessage: IRequestPresentShowMess
     const display = getDisplayForId(parseInt(monitorId, 10));
     console.log(`Opening ${MonitorViews[screenAssignment]} view on monitor ` +
       `${monitorId} (${display.bounds.width}x${display.bounds.height})`);
-    createPresentationWindow(screenAssignment, display.bounds.x, display.bounds.y);
+    createPresentationWindow(screenAssignment, display.bounds.x, display.bounds.y, presentMessage.developerMode);
     setTimeout(sendSlideUpdatedMessage, 1000);
   }
 }
