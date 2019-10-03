@@ -118,6 +118,13 @@ function selectPresentationFile() {
   sendMessage(message);
 }
 
+function requestReloadPresentation() {
+  const message: IMessage = {
+    type: MessageType.RequestReloadPresentation
+  };
+  sendMessage(message);
+}
+
 function requestPresenterShow() {
   const screenAssignments: { [ id: number ]: MonitorViews } = {};
   const monitorListElement = document.getElementById('monitorList');
@@ -152,6 +159,12 @@ if (!presentButton) {
   throw new Error(createInternalError('"presentButton" is unexpectedly null'));
 }
 presentButton.onclick = requestPresenterShow;
+
+const reloadShowButton = document.getElementById('reloadShowButton');
+if (!reloadShowButton) {
+  throw new Error(createInternalError('"reloadShowButton" is unexpectedly null'));
+}
+reloadShowButton.onclick = requestReloadPresentation;
 
 const managerReadyMessage: IMessage = {
   type: MessageType.ManagerReady,

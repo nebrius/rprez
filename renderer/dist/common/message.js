@@ -23,6 +23,7 @@ export var MessageType;
     MessageType["ClientWindowReady"] = "ClientWindowReady";
     MessageType["ScreenUpdated"] = "ScreenUpdated";
     MessageType["RequestLoadPresentation"] = "RequestLoadPresentation";
+    MessageType["RequestReloadPresentation"] = "RequestReloadPresentation";
     MessageType["ProjectLoaded"] = "ProjectLoaded";
     MessageType["RequestPresentShow"] = "RequestPresentShow";
     MessageType["RequestExistShow"] = "RequestExistShow";

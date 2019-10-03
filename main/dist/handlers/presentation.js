@@ -22,11 +22,11 @@ const message_1 = require("../common/message");
 const project_1 = require("../project");
 const windows_1 = require("../windows");
 const server_1 = require("../server");
-async function handleRequestLoadPresentation(loadMessage) {
-    console.log(`Loading presentation at ${loadMessage.filename}`);
+async function loadPresentation(filename) {
+    console.log(`Loading presentation at ${filename}`);
     let presentationProject;
     try {
-        presentationProject = await project_1.loadProject(loadMessage.filename);
+        presentationProject = await project_1.loadProject(filename);
     }
     catch (err) {
         // TODO: display error in the UI
@@ -40,7 +40,16 @@ async function handleRequestLoadPresentation(loadMessage) {
     };
     server_1.sendMessageToManager(message);
 }
+let currentProjectFile = '';
+async function handleRequestLoadPresentation(loadMessage) {
+    currentProjectFile = loadMessage.filename;
+    await loadPresentation(currentProjectFile);
+}
 exports.handleRequestLoadPresentation = handleRequestLoadPresentation;
+async function handleRequestReloadPresentation() {
+    await loadPresentation(currentProjectFile);
+}
+exports.handleRequestReloadPresentation = handleRequestReloadPresentation;
 function handleRequestPresentShow(presentMessage) {
     console.log('Starting presentation');
     for (const monitorId in presentMessage.screenAssignments) {

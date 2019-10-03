@@ -95,6 +95,12 @@ function selectPresentationFile() {
     };
     sendMessage(message);
 }
+function requestReloadPresentation() {
+    const message = {
+        type: MessageType.RequestReloadPresentation
+    };
+    sendMessage(message);
+}
 function requestPresenterShow() {
     const screenAssignments = {};
     const monitorListElement = document.getElementById('monitorList');
@@ -127,6 +133,11 @@ if (!presentButton) {
     throw new Error(createInternalError('"presentButton" is unexpectedly null'));
 }
 presentButton.onclick = requestPresenterShow;
+const reloadShowButton = document.getElementById('reloadShowButton');
+if (!reloadShowButton) {
+    throw new Error(createInternalError('"reloadShowButton" is unexpectedly null'));
+}
+reloadShowButton.onclick = requestReloadPresentation;
 const managerReadyMessage = {
     type: MessageType.ManagerReady,
 };

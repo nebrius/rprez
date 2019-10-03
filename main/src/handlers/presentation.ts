@@ -28,12 +28,12 @@ import { loadProject, setSlideNumber, sendSlideUpdatedMessage } from '../project
 import { createPresentationWindow, closePresentationWindows, getDisplayForId } from '../windows';
 import { sendMessageToManager } from '../server';
 
-export async function handleRequestLoadPresentation(loadMessage: IRequestLoadPresentationMessage): Promise<void> {
-  console.log(`Loading presentation at ${loadMessage.filename}`);
+async function loadPresentation(filename: string): Promise<void> {
+  console.log(`Loading presentation at ${filename}`);
 
   let presentationProject;
   try {
-    presentationProject = await loadProject(loadMessage.filename);
+    presentationProject = await loadProject(filename);
   } catch (err) {
     // TODO: display error in the UI
     console.error(err);
@@ -46,6 +46,17 @@ export async function handleRequestLoadPresentation(loadMessage: IRequestLoadPre
     project: presentationProject
   };
   sendMessageToManager(message);
+}
+
+let currentProjectFile: string = '';
+
+export async function handleRequestLoadPresentation(loadMessage: IRequestLoadPresentationMessage): Promise<void> {
+  currentProjectFile = loadMessage.filename;
+  await loadPresentation(currentProjectFile);
+}
+
+export async function handleRequestReloadPresentation() {
+  await loadPresentation(currentProjectFile);
 }
 
 export function handleRequestPresentShow(presentMessage: IRequestPresentShowMessage) {

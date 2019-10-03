@@ -33,6 +33,7 @@ import { createInternalError, PORT } from './common/util';
 import { handleManagerReadyMessage } from './handlers/manager';
 import {
   handleRequestLoadPresentation,
+  handleRequestReloadPresentation,
   handleRequestPresentShow,
   handleRequestExitShow
 } from './handlers/presentation';
@@ -93,6 +94,10 @@ webSocketServer.on('connection', (wsClient) => {
 
       case MessageType.RequestLoadPresentation:
         handleRequestLoadPresentation(parsedMessage as IRequestLoadPresentationMessage);
+        break;
+
+      case MessageType.RequestReloadPresentation:
+        handleRequestReloadPresentation();
         break;
 
       case MessageType.RequestPresentShow:

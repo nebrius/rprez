@@ -23,6 +23,7 @@ export enum MessageType {
   ClientWindowReady = 'ClientWindowReady',
   ScreenUpdated = 'ScreenUpdated',
   RequestLoadPresentation = 'RequestLoadPresentation',
+  RequestReloadPresentation = 'RequestReloadPresentation',
   ProjectLoaded = 'ProjectLoaded',
   RequestPresentShow = 'RequestPresentShow',
   RequestExistShow = 'RequestExistShow',
@@ -34,7 +35,7 @@ export enum MessageType {
   TimerPaused = 'TimerPaused',
   RequestStartTimer = 'RequestStartTimer',
   RequestPauseTimer = 'RequestPauseTimer',
-  ClientMessage = 'ClientMessage'
+  ClientMessage = 'ClientMessage',
 }
 
 export interface IMessage {

@@ -73,6 +73,9 @@ webSocketServer.on('connection', (wsClient) => {
             case message_1.MessageType.RequestLoadPresentation:
                 presentation_1.handleRequestLoadPresentation(parsedMessage);
                 break;
+            case message_1.MessageType.RequestReloadPresentation:
+                presentation_1.handleRequestReloadPresentation();
+                break;
             case message_1.MessageType.RequestPresentShow:
                 presentation_1.handleRequestPresentShow(parsedMessage);
                 break;
