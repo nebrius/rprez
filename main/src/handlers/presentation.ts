@@ -24,7 +24,7 @@ import {
   IProjectLoadedMessage,
   MonitorViews
 } from '../common/message';
-import { loadProject, setSlideNumber, sendSlideUpdatedMessage } from '../project';
+import { loadProject, getSlideNumber, setSlideNumber, sendSlideUpdatedMessage } from '../project';
 import { createPresentationWindow, closePresentationWindows, getDisplayForId } from '../windows';
 import { sendMessageToManager } from '../server';
 
@@ -40,7 +40,7 @@ async function loadPresentation(filename: string): Promise<void> {
     return;
   }
 
-  setSlideNumber(0);
+  setSlideNumber(Math.min(presentationProject.slides.length - 1, getSlideNumber()));
   const message: IProjectLoadedMessage = {
     type: MessageType.ProjectLoaded,
     project: presentationProject

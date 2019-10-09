@@ -1,3 +1,4 @@
+/// <reference types="electron" />
 import { MonitorViews } from './common/message';
 export declare function getDisplays(): Electron.Display[];
 export declare function getDisplayForId(id: number): Electron.Display;

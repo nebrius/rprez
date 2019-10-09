@@ -49,3 +49,12 @@ export function handleRequestPauseTimer() {
   };
   sendMessageToPresentationWindows(message);
 }
+
+export function handleRequestResetTimer() {
+  elapsedTime = 0;
+  const timerUpdatedMessage: ITimerUpdatedMessage = {
+    type: MessageType.TimerUpdated,
+    elapsedTime
+  };
+  sendMessageToPresentationWindows(timerUpdatedMessage);
+}

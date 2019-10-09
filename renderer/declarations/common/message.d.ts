@@ -16,6 +16,7 @@ export declare enum MessageType {
     TimerPaused = "TimerPaused",
     RequestStartTimer = "RequestStartTimer",
     RequestPauseTimer = "RequestPauseTimer",
+    RequestResetTimer = "RequestResetTimer",
     ClientMessage = "ClientMessage"
 }
 export interface IMessage {

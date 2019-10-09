@@ -16,11 +16,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { connectKeyHandlers } from '../keyHandlers.js';
 import { MessageType } from '../common/message.js';
 import { createInternalError, numToString } from '../common/util.js';
 import { addMessageListener, sendMessage } from '../messaging.js';
-connectKeyHandlers(document);
 function getElement(name) {
     const element = document.getElementById(name);
     if (!element) {
@@ -38,6 +36,13 @@ const clockControlButton = getElement('speaker-clockControl');
 clockControlButton.onclick = () => {
     const message = {
         type: clockControlButton.innerText === '⏯' ? MessageType.RequestStartTimer : MessageType.RequestPauseTimer
+    };
+    sendMessage(message);
+};
+const clockResetButton = getElement('speaker-clockReset');
+clockResetButton.onclick = () => {
+    const message = {
+        type: MessageType.RequestResetTimer
     };
     sendMessage(message);
 };

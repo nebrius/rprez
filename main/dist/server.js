@@ -94,6 +94,9 @@ webSocketServer.on('connection', (wsClient) => {
             case message_1.MessageType.RequestPauseTimer:
                 timer_1.handleRequestPauseTimer();
                 break;
+            case message_1.MessageType.RequestResetTimer:
+                timer_1.handleRequestResetTimer();
+                break;
             case message_1.MessageType.ClientWindowReady:
                 clientWindowConnections.set(wsClient, true);
                 client_1.handleClientWindowReady(parsedMessage);

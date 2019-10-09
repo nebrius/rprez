@@ -16,11 +16,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { connectKeyHandlers } from '../keyHandlers.js';
 import { MessageType } from '../common/message.js';
 import { createInternalError, numToString } from '../common/util.js';
 import { addMessageListener, sendMessage } from '../messaging.js';
-connectKeyHandlers(document);
 const elapsedTimeLabel = document.getElementById('clock-elapsedTime');
 if (!elapsedTimeLabel) {
     throw new Error(createInternalError('elapsedTimeLabel is unexpectedly null'));

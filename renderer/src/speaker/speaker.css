@@ -76,7 +76,7 @@ iframe {
   font-style: bold;
 }
 
-#speaker-clockControl {
+#speaker-clockControl, #speaker-clockReset {
   width: 100px;
   height: 100px;
   font-size: 42pt;

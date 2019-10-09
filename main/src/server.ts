@@ -38,7 +38,7 @@ import {
   handleRequestExitShow
 } from './handlers/presentation';
 import { handleRequestNextSlide, handleRequestPreviousSlide } from './handlers/navigation';
-import { handleRequestStartTimer, handleRequestPauseTimer } from './handlers/timer';
+import { handleRequestStartTimer, handleRequestPauseTimer, handleRequestResetTimer } from './handlers/timer';
 import { handleClientWindowReady, handleClientMessage } from './handlers/client';
 
 const app = express();
@@ -122,6 +122,10 @@ webSocketServer.on('connection', (wsClient) => {
 
       case MessageType.RequestPauseTimer:
         handleRequestPauseTimer();
+        break;
+
+      case MessageType.RequestResetTimer:
+        handleRequestResetTimer();
         break;
 
       case MessageType.ClientWindowReady:

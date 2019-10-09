@@ -35,6 +35,7 @@ export var MessageType;
     MessageType["TimerPaused"] = "TimerPaused";
     MessageType["RequestStartTimer"] = "RequestStartTimer";
     MessageType["RequestPauseTimer"] = "RequestPauseTimer";
+    MessageType["RequestResetTimer"] = "RequestResetTimer";
     MessageType["ClientMessage"] = "ClientMessage";
 })(MessageType || (MessageType = {}));
 export var MonitorViews;

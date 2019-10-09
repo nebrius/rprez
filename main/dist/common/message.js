@@ -37,6 +37,7 @@ var MessageType;
     MessageType["TimerPaused"] = "TimerPaused";
     MessageType["RequestStartTimer"] = "RequestStartTimer";
     MessageType["RequestPauseTimer"] = "RequestPauseTimer";
+    MessageType["RequestResetTimer"] = "RequestResetTimer";
     MessageType["ClientMessage"] = "ClientMessage";
 })(MessageType = exports.MessageType || (exports.MessageType = {}));
 var MonitorViews;

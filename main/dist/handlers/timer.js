@@ -49,4 +49,13 @@ function handleRequestPauseTimer() {
     server_1.sendMessageToPresentationWindows(message);
 }
 exports.handleRequestPauseTimer = handleRequestPauseTimer;
+function handleRequestResetTimer() {
+    elapsedTime = 0;
+    const timerUpdatedMessage = {
+        type: message_1.MessageType.TimerUpdated,
+        elapsedTime
+    };
+    server_1.sendMessageToPresentationWindows(timerUpdatedMessage);
+}
+exports.handleRequestResetTimer = handleRequestResetTimer;
 //# sourceMappingURL=timer.js.map

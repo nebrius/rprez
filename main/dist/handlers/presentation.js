@@ -33,7 +33,7 @@ async function loadPresentation(filename) {
         console.error(err);
         return;
     }
-    project_1.setSlideNumber(0);
+    project_1.setSlideNumber(Math.min(presentationProject.slides.length - 1, project_1.getSlideNumber()));
     const message = {
         type: message_1.MessageType.ProjectLoaded,
         project: presentationProject
