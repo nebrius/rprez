@@ -40,6 +40,7 @@ import {
 import { handleRequestNextSlide, handleRequestPreviousSlide } from './handlers/navigation';
 import { handleRequestStartTimer, handleRequestPauseTimer, handleRequestResetTimer } from './handlers/timer';
 import { handleClientWindowReady, handleClientMessage } from './handlers/client';
+import { handleRequestExportSlides } from './handlers/export';
 
 const app = express();
 app.use('/rprez', express.static(join(__dirname, '../../renderer/dist/')));
@@ -106,6 +107,10 @@ webSocketServer.on('connection', (wsClient) => {
 
       case MessageType.RequestExistShow:
         handleRequestExitShow();
+        break;
+
+      case MessageType.RequestExportSlides:
+        handleRequestExportSlides();
         break;
 
       case MessageType.RequestNextSlide:

@@ -5,6 +5,7 @@ export declare enum MessageType {
     ScreenUpdated = "ScreenUpdated",
     RequestLoadPresentation = "RequestLoadPresentation",
     RequestReloadPresentation = "RequestReloadPresentation",
+    RequestExportSlides = "RequestExportSlides",
     ProjectLoaded = "ProjectLoaded",
     RequestPresentShow = "RequestPresentShow",
     RequestExistShow = "RequestExistShow",

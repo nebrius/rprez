@@ -29,6 +29,7 @@ const presentation_1 = require("./handlers/presentation");
 const navigation_1 = require("./handlers/navigation");
 const timer_1 = require("./handlers/timer");
 const client_1 = require("./handlers/client");
+const export_1 = require("./handlers/export");
 const app = express();
 app.use('/rprez', express.static(path_1.join(__dirname, '../../renderer/dist/')));
 const httpServer = http_1.createServer(app);
@@ -81,6 +82,9 @@ webSocketServer.on('connection', (wsClient) => {
                 break;
             case message_1.MessageType.RequestExistShow:
                 presentation_1.handleRequestExitShow();
+                break;
+            case message_1.MessageType.RequestExportSlides:
+                export_1.handleRequestExportSlides();
                 break;
             case message_1.MessageType.RequestNextSlide:
                 navigation_1.handleRequestNextSlide();

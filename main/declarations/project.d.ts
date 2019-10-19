@@ -1,5 +1,5 @@
 import { IProject } from './common/message';
-export declare function getCurrentProjectDirectory(): string;
+export declare function getCurrentProjectDirectory(): string | undefined;
 export declare function getCurrentProject(): IProject | null;
 export declare function loadProject(pathToProjectFile: string): Promise<IProject>;
 export declare function sendSlideUpdatedMessage(): void;

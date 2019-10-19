@@ -24,6 +24,7 @@ export var MessageType;
     MessageType["ScreenUpdated"] = "ScreenUpdated";
     MessageType["RequestLoadPresentation"] = "RequestLoadPresentation";
     MessageType["RequestReloadPresentation"] = "RequestReloadPresentation";
+    MessageType["RequestExportSlides"] = "RequestExportSlides";
     MessageType["ProjectLoaded"] = "ProjectLoaded";
     MessageType["RequestPresentShow"] = "RequestPresentShow";
     MessageType["RequestExistShow"] = "RequestExistShow";

@@ -148,6 +148,13 @@ function requestPresenterShow() {
   sendMessage(message);
 }
 
+function requestExportSlides() {
+  const message: IMessage = {
+    type: MessageType.RequestExportSlides
+  };
+  sendMessage(message);
+}
+
 const presentationInput = document.getElementById('presentationInput');
 if (!presentationInput) {
   throw new Error(createInternalError('"presentationInput" is unexpectedly null'));
@@ -165,6 +172,12 @@ if (!reloadShowButton) {
   throw new Error(createInternalError('"reloadShowButton" is unexpectedly null'));
 }
 reloadShowButton.onclick = requestReloadPresentation;
+
+const exportSlidesButton = document.getElementById('exportSlidesButton');
+if (!exportSlidesButton) {
+  throw new Error(createInternalError('"exportSlidesButton" is unexpectedly null'));
+}
+exportSlidesButton.onclick = requestExportSlides;
 
 const managerReadyMessage: IMessage = {
   type: MessageType.ManagerReady,

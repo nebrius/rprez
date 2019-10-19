@@ -26,11 +26,11 @@ import { MessageType, IProject, ICurrentSlideUpdatedMessage, ProjectSchema } fro
 import { createInternalError } from './common/util';
 import { sendMessageToPresentationWindows, setProjectDirectory } from './server';
 
-let currentProjectDirectory: string;
+let currentProjectDirectory: string | undefined;
 let currentProject: IProject | null = null;
 let currentSlide: number = 0;
 
-export function getCurrentProjectDirectory(): string {
+export function getCurrentProjectDirectory(): string | undefined {
   return currentProjectDirectory;
 }
 
