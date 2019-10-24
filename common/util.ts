@@ -30,3 +30,7 @@ export function numToString(num: number): string {
   }
   return convertedNum;
 }
+
+export async function sleep(duration: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, duration));
+}

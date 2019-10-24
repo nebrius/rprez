@@ -47,7 +47,7 @@ export function getDisplayForId(id: number): Electron.Display {
 
 // Manager window methods
 
-export async function createManagerWindow() {
+export async function createManagerWindow(): Promise<void> {
   const mod = await import('electron');
   screenModule = mod.screen;
 

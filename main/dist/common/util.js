@@ -31,4 +31,8 @@ function numToString(num) {
     return convertedNum;
 }
 exports.numToString = numToString;
+async function sleep(duration) {
+    return new Promise((resolve) => setTimeout(resolve, duration));
+}
+exports.sleep = sleep;
 //# sourceMappingURL=util.js.map

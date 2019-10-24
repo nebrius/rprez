@@ -19,26 +19,52 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
-const ElectronPDF = require("electron-pdf");
 const project_1 = require("../project");
-const path_1 = require("path");
-function exportSlides(outputFile) {
+const util_1 = require("../common/util");
+const pdfjs_1 = require("pdfjs");
+const fs_1 = require("fs");
+async function exportSlides(outputFile) {
     console.log(`Export presentation slides to ${outputFile}`);
+    // Create the list of slide files
     const project = project_1.getCurrentProject();
     const projectDirectory = project_1.getCurrentProjectDirectory();
     if (!project || !projectDirectory) {
         throw new Error('"handleRequestExportSlides" called before project was loaded');
     }
-    const slides = project.slides.map((slide) => ({
-        slide: path_1.normalize(path_1.join(projectDirectory, slide.slide.replace(/^\/presentation\//, ''))),
-        notes: slide.notes
-    }));
-    console.log(slides);
-    const exporter = new ElectronPDF();
-    exporter.on('charged', () => {
-        // DO stuff
-    });
-    exporter.start();
+    const slides = project.slides.map((slide) => `http://localhost:${util_1.PORT}${slide.slide}`);
+    // Calculate slide dimensions in microns
+    const dpi = process.platform === 'darwin' ? 72 : 96;
+    const width = 1921 / dpi / 0.000039370;
+    const height = 1081 / dpi / 0.000039370;
+    const pages = [];
+    await Promise.all(slides.map((slideUrl, index) => new Promise(async (resolve) => {
+        // Create a hidden renderer window. We'll use this window to load a page containing the slide in question,
+        // and then "print" them to a PDF, which is stored in a buffer
+        const renderWindow = new electron_1.BrowserWindow({ width: 2000, height: 1200, show: false });
+        renderWindow.setMenu(null);
+        renderWindow.loadURL(slideUrl);
+        // TODO: convert this hacky crap into proper message-based loading complete timing
+        await util_1.sleep(10000);
+        // Convert the single slide to a PDF and store it for later use
+        console.log(`Converting slide ${slideUrl}`);
+        const data = await renderWindow.webContents.printToPDF({
+            printBackground: true,
+            marginsType: 1,
+            pageSize: { width, height }
+        });
+        pages[index] = new pdfjs_1.ExternalDocument(data);
+        renderWindow.close();
+        console.log(`Finished converting slide ${slideUrl}`);
+        resolve();
+    }))).catch((err) => console.error(err));
+    // Create a new empty document, and merge all slides into it, then write to a file
+    const mergedPdf = new pdfjs_1.Document();
+    for (const page of pages) {
+        mergedPdf.addPagesOf(page);
+    }
+    const mergedPdfBuffer = await mergedPdf.asBuffer();
+    await fs_1.promises.writeFile(outputFile, mergedPdfBuffer);
+    console.log('done');
 }
 async function handleRequestExportSlides() {
     const projectDirectory = project_1.getCurrentProjectDirectory();
@@ -55,7 +81,7 @@ async function handleRequestExportSlides() {
             }]
     });
     if (!result.canceled && result.filePath) {
-        exportSlides(result.filePath);
+        await exportSlides(result.filePath);
     }
 }
 exports.handleRequestExportSlides = handleRequestExportSlides;
