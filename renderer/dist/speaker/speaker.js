@@ -17,15 +17,9 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { MessageType } from '../common/message.js';
-import { createInternalError, numToString } from '../common/util.js';
+import { numToString } from '../common/util.js';
 import { addMessageListener, sendMessage } from '../messaging.js';
-function getElement(name) {
-    const element = document.getElementById(name);
-    if (!element) {
-        throw new Error(createInternalError(`${name} is unexpectedly null`));
-    }
-    return element;
-}
+import { getElement } from '../util.js';
 const currentSlideIframe = getElement('speaker-currentSlide-iframe');
 const nextSlideIframe = getElement('speaker-nextSlide-iframe');
 const notesIframe = getElement('speaker-notes-iframe');

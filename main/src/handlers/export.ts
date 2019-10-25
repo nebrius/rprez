@@ -22,9 +22,12 @@ import { getCurrentProject, getCurrentProjectDirectory } from '../project';
 import { sleep, PORT } from '../common/util';
 import { Document, ExternalDocument } from 'pdfjs';
 import { promises } from 'fs';
+import { MessageType, IExportSlidesProgress, IMessage } from '../common/message';
+import { sendMessageToManager } from '../server';
 
 async function exportSlides(outputFile: string): Promise<void> {
   console.log(`Export presentation slides to ${outputFile}`);
+  const startTime = Date.now();
 
   // Create the list of slide files
   const project = getCurrentProject();
@@ -39,6 +42,7 @@ async function exportSlides(outputFile: string): Promise<void> {
   const width = 1921 / dpi / 0.000039370;
   const height = 1081 / dpi / 0.000039370;
 
+  let progressPercentage = 0;
   const pages: ExternalDocument[] = [];
   await Promise.all(slides.map((slideUrl, index) => new Promise(async (resolve) => {
     // Create a hidden renderer window. We'll use this window to load a page containing the slide in question,
@@ -48,7 +52,16 @@ async function exportSlides(outputFile: string): Promise<void> {
     renderWindow.loadURL(slideUrl);
 
     // TODO: convert this hacky crap into proper message-based loading complete timing
-    await sleep(10000);
+    let message: IExportSlidesProgress;
+    for (let i = 0; i < 10; i++) {
+      await sleep(1000);
+      progressPercentage += 0.05 / slides.length;
+      message = {
+        type: MessageType.ExportSlidesProgress,
+        percentage: progressPercentage
+      };
+      sendMessageToManager(message);
+    }
 
     // Convert the single slide to a PDF and store it for later use
     console.log(`Converting slide ${slideUrl}`);
@@ -60,6 +73,12 @@ async function exportSlides(outputFile: string): Promise<void> {
     pages[index] = new ExternalDocument(data);
     renderWindow.close();
     resolve();
+    progressPercentage += 0.5 / slides.length;
+    message = {
+      type: MessageType.ExportSlidesProgress,
+      percentage: progressPercentage
+    };
+    sendMessageToManager(message);
   }))).catch((err) => console.error(err));
 
   // Create a new empty document, and merge all slides into it, then write to a file
@@ -69,7 +88,13 @@ async function exportSlides(outputFile: string): Promise<void> {
   }
   const mergedPdfBuffer = await mergedPdf.asBuffer();
   await promises.writeFile(outputFile, mergedPdfBuffer);
-  console.log('done');
+
+  // Wrap up
+  console.log(`Finished exporting slides in ${Date.now() - startTime}ms`);
+  const completedMessage: IMessage = {
+    type: MessageType.ExportSlidesCompleted
+  };
+  sendMessageToManager(completedMessage);
 }
 
 export async function handleRequestExportSlides(): Promise<void> {

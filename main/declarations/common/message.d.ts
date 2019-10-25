@@ -6,6 +6,8 @@ export declare enum MessageType {
     RequestLoadPresentation = "RequestLoadPresentation",
     RequestReloadPresentation = "RequestReloadPresentation",
     RequestExportSlides = "RequestExportSlides",
+    ExportSlidesProgress = "ExportSlidesProgress",
+    ExportSlidesCompleted = "ExportSlidesCompleted",
     ProjectLoaded = "ProjectLoaded",
     RequestPresentShow = "RequestPresentShow",
     RequestExistShow = "RequestExistShow",
@@ -48,6 +50,9 @@ export interface IRequestLoadPresentationMessage extends IMessage {
 }
 export interface IProjectLoadedMessage extends IMessage {
     project: IProject;
+}
+export interface IExportSlidesProgress extends IMessage {
+    percentage: number;
 }
 export interface ITimerUpdatedMessage extends IMessage {
     elapsedTime: number;

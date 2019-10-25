@@ -27,6 +27,8 @@ var MessageType;
     MessageType["RequestLoadPresentation"] = "RequestLoadPresentation";
     MessageType["RequestReloadPresentation"] = "RequestReloadPresentation";
     MessageType["RequestExportSlides"] = "RequestExportSlides";
+    MessageType["ExportSlidesProgress"] = "ExportSlidesProgress";
+    MessageType["ExportSlidesCompleted"] = "ExportSlidesCompleted";
     MessageType["ProjectLoaded"] = "ProjectLoaded";
     MessageType["RequestPresentShow"] = "RequestPresentShow";
     MessageType["RequestExistShow"] = "RequestExistShow";

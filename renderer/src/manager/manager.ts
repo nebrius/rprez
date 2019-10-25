@@ -23,11 +23,13 @@ import {
   IScreenUpdatedMessage,
   IRequestPresentShowMessage,
   IRequestLoadPresentationMessage,
+  IExportSlidesProgress,
   IScreenInfo,
   MonitorViews
 } from '../common/message.js';
 import { createInternalError } from '../common/util.js';
 import { addMessageListener, sendMessage } from '../messaging.js';
+import { getElement } from '../util.js';
 
 let screens: IScreenInfo[] = [];
 
@@ -62,13 +64,53 @@ function createMonitorEntry(
   parent.appendChild(container);
 }
 
+getElement('presentationInput').onchange = () => {
+  const selectedFile = getElement('presentationInput') as HTMLInputElement;
+  const filenames = selectedFile.files;
+  if (!filenames) {
+    throw new Error(createInternalError('"filenames" is unexpectedly null'));
+  }
+  const message: IRequestLoadPresentationMessage = {
+    type: MessageType.RequestLoadPresentation,
+    filename: (filenames[0] as any).path
+  };
+  sendMessage(message);
+};
+
+getElement('reloadShowButton').onclick = () => {
+  const message: IMessage = {
+    type: MessageType.RequestReloadPresentation
+  };
+  sendMessage(message);
+};
+
+getElement('presentButton').onclick = () => {
+  const screenAssignments: { [ id: number ]: MonitorViews } = {};
+  const developerModeCheckboxElement = getElement('developerModeCheckbox');
+  for (const monitorSelect of document.querySelectorAll('#monitorList select')) {
+    const monitorView = (monitorSelect as HTMLSelectElement).selectedOptions[0].value as MonitorViews;
+    const monitorId = parseInt(monitorSelect.getAttribute('data-screenid') as string, 10);
+    screenAssignments[monitorId] = monitorView;
+  }
+  const message: IRequestPresentShowMessage = {
+    type: MessageType.RequestPresentShow,
+    developerMode: (developerModeCheckboxElement as HTMLInputElement).checked,
+    screenAssignments
+  };
+  sendMessage(message);
+};
+
+getElement('exportSlidesButton').onclick = () => {
+  const message: IMessage = {
+    type: MessageType.RequestExportSlides
+  };
+  sendMessage(message);
+};
+
 addMessageListener((msg) => {
   switch (msg.type) {
     case MessageType.ScreenUpdated:
-      const monitorListContainer = document.getElementById('monitorList');
-      if (!monitorListContainer) {
-        throw new Error(createInternalError('"monitorListContainer" is unexpectedly null'));
-      }
+      const monitorListContainer = getElement('monitorList');
       for (const child of monitorListContainer.childNodes) {
         monitorListContainer.removeChild(child);
       }
@@ -85,99 +127,27 @@ addMessageListener((msg) => {
       break;
 
     case MessageType.ProjectLoaded:
-      const presentationView = document.getElementById('presentationView');
-      if (!presentationView) {
-        throw new Error(createInternalError('presentationView is unexpectedly null'));
-      }
-      const loadView = document.getElementById('loadView');
-      if (!loadView) {
-        throw new Error(createInternalError('loadView is unexpectedly null'));
-      }
+      const presentationView = getElement('presentationView');
+      const loadView = getElement('loadView');
       presentationView.style.display = 'inherit';
       loadView.style.display = 'none';
+      break;
+
+    case MessageType.ExportSlidesProgress:
+      const exportSlidesProgress = getElement('exportSlidesProgress') as HTMLProgressElement;
+      exportSlidesProgress.style.display = 'inherit';
+      exportSlidesProgress.value = (msg as IExportSlidesProgress).percentage;
+      break;
+
+    case MessageType.ExportSlidesCompleted:
+      alert('Slide export complete');
+      getElement('exportSlidesProgress').style.display = 'none';
       break;
 
     default:
       throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
   }
 });
-
-function selectPresentationFile() {
-  const selectedFile = document.getElementById('presentationInput');
-  if (!selectedFile) {
-    throw new Error(createInternalError('"selectedFile" is unexpectedly null'));
-  }
-  const filenames = (selectedFile as HTMLInputElement).files;
-  if (!filenames) {
-    throw new Error(createInternalError('"filenames" is unexpectedly null'));
-  }
-  const message: IRequestLoadPresentationMessage = {
-    type: MessageType.RequestLoadPresentation,
-    filename: (filenames[0] as any).path
-  };
-  sendMessage(message);
-}
-
-function requestReloadPresentation() {
-  const message: IMessage = {
-    type: MessageType.RequestReloadPresentation
-  };
-  sendMessage(message);
-}
-
-function requestPresenterShow() {
-  const screenAssignments: { [ id: number ]: MonitorViews } = {};
-  const monitorListElement = document.getElementById('monitorList');
-  if (!monitorListElement) {
-    throw new Error(createInternalError('"monitorListElement" is unexpectedly null'));
-  }
-  const developerModeCheckboxElement = document.getElementById('developerModeCheckbox');
-  if (!developerModeCheckboxElement) {
-    throw new Error(createInternalError('"developerModeCheckboxElement" is unexpectedly null'));
-  }
-  for (const monitorSelect of document.querySelectorAll('#monitorList select')) {
-    const monitorView = (monitorSelect as HTMLSelectElement).selectedOptions[0].value as MonitorViews;
-    const monitorId = parseInt(monitorSelect.getAttribute('data-screenid') as string, 10);
-    screenAssignments[monitorId] = monitorView;
-  }
-  const message: IRequestPresentShowMessage = {
-    type: MessageType.RequestPresentShow,
-    developerMode: (developerModeCheckboxElement as HTMLInputElement).checked,
-    screenAssignments
-  };
-  sendMessage(message);
-}
-
-function requestExportSlides() {
-  const message: IMessage = {
-    type: MessageType.RequestExportSlides
-  };
-  sendMessage(message);
-}
-
-const presentationInput = document.getElementById('presentationInput');
-if (!presentationInput) {
-  throw new Error(createInternalError('"presentationInput" is unexpectedly null'));
-}
-presentationInput.onchange = selectPresentationFile;
-
-const presentButton = document.getElementById('presentButton');
-if (!presentButton) {
-  throw new Error(createInternalError('"presentButton" is unexpectedly null'));
-}
-presentButton.onclick = requestPresenterShow;
-
-const reloadShowButton = document.getElementById('reloadShowButton');
-if (!reloadShowButton) {
-  throw new Error(createInternalError('"reloadShowButton" is unexpectedly null'));
-}
-reloadShowButton.onclick = requestReloadPresentation;
-
-const exportSlidesButton = document.getElementById('exportSlidesButton');
-if (!exportSlidesButton) {
-  throw new Error(createInternalError('"exportSlidesButton" is unexpectedly null'));
-}
-exportSlidesButton.onclick = requestExportSlides;
 
 const managerReadyMessage: IMessage = {
   type: MessageType.ManagerReady,

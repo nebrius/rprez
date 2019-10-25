@@ -17,17 +17,10 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { MessageType } from '../common/message.js';
-import { createInternalError } from '../common/util.js';
 import { addMessageListener, sendMessage } from '../messaging.js';
-function getIFrame(id) {
-    const iframe = document.getElementById(id);
-    if (!iframe) {
-        throw new Error(createInternalError('iframe is unexpectedly null'));
-    }
-    return iframe;
-}
-const iframe1 = getIFrame('audience-currentSlide-iframe-1');
-const iframe2 = getIFrame('audience-currentSlide-iframe-2');
+import { getElement } from '../util.js';
+const iframe1 = getElement('audience-currentSlide-iframe-1');
+const iframe2 = getElement('audience-currentSlide-iframe-2');
 let currentIFRame = 1;
 let frontIframe;
 let backIFrame;

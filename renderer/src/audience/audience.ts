@@ -18,19 +18,11 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { MessageType, IMessage, ICurrentSlideUpdatedMessage } from '../common/message.js';
-import { createInternalError } from '../common/util.js';
 import { addMessageListener, sendMessage } from '../messaging.js';
+import { getElement } from '../util.js';
 
-function getIFrame(id: string): HTMLIFrameElement {
-  const iframe: HTMLIFrameElement | null = document.getElementById(id) as HTMLIFrameElement | null;
-  if (!iframe) {
-    throw new Error(createInternalError('iframe is unexpectedly null'));
-  }
-  return iframe;
-}
-
-const iframe1 = getIFrame('audience-currentSlide-iframe-1');
-const iframe2 = getIFrame('audience-currentSlide-iframe-2');
+const iframe1 = getElement('audience-currentSlide-iframe-1') as HTMLIFrameElement;
+const iframe2 = getElement('audience-currentSlide-iframe-2') as HTMLIFrameElement;
 let currentIFRame = 1;
 
 let frontIframe: HTMLIFrameElement;

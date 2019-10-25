@@ -16,17 +16,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
-export const PORT = 3087;
-export function createInternalError(msg) {
-    return `Internal Error: ${msg}. This is a bug, please report it at https://github.com/nebrius/RPrez.`;
-}
-export function numToString(num) {
-    let convertedNum = num.toString();
-    if (convertedNum.length === 1) {
-        convertedNum = '0' + convertedNum;
-    }
-    return convertedNum;
-}
-export async function sleep(duration) {
-    return new Promise((resolve) => setTimeout(resolve, duration));
+
+import { createInternalError } from './common/util.js';
+
+export function getElement(id: string): HTMLElement {
+  const element = document.getElementById(id);
+  if (!element) {
+    throw new Error(createInternalError(`"${id}" is unexpectedly null`));
+  }
+  return element;
 }
