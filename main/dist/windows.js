@@ -17,7 +17,31 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.closePresentationWindows = exports.createPresentationWindow = exports.createManagerWindow = exports.getDisplayForId = exports.getDisplays = void 0;
 const electron_1 = require("electron");
 const util_1 = require("./common/util");
 const message_1 = require("./common/message");
@@ -28,7 +52,7 @@ const presentationWindows = [];
 let screenModule = null;
 function getDisplays() {
     if (screenModule === null) {
-        throw util_1.createInternalError(`"screenModule" is null but shouldn't be`);
+        throw (0, util_1.createInternalError)('"screenModule" is null but shouldn\'t be');
     }
     return screenModule.getAllDisplays();
 }
@@ -40,12 +64,12 @@ function getDisplayForId(id) {
             return display;
         }
     }
-    throw new Error(util_1.createInternalError(`Could not find display for id ${id}`));
+    throw new Error((0, util_1.createInternalError)(`Could not find display for id ${id}`));
 }
 exports.getDisplayForId = getDisplayForId;
 // Manager window methods
 async function createManagerWindow() {
-    const mod = await Promise.resolve().then(() => require('electron'));
+    const mod = await Promise.resolve().then(() => __importStar(require('electron')));
     screenModule = mod.screen;
     // Create the browser window.
     managerWindow = new electron_1.BrowserWindow({ width: 800, height: 600 });
@@ -84,7 +108,7 @@ function createPresentationWindow(type, x, y, developerMode) {
         // when you should delete the corresponding element.
         const winIndex = presentationWindows.indexOf(win);
         if (winIndex === -1) {
-            throw new Error(util_1.createInternalError('Presentation window is unexepctedly missing from 2'));
+            throw new Error((0, util_1.createInternalError)('Presentation window is unexepctedly missing from 2'));
         }
         presentationWindows.splice(winIndex, 1);
     });

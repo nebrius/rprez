@@ -24,8 +24,17 @@ import {
   IProjectLoadedMessage,
   MonitorViews
 } from '../common/message';
-import { loadProject, getSlideNumber, setSlideNumber, sendSlideUpdatedMessage } from '../project';
-import { createPresentationWindow, closePresentationWindows, getDisplayForId } from '../windows';
+import {
+  loadProject,
+  getSlideNumber,
+  setSlideNumber,
+  sendSlideUpdatedMessage
+} from '../project';
+import {
+  createPresentationWindow,
+  closePresentationWindows,
+  getDisplayForId
+} from '../windows';
 import { sendMessageToManager } from '../server';
 
 async function loadPresentation(filename: string): Promise<void> {
@@ -40,7 +49,9 @@ async function loadPresentation(filename: string): Promise<void> {
     return;
   }
 
-  setSlideNumber(Math.min(presentationProject.slides.length - 1, getSlideNumber()));
+  setSlideNumber(
+    Math.min(presentationProject.slides.length - 1, getSlideNumber())
+  );
   const message: IProjectLoadedMessage = {
     type: MessageType.ProjectLoaded,
     project: presentationProject
@@ -48,9 +59,11 @@ async function loadPresentation(filename: string): Promise<void> {
   sendMessageToManager(message);
 }
 
-let currentProjectFile: string = '';
+let currentProjectFile = '';
 
-export async function handleRequestLoadPresentation(loadMessage: IRequestLoadPresentationMessage): Promise<void> {
+export async function handleRequestLoadPresentation(
+  loadMessage: IRequestLoadPresentationMessage
+): Promise<void> {
   currentProjectFile = loadMessage.filename;
   await loadPresentation(currentProjectFile);
 }
@@ -59,17 +72,27 @@ export async function handleRequestReloadPresentation() {
   await loadPresentation(currentProjectFile);
 }
 
-export function handleRequestPresentShow(presentMessage: IRequestPresentShowMessage) {
+export function handleRequestPresentShow(
+  presentMessage: IRequestPresentShowMessage
+) {
   console.log('Starting presentation');
   for (const monitorId in presentMessage.screenAssignments) {
+    // eslint-disable-next-line no-prototype-builtins
     if (!presentMessage.screenAssignments.hasOwnProperty(monitorId)) {
       continue;
     }
     const screenAssignment = presentMessage.screenAssignments[monitorId];
     const display = getDisplayForId(parseInt(monitorId, 10));
-    console.log(`Opening ${MonitorViews[screenAssignment]} view on monitor ` +
-      `${monitorId} (${display.bounds.width}x${display.bounds.height})`);
-    createPresentationWindow(screenAssignment, display.bounds.x, display.bounds.y, presentMessage.developerMode);
+    console.log(
+      `Opening ${MonitorViews[screenAssignment]} view on monitor ` +
+        `${monitorId} (${display.bounds.width}x${display.bounds.height})`
+    );
+    createPresentationWindow(
+      screenAssignment,
+      display.bounds.x,
+      display.bounds.y,
+      presentMessage.developerMode
+    );
     setTimeout(sendSlideUpdatedMessage, 1000);
   }
 }

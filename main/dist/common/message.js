@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProjectSchema = exports.MonitorViews = exports.MessageType = void 0;
 var MessageType;
 (function (MessageType) {
     MessageType["ManagerReady"] = "ManagerReady";

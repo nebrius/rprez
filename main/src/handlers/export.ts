@@ -22,7 +22,11 @@ import { getCurrentProject, getCurrentProjectDirectory } from '../project';
 import { sleep, PORT } from '../common/util';
 import { Document, ExternalDocument } from 'pdfjs';
 import { promises } from 'fs';
-import { MessageType, IExportSlidesProgress, IMessage } from '../common/message';
+import {
+  MessageType,
+  IExportSlidesProgress,
+  IMessage
+} from '../common/message';
 import { sendMessageToManager } from '../server';
 
 async function exportSlides(outputFile: string): Promise<void> {
@@ -33,53 +37,69 @@ async function exportSlides(outputFile: string): Promise<void> {
   const project = getCurrentProject();
   const projectDirectory = getCurrentProjectDirectory();
   if (!project || !projectDirectory) {
-    throw new Error('"handleRequestExportSlides" called before project was loaded');
+    throw new Error(
+      '"handleRequestExportSlides" called before project was loaded'
+    );
   }
-  const slides: string[] = project.slides.map((slide) => `http://localhost:${PORT}${slide.slide}`);
+  const slides: string[] = project.slides.map(
+    (slide) => `http://localhost:${PORT}${slide.slide}`
+  );
 
   // Calculate slide dimensions in microns
   const dpi = process.platform === 'darwin' ? 72 : 96;
-  const width = 1921 / dpi / 0.000039370;
-  const height = 1081 / dpi / 0.000039370;
+  const width = 1921 / dpi / 0.00003937;
+  const height = 1081 / dpi / 0.00003937;
 
   let progressPercentage = 0;
   const pages: ExternalDocument[] = [];
-  await Promise.all(slides.map((slideUrl, index) => new Promise(async (resolve) => {
-    // Create a hidden renderer window. We'll use this window to load a page containing the slide in question,
-    // and then "print" them to a PDF, which is stored in a buffer
-    const renderWindow = new BrowserWindow({ width: 2000, height: 1200, show: false });
-    renderWindow.setMenu(null);
-    renderWindow.loadURL(slideUrl);
+  await Promise.all(
+    slides.map(
+      (slideUrl, index) =>
+        // TODO: rearchitect this so we don't have to disable this lint rule
+        // eslint-disable-next-line no-async-promise-executor
+        new Promise(async (resolve) => {
+          // Create a hidden renderer window. We'll use this window to load a page containing the slide in question,
+          // and then "print" them to a PDF, which is stored in a buffer
+          const renderWindow = new BrowserWindow({
+            width: 2000,
+            height: 1200,
+            show: false
+          });
+          renderWindow.setMenu(null);
+          renderWindow.loadURL(slideUrl);
 
-    // TODO: convert this hacky crap into proper message-based loading complete timing
-    let message: IExportSlidesProgress;
-    for (let i = 0; i < 10; i++) {
-      await sleep(1000);
-      progressPercentage += 0.05 / slides.length;
-      message = {
-        type: MessageType.ExportSlidesProgress,
-        percentage: progressPercentage
-      };
-      sendMessageToManager(message);
-    }
+          // TODO: convert this hacky crap into proper message-based loading complete timing
+          let message: IExportSlidesProgress;
+          for (let i = 0; i < 10; i++) {
+            await sleep(1000);
+            progressPercentage += 0.05 / slides.length;
+            message = {
+              type: MessageType.ExportSlidesProgress,
+              percentage: progressPercentage
+            };
+            sendMessageToManager(message);
+          }
 
-    // Convert the single slide to a PDF and store it for later use
-    console.log(`Converting slide ${slideUrl}`);
-    const data: Buffer = await renderWindow.webContents.printToPDF({
-      printBackground: true,
-      marginsType: 1,
-      pageSize: { width, height }
-    });
-    pages[index] = new ExternalDocument(data);
-    renderWindow.close();
-    resolve();
-    progressPercentage += 0.5 / slides.length;
-    message = {
-      type: MessageType.ExportSlidesProgress,
-      percentage: progressPercentage
-    };
-    sendMessageToManager(message);
-  }))).catch((err) => console.error(err));
+          // Convert the single slide to a PDF and store it for later use
+          console.log(`Converting slide ${slideUrl}`);
+          const data: Buffer = await renderWindow.webContents.printToPDF({
+            printBackground: true,
+            marginsType: 1,
+            pageSize: { width, height }
+          });
+          pages[index] = new ExternalDocument(data);
+          renderWindow.close();
+          // TODO: why do we have to pass undefined here?
+          resolve(undefined);
+          progressPercentage += 0.5 / slides.length;
+          message = {
+            type: MessageType.ExportSlidesProgress,
+            percentage: progressPercentage
+          };
+          sendMessageToManager(message);
+        })
+    )
+  ).catch((err) => console.error(err));
 
   // Create a new empty document, and merge all slides into it, then write to a file
   const mergedPdf = new Document();
@@ -100,16 +120,20 @@ async function exportSlides(outputFile: string): Promise<void> {
 export async function handleRequestExportSlides(): Promise<void> {
   const projectDirectory = getCurrentProjectDirectory();
   if (typeof projectDirectory !== 'string') {
-    throw new Error('"handleRequestExportSlides" called before project was loaded');
+    throw new Error(
+      '"handleRequestExportSlides" called before project was loaded'
+    );
   }
   const result = await dialog.showSaveDialog({
     title: 'Select export file path',
     defaultPath: getCurrentProjectDirectory(),
     buttonLabel: 'Export',
-    filters: [{
-      name: 'PDF',
-      extensions: [ 'pdf' ]
-    }]
+    filters: [
+      {
+        name: 'PDF',
+        extensions: ['pdf']
+      }
+    ]
   });
   if (!result.canceled && result.filePath) {
     await exportSlides(result.filePath);

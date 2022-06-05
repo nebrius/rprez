@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.sleep = exports.numToString = exports.createInternalError = exports.PORT = void 0;
 exports.PORT = 3087;
 function createInternalError(msg) {
     return `Internal Error: ${msg}. This is a bug, please report it at https://github.com/nebrius/RPrez.`;

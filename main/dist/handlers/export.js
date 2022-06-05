@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.handleRequestExportSlides = void 0;
 const electron_1 = require("electron");
 const project_1 = require("../project");
 const util_1 = require("../common/util");
@@ -29,34 +30,41 @@ async function exportSlides(outputFile) {
     console.log(`Export presentation slides to ${outputFile}`);
     const startTime = Date.now();
     // Create the list of slide files
-    const project = project_1.getCurrentProject();
-    const projectDirectory = project_1.getCurrentProjectDirectory();
+    const project = (0, project_1.getCurrentProject)();
+    const projectDirectory = (0, project_1.getCurrentProjectDirectory)();
     if (!project || !projectDirectory) {
         throw new Error('"handleRequestExportSlides" called before project was loaded');
     }
     const slides = project.slides.map((slide) => `http://localhost:${util_1.PORT}${slide.slide}`);
     // Calculate slide dimensions in microns
     const dpi = process.platform === 'darwin' ? 72 : 96;
-    const width = 1921 / dpi / 0.000039370;
-    const height = 1081 / dpi / 0.000039370;
+    const width = 1921 / dpi / 0.00003937;
+    const height = 1081 / dpi / 0.00003937;
     let progressPercentage = 0;
     const pages = [];
-    await Promise.all(slides.map((slideUrl, index) => new Promise(async (resolve) => {
+    await Promise.all(slides.map((slideUrl, index) => 
+    // TODO: rearchitect this so we don't have to disable this lint rule
+    // eslint-disable-next-line no-async-promise-executor
+    new Promise(async (resolve) => {
         // Create a hidden renderer window. We'll use this window to load a page containing the slide in question,
         // and then "print" them to a PDF, which is stored in a buffer
-        const renderWindow = new electron_1.BrowserWindow({ width: 2000, height: 1200, show: false });
+        const renderWindow = new electron_1.BrowserWindow({
+            width: 2000,
+            height: 1200,
+            show: false
+        });
         renderWindow.setMenu(null);
         renderWindow.loadURL(slideUrl);
         // TODO: convert this hacky crap into proper message-based loading complete timing
         let message;
         for (let i = 0; i < 10; i++) {
-            await util_1.sleep(1000);
+            await (0, util_1.sleep)(1000);
             progressPercentage += 0.05 / slides.length;
             message = {
                 type: message_1.MessageType.ExportSlidesProgress,
                 percentage: progressPercentage
             };
-            server_1.sendMessageToManager(message);
+            (0, server_1.sendMessageToManager)(message);
         }
         // Convert the single slide to a PDF and store it for later use
         console.log(`Converting slide ${slideUrl}`);
@@ -67,13 +75,14 @@ async function exportSlides(outputFile) {
         });
         pages[index] = new pdfjs_1.ExternalDocument(data);
         renderWindow.close();
-        resolve();
+        // TODO: why do we have to pass undefined here?
+        resolve(undefined);
         progressPercentage += 0.5 / slides.length;
         message = {
             type: message_1.MessageType.ExportSlidesProgress,
             percentage: progressPercentage
         };
-        server_1.sendMessageToManager(message);
+        (0, server_1.sendMessageToManager)(message);
     }))).catch((err) => console.error(err));
     // Create a new empty document, and merge all slides into it, then write to a file
     const mergedPdf = new pdfjs_1.Document();
@@ -87,21 +96,23 @@ async function exportSlides(outputFile) {
     const completedMessage = {
         type: message_1.MessageType.ExportSlidesCompleted
     };
-    server_1.sendMessageToManager(completedMessage);
+    (0, server_1.sendMessageToManager)(completedMessage);
 }
 async function handleRequestExportSlides() {
-    const projectDirectory = project_1.getCurrentProjectDirectory();
+    const projectDirectory = (0, project_1.getCurrentProjectDirectory)();
     if (typeof projectDirectory !== 'string') {
         throw new Error('"handleRequestExportSlides" called before project was loaded');
     }
     const result = await electron_1.dialog.showSaveDialog({
         title: 'Select export file path',
-        defaultPath: project_1.getCurrentProjectDirectory(),
+        defaultPath: (0, project_1.getCurrentProjectDirectory)(),
         buttonLabel: 'Export',
-        filters: [{
+        filters: [
+            {
                 name: 'PDF',
                 extensions: ['pdf']
-            }]
+            }
+        ]
     });
     if (!result.canceled && result.filePath) {
         await exportSlides(result.filePath);

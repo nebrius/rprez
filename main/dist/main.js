@@ -26,7 +26,7 @@ require("./server"); // Start the server
 // occurs, and some properties on the module itself are not available until after
 // this event has been fired. This is why we dynamically import the module.
 electron_1.app.on('ready', async () => {
-    await windows_1.createManagerWindow();
+    await (0, windows_1.createManagerWindow)();
 });
 // Quit when all windows are closed.
 electron_1.app.on('window-all-closed', () => {

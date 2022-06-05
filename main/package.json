@@ -5,7 +5,9 @@
   "main": "dist/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prebuild": "tslint 'src/**/*.ts'",
+    "lint": "eslint ./src/**/*.ts",
+    "lint-fix": "eslint --fix ./src/**/*.ts",
+    "prebuild": "npm run lint",
     "build": "tsc",
     "start": "electron ."
   },
@@ -20,18 +22,23 @@
   },
   "homepage": "https://github.com/nebrius/rprez#readme",
   "devDependencies": {
-    "@types/express": "^4.17.0",
-    "@types/node": "^12.6.9",
-    "@types/ws": "^6.0.1",
-    "electron-rebuild": "^1.8.6",
-    "tslint": "^5.20.0",
-    "typescript": "^3.6.3"
+    "@types/express": "^4.17.13",
+    "@types/node": "^17.0.40",
+    "@types/ws": "^8.5.3",
+    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/parser": "^5.27.0",
+    "electron-rebuild": "^3.2.7",
+    "eslint": "^8.17.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.6.2",
+    "typescript": "^4.7.3"
   },
   "dependencies": {
-    "electron": "^6.0.0",
-    "express": "^4.17.1",
-    "jsonschema": "^1.2.4",
-    "pdfjs": "^2.3.2",
-    "ws": "^7.1.1"
+    "electron": "^19.0.3",
+    "express": "^4.18.1",
+    "jsonschema": "^1.4.1",
+    "pdfjs": "^2.4.7",
+    "ws": "^8.7.0"
   }
 }

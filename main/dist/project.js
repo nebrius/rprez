@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.setSlideNumber = exports.getSlideNumber = exports.sendSlideUpdatedMessage = exports.loadProject = exports.getCurrentProject = exports.getCurrentProjectDirectory = void 0;
 const path_1 = require("path");
 const util_1 = require("util");
 const fs_1 = require("fs");
@@ -38,7 +39,7 @@ function getCurrentProject() {
 }
 exports.getCurrentProject = getCurrentProject;
 async function loadProject(pathToProjectFile) {
-    const presentationFileExists = await util_1.promisify(fs_1.exists)(pathToProjectFile);
+    const presentationFileExists = await (0, util_1.promisify)(fs_1.exists)(pathToProjectFile);
     if (!presentationFileExists) {
         throw new Error(`Presentation file ${pathToProjectFile} does not exist`);
     }
@@ -55,12 +56,12 @@ async function loadProject(pathToProjectFile) {
     catch (err) {
         throw new Error(`Could not parse project file ${pathToProjectFile}: ${err}`);
     }
-    const results = (new jsonschema_1.Validator()).validate(currentProject, message_1.ProjectSchema);
+    const results = new jsonschema_1.Validator().validate(currentProject, message_1.ProjectSchema);
     if (!results.valid) {
         throw new Error(`Invalid project file ${pathToProjectFile}:\n${results.errors.join('\n')}`);
     }
-    currentProjectDirectory = path_1.dirname(pathToProjectFile);
-    server_1.setProjectDirectory(currentProjectDirectory);
+    currentProjectDirectory = (0, path_1.dirname)(pathToProjectFile);
+    (0, server_1.setProjectDirectory)(currentProjectDirectory);
     currentProject.slides = currentProject.slides.map((slide) => ({
         slide: `/presentation/${slide.slide}`,
         notes: slide.notes && `/presentation/${slide.notes}`
@@ -70,7 +71,7 @@ async function loadProject(pathToProjectFile) {
 exports.loadProject = loadProject;
 function sendSlideUpdatedMessage() {
     if (currentProject === null) {
-        throw new Error(util_2.createInternalError('"currentProject" is unexpectedly null'));
+        throw new Error((0, util_2.createInternalError)('"currentProject" is unexpectedly null'));
     }
     const message = {
         type: message_1.MessageType.CurrentSlideUpdated,
@@ -78,9 +79,10 @@ function sendSlideUpdatedMessage() {
         numSlides: currentProject.slides.length,
         currentSlideUrl: currentProject.slides[currentSlide].slide,
         currentNotesUrl: currentProject.slides[currentSlide].notes,
-        nextSlideUrl: currentProject.slides[currentSlide + 1] && currentProject.slides[currentSlide + 1].slide
+        nextSlideUrl: currentProject.slides[currentSlide + 1] &&
+            currentProject.slides[currentSlide + 1].slide
     };
-    server_1.sendMessageToPresentationWindows(message);
+    (0, server_1.sendMessageToPresentationWindows)(message);
 }
 exports.sendSlideUpdatedMessage = sendSlideUpdatedMessage;
 function getSlideNumber() {

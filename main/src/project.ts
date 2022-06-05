@@ -22,13 +22,21 @@ import { promisify } from 'util';
 import { exists, promises } from 'fs';
 const { readFile } = promises;
 import { Validator } from 'jsonschema';
-import { MessageType, IProject, ICurrentSlideUpdatedMessage, ProjectSchema } from './common/message';
+import {
+  MessageType,
+  IProject,
+  ICurrentSlideUpdatedMessage,
+  ProjectSchema
+} from './common/message';
 import { createInternalError } from './common/util';
-import { sendMessageToPresentationWindows, setProjectDirectory } from './server';
+import {
+  sendMessageToPresentationWindows,
+  setProjectDirectory
+} from './server';
 
 let currentProjectDirectory: string | undefined;
 let currentProject: IProject | null = null;
-let currentSlide: number = 0;
+let currentSlide = 0;
 
 export function getCurrentProjectDirectory(): string | undefined {
   return currentProjectDirectory;
@@ -38,7 +46,9 @@ export function getCurrentProject(): IProject | null {
   return currentProject;
 }
 
-export async function loadProject(pathToProjectFile: string): Promise<IProject> {
+export async function loadProject(
+  pathToProjectFile: string
+): Promise<IProject> {
   const presentationFileExists = await promisify(exists)(pathToProjectFile);
   if (!presentationFileExists) {
     throw new Error(`Presentation file ${pathToProjectFile} does not exist`);
@@ -48,34 +58,44 @@ export async function loadProject(pathToProjectFile: string): Promise<IProject> 
   try {
     data = await readFile(pathToProjectFile);
   } catch (err) {
-    throw new Error(`Unable to read presentation file ${pathToProjectFile}: ${err}`);
+    throw new Error(
+      `Unable to read presentation file ${pathToProjectFile}: ${err}`
+    );
   }
 
   try {
     currentProject = JSON.parse(data.toString());
   } catch (err) {
-    throw new Error(`Could not parse project file ${pathToProjectFile}: ${err}`);
+    throw new Error(
+      `Could not parse project file ${pathToProjectFile}: ${err}`
+    );
   }
 
-  const results = (new Validator()).validate(currentProject, ProjectSchema);
+  const results = new Validator().validate(currentProject, ProjectSchema);
   if (!results.valid) {
-    throw new Error(`Invalid project file ${pathToProjectFile}:\n${results.errors.join('\n')}`);
+    throw new Error(
+      `Invalid project file ${pathToProjectFile}:\n${results.errors.join('\n')}`
+    );
   }
 
   currentProjectDirectory = dirname(pathToProjectFile);
   setProjectDirectory(currentProjectDirectory);
 
-  (currentProject as IProject).slides = (currentProject as IProject).slides.map((slide) => ({
-    slide: `/presentation/${slide.slide}`,
-    notes: slide.notes && `/presentation/${slide.notes}`
-  }));
+  (currentProject as IProject).slides = (currentProject as IProject).slides.map(
+    (slide) => ({
+      slide: `/presentation/${slide.slide}`,
+      notes: slide.notes && `/presentation/${slide.notes}`
+    })
+  );
 
   return currentProject as IProject;
 }
 
 export function sendSlideUpdatedMessage() {
   if (currentProject === null) {
-    throw new Error(createInternalError('"currentProject" is unexpectedly null'));
+    throw new Error(
+      createInternalError('"currentProject" is unexpectedly null')
+    );
   }
   const message: ICurrentSlideUpdatedMessage = {
     type: MessageType.CurrentSlideUpdated,
@@ -83,7 +103,9 @@ export function sendSlideUpdatedMessage() {
     numSlides: currentProject.slides.length,
     currentSlideUrl: currentProject.slides[currentSlide].slide,
     currentNotesUrl: currentProject.slides[currentSlide].notes,
-    nextSlideUrl: currentProject.slides[currentSlide + 1] && currentProject.slides[currentSlide + 1].slide
+    nextSlideUrl:
+      currentProject.slides[currentSlide + 1] &&
+      currentProject.slides[currentSlide + 1].slide
   };
   sendMessageToPresentationWindows(message);
 }

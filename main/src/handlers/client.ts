@@ -18,7 +18,10 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { IMessage } from '../common/message';
-import { sendMessageToPresentationWindows, sendMessageToClientWindows } from '../server';
+import {
+  sendMessageToPresentationWindows,
+  sendMessageToClientWindows
+} from '../server';
 
 export function handleClientWindowReady(msg: IMessage): void {
   sendMessageToPresentationWindows(msg);

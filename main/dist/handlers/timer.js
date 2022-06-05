@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.handleRequestResetTimer = exports.handleRequestPauseTimer = exports.handleRequestStartTimer = void 0;
 const message_1 = require("../common/message");
 const server_1 = require("../server");
 let elapsedTime = 0;
@@ -33,12 +34,12 @@ function handleRequestStartTimer() {
             type: message_1.MessageType.TimerUpdated,
             elapsedTime
         };
-        server_1.sendMessageToPresentationWindows(timerUpdatedMessage);
+        (0, server_1.sendMessageToPresentationWindows)(timerUpdatedMessage);
     }, 100);
     const message = {
         type: message_1.MessageType.TimerStarted
     };
-    server_1.sendMessageToPresentationWindows(message);
+    (0, server_1.sendMessageToPresentationWindows)(message);
 }
 exports.handleRequestStartTimer = handleRequestStartTimer;
 function handleRequestPauseTimer() {
@@ -46,7 +47,7 @@ function handleRequestPauseTimer() {
     const message = {
         type: message_1.MessageType.TimerPaused
     };
-    server_1.sendMessageToPresentationWindows(message);
+    (0, server_1.sendMessageToPresentationWindows)(message);
 }
 exports.handleRequestPauseTimer = handleRequestPauseTimer;
 function handleRequestResetTimer() {
@@ -55,7 +56,7 @@ function handleRequestResetTimer() {
         type: message_1.MessageType.TimerUpdated,
         elapsedTime
     };
-    server_1.sendMessageToPresentationWindows(timerUpdatedMessage);
+    (0, server_1.sendMessageToPresentationWindows)(timerUpdatedMessage);
 }
 exports.handleRequestResetTimer = handleRequestResetTimer;
 //# sourceMappingURL=timer.js.map

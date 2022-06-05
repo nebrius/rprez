@@ -19,8 +19,8 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 
 import { join } from 'path';
 import { createServer } from 'http';
-import { Server } from 'ws';
-import * as express from 'express';
+import WebSocket, { Server } from 'ws';
+import express from 'express';
 
 import {
   MessageType,
@@ -37,9 +37,19 @@ import {
   handleRequestPresentShow,
   handleRequestExitShow
 } from './handlers/presentation';
-import { handleRequestNextSlide, handleRequestPreviousSlide } from './handlers/navigation';
-import { handleRequestStartTimer, handleRequestPauseTimer, handleRequestResetTimer } from './handlers/timer';
-import { handleClientWindowReady, handleClientMessage } from './handlers/client';
+import {
+  handleRequestNextSlide,
+  handleRequestPreviousSlide
+} from './handlers/navigation';
+import {
+  handleRequestStartTimer,
+  handleRequestPauseTimer,
+  handleRequestResetTimer
+} from './handlers/timer';
+import {
+  handleClientWindowReady,
+  handleClientMessage
+} from './handlers/client';
 import { handleRequestExportSlides } from './handlers/export';
 
 const app = express();
@@ -53,25 +63,27 @@ interface IWebSocket {
   send(msg: string): void;
 }
 
-let managerConnection: any;
+let managerConnection: WebSocket;
 const presentationWindowConnections = new Map<IWebSocket, boolean>();
 const clientWindowConnections = new Map<IWebSocket, boolean>();
 
 export function sendMessageToManager(msg: IMessage): void {
   if (!managerConnection) {
-    throw new Error(createInternalError('"managerWindow" is unexpectedly null'));
+    throw new Error(
+      createInternalError('"managerWindow" is unexpectedly null')
+    );
   }
   managerConnection.send(JSON.stringify(msg));
 }
 
 export function sendMessageToPresentationWindows(msg: IMessage): void {
-  for (const [ connection ] of presentationWindowConnections) {
+  for (const [connection] of presentationWindowConnections) {
     connection.send(JSON.stringify(msg));
   }
 }
 
 export function sendMessageToClientWindows(msg: IMessage): void {
-  for (const [ connection ] of clientWindowConnections) {
+  for (const [connection] of clientWindowConnections) {
     connection.send(JSON.stringify(msg));
   }
 }
@@ -94,7 +106,9 @@ webSocketServer.on('connection', (wsClient) => {
         break;
 
       case MessageType.RequestLoadPresentation:
-        handleRequestLoadPresentation(parsedMessage as IRequestLoadPresentationMessage);
+        handleRequestLoadPresentation(
+          parsedMessage as IRequestLoadPresentationMessage
+        );
         break;
 
       case MessageType.RequestReloadPresentation:
@@ -143,7 +157,11 @@ webSocketServer.on('connection', (wsClient) => {
         break;
 
       default:
-        throw new Error(createInternalError(`Received unexpected message type ${parsedMessage.type}`));
+        throw new Error(
+          createInternalError(
+            `Received unexpected message type ${parsedMessage.type}`
+          )
+        );
     }
   });
   wsClient.on('close', () => {

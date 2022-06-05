@@ -30,7 +30,7 @@ let screenModule: Electron.Screen | null = null;
 
 export function getDisplays() {
   if (screenModule === null) {
-    throw createInternalError(`"screenModule" is null but shouldn't be`);
+    throw createInternalError('"screenModule" is null but shouldn\'t be');
   }
   return screenModule.getAllDisplays();
 }
@@ -70,7 +70,12 @@ export async function createManagerWindow(): Promise<void> {
 
 // Presentation window methods
 
-export function createPresentationWindow(type: MonitorViews, x: number, y: number, developerMode: boolean): void {
+export function createPresentationWindow(
+  type: MonitorViews,
+  x: number,
+  y: number,
+  developerMode: boolean
+): void {
   // Create the browser window.
   const win = new BrowserWindow({ width: 800, height: 600, x, y });
 
@@ -95,7 +100,11 @@ export function createPresentationWindow(type: MonitorViews, x: number, y: numbe
     // when you should delete the corresponding element.
     const winIndex = presentationWindows.indexOf(win);
     if (winIndex === -1) {
-      throw new Error(createInternalError('Presentation window is unexepctedly missing from 2'));
+      throw new Error(
+        createInternalError(
+          'Presentation window is unexepctedly missing from 2'
+        )
+      );
     }
     presentationWindows.splice(winIndex, 1);
   });
