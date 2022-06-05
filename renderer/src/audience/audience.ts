@@ -17,12 +17,20 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { MessageType, IMessage, ICurrentSlideUpdatedMessage } from '../common/message.js';
+import {
+  MessageType,
+  IMessage,
+  ICurrentSlideUpdatedMessage
+} from '../common/message.js';
 import { addMessageListener, sendMessage } from '../messaging.js';
 import { getElement } from '../util.js';
 
-const iframe1 = getElement('audience-currentSlide-iframe-1') as HTMLIFrameElement;
-const iframe2 = getElement('audience-currentSlide-iframe-2') as HTMLIFrameElement;
+const iframe1 = getElement(
+  'audience-currentSlide-iframe-1'
+) as HTMLIFrameElement;
+const iframe2 = getElement(
+  'audience-currentSlide-iframe-2'
+) as HTMLIFrameElement;
 let currentIFRame = 1;
 
 let frontIframe: HTMLIFrameElement;
@@ -30,7 +38,7 @@ let backIFrame: HTMLIFrameElement;
 
 addMessageListener((msg) => {
   switch (msg.type) {
-    case MessageType.CurrentSlideUpdated:
+    case MessageType.CurrentSlideUpdated: {
       const currentSlideUpdatedMessage = msg as ICurrentSlideUpdatedMessage;
       if (currentIFRame === 1) {
         currentIFRame = 2;
@@ -42,17 +50,23 @@ addMessageListener((msg) => {
         backIFrame = iframe2;
       }
       frontIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
-      console.log(`Slide changed to ${(msg as ICurrentSlideUpdatedMessage).currentSlideIndex}`);
+      console.log(
+        `Slide changed to ${
+          (msg as ICurrentSlideUpdatedMessage).currentSlideIndex
+        }`
+      );
       break;
+    }
 
-    case MessageType.ClientWindowReady:
+    case MessageType.ClientWindowReady: {
       frontIframe.style.zIndex = '1';
       backIFrame.style.zIndex = '0';
       break;
+    }
   }
 });
 
 const presentationWindowReadyMessage: IMessage = {
-  type: MessageType.PresentationWindowReady,
+  type: MessageType.PresentationWindowReady
 };
 sendMessage(presentationWindowReadyMessage);

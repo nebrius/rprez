@@ -5,7 +5,9 @@
   "main": "dist/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prebuild": "tslint 'src/**/*.ts'",
+    "lint": "eslint ./src/**/*.ts",
+    "lint-fix": "eslint --fix ./src/**/*.ts",
+    "prebuild": "npm run lint",
     "build": "tsc",
     "postbuild": "glopy renderer"
   },
@@ -33,9 +35,13 @@
   },
   "homepage": "https://github.com/nebrius/rprez#readme",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/parser": "^5.27.0",
+    "eslint": "^8.17.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "glopy": "0.0.3",
-    "tslint": "^5.18.0",
-    "typescript": "^3.5.3"
-  },
-  "dependencies": {}
+    "prettier": "^2.6.2",
+    "typescript": "^4.7.3"
+  }
 }

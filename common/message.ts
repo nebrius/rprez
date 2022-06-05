@@ -64,7 +64,7 @@ export interface IScreenUpdatedMessage extends IMessage {
 }
 
 export interface IRequestPresentShowMessage extends IMessage {
-  screenAssignments: { [ id: number ]: MonitorViews };
+  screenAssignments: { [id: number]: MonitorViews };
   developerMode: boolean;
 }
 
@@ -116,9 +116,9 @@ export const ProjectSchema = {
             type: 'string'
           }
         },
-        required: [ 'slide' ]
+        required: ['slide']
       }
     }
   },
-  required: [ 'slides' ]
+  required: ['slides']
 };

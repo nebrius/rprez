@@ -29,7 +29,9 @@ const clockTimeLabel = getElement('speaker-clockTime');
 const clockControlButton = getElement('speaker-clockControl');
 clockControlButton.onclick = () => {
     const message = {
-        type: clockControlButton.innerText === '⏯' ? MessageType.RequestStartTimer : MessageType.RequestPauseTimer
+        type: clockControlButton.innerText === '⏯'
+            ? MessageType.RequestStartTimer
+            : MessageType.RequestPauseTimer
     };
     sendMessage(message);
 };
@@ -51,28 +53,32 @@ setInterval(() => {
 }, 1000);
 addMessageListener((msg) => {
     switch (msg.type) {
-        case MessageType.CurrentSlideUpdated:
+        case MessageType.CurrentSlideUpdated: {
             const currentSlideUpdatedMessage = msg;
             currentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
             nextSlideIframe.src = currentSlideUpdatedMessage.nextSlideUrl || '';
             notesIframe.src = currentSlideUpdatedMessage.currentNotesUrl || '';
-            slideCountLabel.innerText =
-                `${currentSlideUpdatedMessage.currentSlideIndex}/${currentSlideUpdatedMessage.numSlides}`;
+            slideCountLabel.innerText = `${currentSlideUpdatedMessage.currentSlideIndex}/${currentSlideUpdatedMessage.numSlides}`;
             console.log(`Slide changed to ${msg.currentSlideIndex}`);
             break;
-        case MessageType.TimerUpdated:
+        }
+        case MessageType.TimerUpdated: {
             const time = new Date(msg.elapsedTime);
             elapsedTimeLabel.innerText = formateDateUTC(time);
             break;
-        case MessageType.TimerStarted:
+        }
+        case MessageType.TimerStarted: {
             clockControlButton.innerText = '⏸';
             break;
-        case MessageType.TimerPaused:
+        }
+        case MessageType.TimerPaused: {
             clockControlButton.innerText = '⏯';
             break;
+        }
     }
 });
 const presentationWindowReadyMessage = {
-    type: MessageType.PresentationWindowReady,
+    type: MessageType.PresentationWindowReady
 };
 sendMessage(presentationWindowReadyMessage);
+//# sourceMappingURL=speaker.js.map

@@ -23,6 +23,7 @@ const messageQueue = [];
 connection.addEventListener('open', () => {
     console.log('Connected to bridging server');
     isConnected = true;
+    // eslint-disable-next-line no-constant-condition
     while (true) {
         const message = messageQueue.shift();
         if (!message) {
@@ -48,3 +49,4 @@ export function addMessageListener(cb) {
         cb(JSON.parse(msg.data));
     });
 }
+//# sourceMappingURL=messaging.js.map

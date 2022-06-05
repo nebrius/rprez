@@ -24,3 +24,4 @@ export function getElement(id) {
     }
     return element;
 }
+//# sourceMappingURL=util.js.map

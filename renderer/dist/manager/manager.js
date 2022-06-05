@@ -29,9 +29,6 @@ function createMonitorEntry(parent, screenInfo, screenIndex, defaultOption) {
     const select = document.createElement('select');
     select.setAttribute('data-screenid', screenInfo.id.toString());
     for (const monitorView in MonitorViews) {
-        if (!MonitorViews.hasOwnProperty(monitorView)) {
-            continue;
-        }
         const noneOption = document.createElement('option');
         noneOption.value = monitorView;
         noneOption.innerText = monitorView;
@@ -51,6 +48,8 @@ getElement('presentationInput').onchange = () => {
     }
     const message = {
         type: MessageType.RequestLoadPresentation,
+        // TODO: figure out why 'path' isn't a valid property
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         filename: filenames[0].path
     };
     sendMessage(message);
@@ -65,7 +64,8 @@ getElement('presentButton').onclick = () => {
     const screenAssignments = {};
     const developerModeCheckboxElement = getElement('developerModeCheckbox');
     for (const monitorSelect of document.querySelectorAll('#monitorList select')) {
-        const monitorView = monitorSelect.selectedOptions[0].value;
+        const monitorView = monitorSelect.selectedOptions[0]
+            .value;
         const monitorId = parseInt(monitorSelect.getAttribute('data-screenid'), 10);
         screenAssignments[monitorId] = monitorView;
     }
@@ -84,7 +84,7 @@ getElement('exportSlidesButton').onclick = () => {
 };
 addMessageListener((msg) => {
     switch (msg.type) {
-        case MessageType.ScreenUpdated:
+        case MessageType.ScreenUpdated: {
             const monitorListContainer = getElement('monitorList');
             for (const child of monitorListContainer.childNodes) {
                 monitorListContainer.removeChild(child);
@@ -101,26 +101,32 @@ addMessageListener((msg) => {
                 createMonitorEntry(monitorListContainer, screens[i], i, defaultScreen);
             }
             break;
-        case MessageType.ProjectLoaded:
+        }
+        case MessageType.ProjectLoaded: {
             const presentationView = getElement('presentationView');
             const loadView = getElement('loadView');
             presentationView.style.display = 'inherit';
             loadView.style.display = 'none';
             break;
-        case MessageType.ExportSlidesProgress:
+        }
+        case MessageType.ExportSlidesProgress: {
             const exportSlidesProgress = getElement('exportSlidesProgress');
             exportSlidesProgress.style.display = 'inherit';
             exportSlidesProgress.value = msg.percentage;
             break;
-        case MessageType.ExportSlidesCompleted:
+        }
+        case MessageType.ExportSlidesCompleted: {
             alert('Slide export complete');
             getElement('exportSlidesProgress').style.display = 'none';
             break;
-        default:
+        }
+        default: {
             throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
+        }
     }
 });
 const managerReadyMessage = {
-    type: MessageType.ManagerReady,
+    type: MessageType.ManagerReady
 };
 sendMessage(managerReadyMessage);
+//# sourceMappingURL=manager.js.map

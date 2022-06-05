@@ -26,7 +26,7 @@ let frontIframe;
 let backIFrame;
 addMessageListener((msg) => {
     switch (msg.type) {
-        case MessageType.CurrentSlideUpdated:
+        case MessageType.CurrentSlideUpdated: {
             const currentSlideUpdatedMessage = msg;
             if (currentIFRame === 1) {
                 currentIFRame = 2;
@@ -41,13 +41,16 @@ addMessageListener((msg) => {
             frontIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
             console.log(`Slide changed to ${msg.currentSlideIndex}`);
             break;
-        case MessageType.ClientWindowReady:
+        }
+        case MessageType.ClientWindowReady: {
             frontIframe.style.zIndex = '1';
             backIFrame.style.zIndex = '0';
             break;
+        }
     }
 });
 const presentationWindowReadyMessage = {
-    type: MessageType.PresentationWindowReady,
+    type: MessageType.PresentationWindowReady
 };
 sendMessage(presentationWindowReadyMessage);
+//# sourceMappingURL=audience.js.map

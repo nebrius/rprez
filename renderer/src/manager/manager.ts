@@ -48,13 +48,10 @@ function createMonitorEntry(
   const select = document.createElement('select');
   select.setAttribute('data-screenid', screenInfo.id.toString());
   for (const monitorView in MonitorViews) {
-    if (!MonitorViews.hasOwnProperty(monitorView)) {
-      continue;
-    }
     const noneOption = document.createElement('option');
     noneOption.value = monitorView;
     noneOption.innerText = monitorView;
-    if (defaultOption === MonitorViews[monitorView]) {
+    if (defaultOption === MonitorViews[monitorView as MonitorViews]) {
       noneOption.selected = true;
     }
     select.appendChild(noneOption);
@@ -72,6 +69,8 @@ getElement('presentationInput').onchange = () => {
   }
   const message: IRequestLoadPresentationMessage = {
     type: MessageType.RequestLoadPresentation,
+    // TODO: figure out why 'path' isn't a valid property
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filename: (filenames[0] as any).path
   };
   sendMessage(message);
@@ -85,11 +84,17 @@ getElement('reloadShowButton').onclick = () => {
 };
 
 getElement('presentButton').onclick = () => {
-  const screenAssignments: { [ id: number ]: MonitorViews } = {};
+  const screenAssignments: { [id: number]: MonitorViews } = {};
   const developerModeCheckboxElement = getElement('developerModeCheckbox');
-  for (const monitorSelect of document.querySelectorAll('#monitorList select')) {
-    const monitorView = (monitorSelect as HTMLSelectElement).selectedOptions[0].value as MonitorViews;
-    const monitorId = parseInt(monitorSelect.getAttribute('data-screenid') as string, 10);
+  for (const monitorSelect of document.querySelectorAll(
+    '#monitorList select'
+  )) {
+    const monitorView = (monitorSelect as HTMLSelectElement).selectedOptions[0]
+      .value as MonitorViews;
+    const monitorId = parseInt(
+      monitorSelect.getAttribute('data-screenid') as string,
+      10
+    );
     screenAssignments[monitorId] = monitorView;
   }
   const message: IRequestPresentShowMessage = {
@@ -109,7 +114,7 @@ getElement('exportSlidesButton').onclick = () => {
 
 addMessageListener((msg) => {
   switch (msg.type) {
-    case MessageType.ScreenUpdated:
+    case MessageType.ScreenUpdated: {
       const monitorListContainer = getElement('monitorList');
       for (const child of monitorListContainer.childNodes) {
         monitorListContainer.removeChild(child);
@@ -125,31 +130,40 @@ addMessageListener((msg) => {
         createMonitorEntry(monitorListContainer, screens[i], i, defaultScreen);
       }
       break;
+    }
 
-    case MessageType.ProjectLoaded:
+    case MessageType.ProjectLoaded: {
       const presentationView = getElement('presentationView');
       const loadView = getElement('loadView');
       presentationView.style.display = 'inherit';
       loadView.style.display = 'none';
       break;
+    }
 
-    case MessageType.ExportSlidesProgress:
-      const exportSlidesProgress = getElement('exportSlidesProgress') as HTMLProgressElement;
+    case MessageType.ExportSlidesProgress: {
+      const exportSlidesProgress = getElement(
+        'exportSlidesProgress'
+      ) as HTMLProgressElement;
       exportSlidesProgress.style.display = 'inherit';
       exportSlidesProgress.value = (msg as IExportSlidesProgress).percentage;
       break;
+    }
 
-    case MessageType.ExportSlidesCompleted:
+    case MessageType.ExportSlidesCompleted: {
       alert('Slide export complete');
       getElement('exportSlidesProgress').style.display = 'none';
       break;
+    }
 
-    default:
-      throw new Error(createInternalError(`Received unexpected message type ${msg.type}`));
+    default: {
+      throw new Error(
+        createInternalError(`Received unexpected message type ${msg.type}`)
+      );
+    }
   }
 });
 
 const managerReadyMessage: IMessage = {
-  type: MessageType.ManagerReady,
+  type: MessageType.ManagerReady
 };
 sendMessage(managerReadyMessage);

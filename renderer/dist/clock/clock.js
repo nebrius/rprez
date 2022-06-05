@@ -25,14 +25,15 @@ if (!elapsedTimeLabel) {
 }
 addMessageListener((msg) => {
     switch (msg.type) {
-        case MessageType.TimerUpdated:
+        case MessageType.TimerUpdated: {
             const time = new Date(msg.elapsedTime);
-            elapsedTimeLabel.innerText =
-                `${numToString(time.getUTCHours())}:${numToString(time.getUTCMinutes())}:${numToString(time.getUTCSeconds())}`;
+            elapsedTimeLabel.innerText = `${numToString(time.getUTCHours())}:${numToString(time.getUTCMinutes())}:${numToString(time.getUTCSeconds())}`;
             break;
+        }
     }
 });
 const presentationWindowReadyMessage = {
-    type: MessageType.PresentationWindowReady,
+    type: MessageType.PresentationWindowReady
 };
 sendMessage(presentationWindowReadyMessage);
+//# sourceMappingURL=clock.js.map

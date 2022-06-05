@@ -27,6 +27,7 @@ const messageQueue: IMessage[] = [];
 connection.addEventListener('open', () => {
   console.log('Connected to bridging server');
   isConnected = true;
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     const message = messageQueue.shift();
     if (!message) {
