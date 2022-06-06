@@ -64,6 +64,7 @@ getElement('presentButton').onclick = () => {
     const screenAssignments = {};
     const developerModeCheckboxElement = getElement('developerModeCheckbox');
     for (const monitorSelect of document.querySelectorAll('#monitorList select')) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const monitorView = monitorSelect.selectedOptions[0]
             .value;
         const monitorId = parseInt(monitorSelect.getAttribute('data-screenid'), 10);
@@ -98,6 +99,7 @@ addMessageListener((msg) => {
                 else if (i === 1) {
                     defaultScreen = MonitorViews.Speaker;
                 }
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 createMonitorEntry(monitorListContainer, screens[i], i, defaultScreen);
             }
             break;

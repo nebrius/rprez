@@ -89,7 +89,8 @@ getElement('presentButton').onclick = () => {
   for (const monitorSelect of document.querySelectorAll(
     '#monitorList select'
   )) {
-    const monitorView = (monitorSelect as HTMLSelectElement).selectedOptions[0]
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const monitorView = (monitorSelect as HTMLSelectElement).selectedOptions[0]!
       .value as MonitorViews;
     const monitorId = parseInt(
       monitorSelect.getAttribute('data-screenid') as string,
@@ -127,7 +128,8 @@ addMessageListener((msg) => {
         } else if (i === 1) {
           defaultScreen = MonitorViews.Speaker;
         }
-        createMonitorEntry(monitorListContainer, screens[i], i, defaultScreen);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        createMonitorEntry(monitorListContainer, screens[i]!, i, defaultScreen);
       }
       break;
     }
