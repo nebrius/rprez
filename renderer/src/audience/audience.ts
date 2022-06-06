@@ -17,11 +17,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-  MessageType,
-  Message,
-  CurrentSlideUpdatedMessage
-} from '../common/message.js';
+import { Message, CurrentSlideUpdatedMessage } from '../common/message.js';
 import { addMessageListener, sendMessage } from '../messaging.js';
 import { getElement } from '../util.js';
 
@@ -38,7 +34,7 @@ let backIFrame: HTMLIFrameElement;
 
 addMessageListener((msg) => {
   switch (msg.type) {
-    case MessageType.CurrentSlideUpdated: {
+    case 'CurrentSlideUpdated': {
       const currentSldeUpdatedMessage = msg as CurrentSlideUpdatedMessage;
       if (currentIFRame === 1) {
         currentIFRame = 2;
@@ -58,7 +54,7 @@ addMessageListener((msg) => {
       break;
     }
 
-    case MessageType.ClientWindowReady: {
+    case 'ClientWindowReady': {
       frontIframe.style.zIndex = '1';
       backIFrame.style.zIndex = '0';
       break;
@@ -67,6 +63,6 @@ addMessageListener((msg) => {
 });
 
 const presentatonWindowReadyMessage: Message = {
-  type: MessageType.PresentationWindowReady
+  type: 'PresentationWindowReady'
 };
 sendMessage(presentatonWindowReadyMessage);

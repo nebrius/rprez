@@ -26,7 +26,6 @@ const path_1 = require("path");
 const http_1 = require("http");
 const ws_1 = require("ws");
 const express_1 = __importDefault(require("express"));
-const message_1 = require("./common/message");
 const util_1 = require("./common/util");
 const manager_1 = require("./handlers/manager");
 const presentation_1 = require("./handlers/presentation");
@@ -68,48 +67,48 @@ webSocketServer.on('connection', (wsClient) => {
     wsClient.on('message', (msg) => {
         const parsedMessage = JSON.parse(msg.toString());
         switch (parsedMessage.type) {
-            case message_1.MessageType.ManagerReady:
+            case 'ManagerReady':
                 managerConnection = wsClient;
                 (0, manager_1.handleManagerReadyMessage)();
                 break;
-            case message_1.MessageType.PresentationWindowReady:
+            case 'PresentationWindowReady':
                 presentationWindowConnections.set(wsClient, true);
                 break;
-            case message_1.MessageType.RequestLoadPresentation:
+            case 'RequestLoadPresentation':
                 (0, presentation_1.handleRequestLoadPresentation)(parsedMessage);
                 break;
-            case message_1.MessageType.RequestReloadPresentation:
+            case 'RequestReloadPresentation':
                 (0, presentation_1.handleRequestReloadPresentation)();
                 break;
-            case message_1.MessageType.RequestPresentShow:
+            case 'RequestPresentShow':
                 (0, presentation_1.handleRequestPresentShow)(parsedMessage);
                 break;
-            case message_1.MessageType.RequestExistShow:
+            case 'RequestExistShow':
                 (0, presentation_1.handleRequestExitShow)();
                 break;
-            case message_1.MessageType.RequestExportSlides:
+            case 'RequestExportSlides':
                 (0, export_1.handleRequestExportSlides)();
                 break;
-            case message_1.MessageType.RequestNextSlide:
+            case 'RequestNextSlide':
                 (0, navigation_1.handleRequestNextSlide)();
                 break;
-            case message_1.MessageType.RequestPreviousSlide:
+            case 'RequestPreviousSlide':
                 (0, navigation_1.handleRequestPreviousSlide)();
                 break;
-            case message_1.MessageType.RequestStartTimer:
+            case 'RequestStartTimer':
                 (0, timer_1.handleRequestStartTimer)();
                 break;
-            case message_1.MessageType.RequestPauseTimer:
+            case 'RequestPauseTimer':
                 (0, timer_1.handleRequestPauseTimer)();
                 break;
-            case message_1.MessageType.RequestResetTimer:
+            case 'RequestResetTimer':
                 (0, timer_1.handleRequestResetTimer)();
                 break;
-            case message_1.MessageType.ClientWindowReady:
+            case 'ClientWindowReady':
                 clientWindowConnections.set(wsClient, true);
                 (0, client_1.handleClientWindowReady)(parsedMessage);
                 break;
-            case message_1.MessageType.ClentMessage:
+            case 'ClentMessage':
                 (0, client_1.handleClentMessage)(parsedMessage);
                 break;
             default:

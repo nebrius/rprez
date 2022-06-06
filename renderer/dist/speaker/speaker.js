@@ -16,7 +16,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { MessageType } from '../common/message.js';
 import { numToString } from '../common/util.js';
 import { addMessageListener, sendMessage } from '../messaging.js';
 import { getElement } from '../util.js';
@@ -30,15 +29,15 @@ const clockControlButton = getElement('speaker-clockControl');
 clockControlButton.onclick = () => {
     const message = {
         type: clockControlButton.innerText === '⏯'
-            ? MessageType.RequestStartTimer
-            : MessageType.RequestPauseTimer
+            ? 'RequestStartTimer'
+            : 'RequestPauseTimer'
     };
     sendMessage(message);
 };
 const clockResetButton = getElement('speaker-clockReset');
 clockResetButton.onclick = () => {
     const message = {
-        type: MessageType.RequestResetTimer
+        type: 'RequestResetTimer'
     };
     sendMessage(message);
 };
@@ -53,7 +52,7 @@ setInterval(() => {
 }, 1000);
 addMessageListener((msg) => {
     switch (msg.type) {
-        case MessageType.CurrentSlideUpdated: {
+        case 'CurrentSlideUpdated': {
             const currentSldeUpdatedMessage = msg;
             currentSlideIframe.src = currentSldeUpdatedMessage.currentSlideUrl;
             nextSlideIframe.src = currentSldeUpdatedMessage.nextSlideUrl || '';
@@ -62,23 +61,23 @@ addMessageListener((msg) => {
             console.log(`Slide changed to ${msg.currentSlideIndex}`);
             break;
         }
-        case MessageType.TimerUpdated: {
+        case 'TimerUpdated': {
             const time = new Date(msg.elapsedTime);
             elapsedTimeLabel.innerText = formateDateUTC(time);
             break;
         }
-        case MessageType.TimerStarted: {
+        case 'TimerStarted': {
             clockControlButton.innerText = '⏸';
             break;
         }
-        case MessageType.TimerPaused: {
+        case 'TimerPaused': {
             clockControlButton.innerText = '⏯';
             break;
         }
     }
 });
 const presentatonWindowReadyMessage = {
-    type: MessageType.PresentationWindowReady
+    type: 'PresentationWindowReady'
 };
 sendMessage(presentatonWindowReadyMessage);
 //# sourceMappingURL=speaker.js.map

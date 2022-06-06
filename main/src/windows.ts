@@ -80,7 +80,7 @@ export function createPresentationWindow(
   const win = new BrowserWindow({ width: 800, height: 600, x, y });
 
   // and load the index.html of the app.
-  const filebase = MonitorViews[type].toLowerCase();
+  const filebase = type.toLowerCase();
   win.loadURL(`http://localhost:${PORT}/rprez/${filebase}/${filebase}.html`);
 
   if (developerMode) {

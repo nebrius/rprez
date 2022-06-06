@@ -24,7 +24,6 @@ const project_1 = require("../project");
 const util_1 = require("../common/util");
 const pdfjs_1 = require("pdfjs");
 const fs_1 = require("fs");
-const message_1 = require("../common/message");
 const server_1 = require("../server");
 async function exportSlides(outputFile) {
     console.log(`Export presentation slides to ${outputFile}`);
@@ -61,7 +60,7 @@ async function exportSlides(outputFile) {
             await (0, util_1.sleep)(1000);
             progressPercentage += 0.05 / slides.length;
             message = {
-                type: message_1.MessageType.ExportSlidesProgress,
+                type: 'ExportSlidesProgress',
                 percentage: progressPercentage
             };
             (0, server_1.sendMessageToManager)(message);
@@ -79,7 +78,7 @@ async function exportSlides(outputFile) {
         resolve(undefined);
         progressPercentage += 0.5 / slides.length;
         message = {
-            type: message_1.MessageType.ExportSlidesProgress,
+            type: 'ExportSlidesProgress',
             percentage: progressPercentage
         };
         (0, server_1.sendMessageToManager)(message);
@@ -94,7 +93,7 @@ async function exportSlides(outputFile) {
     // Wrap up
     console.log(`Finished exporting slides in ${Date.now() - startTime}ms`);
     const completedMessage = {
-        type: message_1.MessageType.ExportSlidesCompleted
+        type: 'ExportSlidesCompleted'
     };
     (0, server_1.sendMessageToManager)(completedMessage);
 }

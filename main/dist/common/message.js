@@ -18,39 +18,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProjectSchema = exports.MonitorViews = exports.MessageType = void 0;
-var MessageType;
-(function (MessageType) {
-    MessageType["ManagerReady"] = "ManagerReady";
-    MessageType["PresentationWindowReady"] = "PresentationWindowReady";
-    MessageType["ClientWindowReady"] = "ClientWindowReady";
-    MessageType["ScreenUpdated"] = "ScreenUpdated";
-    MessageType["RequestLoadPresentation"] = "RequestLoadPresentation";
-    MessageType["RequestReloadPresentation"] = "RequestReloadPresentation";
-    MessageType["RequestExportSlides"] = "RequestExportSlides";
-    MessageType["ExportSlidesProgress"] = "ExportSlidesProgress";
-    MessageType["ExportSlidesCompleted"] = "ExportSlidesCompleted";
-    MessageType["ProjectLoaded"] = "ProjectLoaded";
-    MessageType["RequestPresentShow"] = "RequestPresentShow";
-    MessageType["RequestExistShow"] = "RequestExistShow";
-    MessageType["RequestNextSlide"] = "RequestNextSlide";
-    MessageType["RequestPreviousSlide"] = "RequestPreviousSlide";
-    MessageType["CurrentSlideUpdated"] = "CurrentSlideUpdated";
-    MessageType["TimerUpdated"] = "TimerUpdated";
-    MessageType["TimerStarted"] = "TimerStarted";
-    MessageType["TimerPaused"] = "TimerPaused";
-    MessageType["RequestStartTimer"] = "RequestStartTimer";
-    MessageType["RequestPauseTimer"] = "RequestPauseTimer";
-    MessageType["RequestResetTimer"] = "RequestResetTimer";
-    MessageType["ClentMessage"] = "ClentMessage";
-})(MessageType = exports.MessageType || (exports.MessageType = {}));
-var MonitorViews;
-(function (MonitorViews) {
-    MonitorViews["None"] = "None";
-    MonitorViews["Speaker"] = "Speaker";
-    MonitorViews["Audience"] = "Audience";
-    MonitorViews["Clock"] = "Clock";
-})(MonitorViews = exports.MonitorViews || (exports.MonitorViews = {}));
+exports.ProjectSchema = void 0;
 exports.ProjectSchema = {
     type: 'object',
     properties: {

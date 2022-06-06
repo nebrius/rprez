@@ -22,7 +22,7 @@ import { getCurrentProject, getCurrentProjectDirectory } from '../project';
 import { sleep, PORT } from '../common/util';
 import { Document, ExternalDocument } from 'pdfjs';
 import { promises } from 'fs';
-import { MessageType, IExportSlidesProgress, Message } from '../common/message';
+import { ExportSlidesProgress, Message } from '../common/message';
 import { sendMessageToManager } from '../server';
 
 async function exportSlides(outputFile: string): Promise<void> {
@@ -65,12 +65,12 @@ async function exportSlides(outputFile: string): Promise<void> {
           renderWindow.loadURL(slideUrl);
 
           // TODO: convert this hacky crap into proper message-based loading complete timing
-          let message: IExportSlidesProgress;
+          let message: ExportSlidesProgress;
           for (let i = 0; i < 10; i++) {
             await sleep(1000);
             progressPercentage += 0.05 / slides.length;
             message = {
-              type: MessageType.ExportSlidesProgress,
+              type: 'ExportSlidesProgress',
               percentage: progressPercentage
             };
             sendMessageToManager(message);
@@ -89,7 +89,7 @@ async function exportSlides(outputFile: string): Promise<void> {
           resolve(undefined);
           progressPercentage += 0.5 / slides.length;
           message = {
-            type: MessageType.ExportSlidesProgress,
+            type: 'ExportSlidesProgress',
             percentage: progressPercentage
           };
           sendMessageToManager(message);
@@ -108,7 +108,7 @@ async function exportSlides(outputFile: string): Promise<void> {
   // Wrap up
   console.log(`Finished exporting slides in ${Date.now() - startTime}ms`);
   const completedMessage: Message = {
-    type: MessageType.ExportSlidesCompleted
+    type: 'ExportSlidesCompleted'
   };
   sendMessageToManager(completedMessage);
 }

@@ -18,12 +18,11 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
-  MessageType,
   Message,
   ScreenUpdatedMessage,
   RequestPresentShowMessage,
   RequestLoadPresentationMessage,
-  IExportSlidesProgress,
+  ExportSlidesProgress,
   ScreenInfo,
   MonitorViews
 } from '../common/message.js';
@@ -47,11 +46,12 @@ function createMonitorEntry(
 
   const select = document.createElement('select');
   select.setAttribute('data-screenid', screenInfo.id.toString());
-  for (const monitorView in MonitorViews) {
+  const monitorViews: MonitorViews[] = ['None', 'Speaker', 'Audience', 'Clock'];
+  for (const monitorView of monitorViews) {
     const noneOption = document.createElement('option');
     noneOption.value = monitorView;
     noneOption.innerText = monitorView;
-    if (defaultOption === MonitorViews[monitorView as MonitorViews]) {
+    if (defaultOption === monitorView) {
       noneOption.selected = true;
     }
     select.appendChild(noneOption);
@@ -68,7 +68,7 @@ getElement('presentationInput').onchange = () => {
     throw new Error(createInternalError('"filenames" is unexpectedly null'));
   }
   const message: RequestLoadPresentationMessage = {
-    type: MessageType.RequestLoadPresentation,
+    type: 'RequestLoadPresentation',
     // TODO: figure out why 'path' isn't a valid property
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filename: (filenames[0] as any).path
@@ -78,7 +78,7 @@ getElement('presentationInput').onchange = () => {
 
 getElement('reloadShowButton').onclick = () => {
   const message: Message = {
-    type: MessageType.RequestReloadPresentation
+    type: 'RequestReloadPresentation'
   };
   sendMessage(message);
 };
@@ -99,7 +99,7 @@ getElement('presentButton').onclick = () => {
     screenAssignments[monitorId] = monitorView;
   }
   const message: RequestPresentShowMessage = {
-    type: MessageType.RequestPresentShow,
+    type: 'RequestPresentShow',
     developerMode: (developerModeCheckboxElement as HTMLInputElement).checked,
     screenAssignments
   };
@@ -108,14 +108,14 @@ getElement('presentButton').onclick = () => {
 
 getElement('exportSlidesButton').onclick = () => {
   const message: Message = {
-    type: MessageType.RequestExportSlides
+    type: 'RequestExportSlides'
   };
   sendMessage(message);
 };
 
 addMessageListener((msg) => {
   switch (msg.type) {
-    case MessageType.ScreenUpdated: {
+    case 'ScreenUpdated': {
       const monitorListContainer = getElement('monitorList');
       for (const child of monitorListContainer.childNodes) {
         monitorListContainer.removeChild(child);
@@ -124,9 +124,9 @@ addMessageListener((msg) => {
       for (let i = 0; i < screens.length; i++) {
         let defaultScreen: MonitorViews | undefined;
         if (i === 0) {
-          defaultScreen = MonitorViews.Audience;
+          defaultScreen = 'Audience';
         } else if (i === 1) {
-          defaultScreen = MonitorViews.Speaker;
+          defaultScreen = 'Speaker';
         }
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         createMonitorEntry(monitorListContainer, screens[i]!, i, defaultScreen);
@@ -134,7 +134,7 @@ addMessageListener((msg) => {
       break;
     }
 
-    case MessageType.ProjectLoaded: {
+    case 'ProjectLoaded': {
       const presentationView = getElement('presentationView');
       const loadView = getElement('loadView');
       presentationView.style.display = 'inherit';
@@ -142,16 +142,16 @@ addMessageListener((msg) => {
       break;
     }
 
-    case MessageType.ExportSlidesProgress: {
+    case 'ExportSlidesProgress': {
       const exportSlidesProgress = getElement(
         'exportSlidesProgress'
       ) as HTMLProgressElement;
       exportSlidesProgress.style.display = 'inherit';
-      exportSlidesProgress.value = (msg as IExportSlidesProgress).percentage;
+      exportSlidesProgress.value = (msg as ExportSlidesProgress).percentage;
       break;
     }
 
-    case MessageType.ExportSlidesCompleted: {
+    case 'ExportSlidesCompleted': {
       alert('Slide export complete');
       getElement('exportSlidesProgress').style.display = 'none';
       break;
@@ -166,6 +166,6 @@ addMessageListener((msg) => {
 });
 
 const managerReadyMessage: Message = {
-  type: MessageType.ManagerReady
+  type: 'ManagerReady'
 };
 sendMessage(managerReadyMessage);

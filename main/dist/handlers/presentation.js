@@ -19,7 +19,6 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleRequestExitShow = exports.handleRequestPresentShow = exports.handleRequestReloadPresentation = exports.handleRequestLoadPresentation = void 0;
-const message_1 = require("../common/message");
 const project_1 = require("../project");
 const windows_1 = require("../windows");
 const server_1 = require("../server");
@@ -36,7 +35,7 @@ async function loadPresentation(filename) {
     }
     (0, project_1.setSlideNumber)(Math.min(presentationProject.slides.length - 1, (0, project_1.getSlideNumber)()));
     const message = {
-        type: message_1.MessageType.ProjectLoaded,
+        type: 'ProjectLoaded',
         project: presentationProject
     };
     (0, server_1.sendMessageToManager)(message);
@@ -63,7 +62,7 @@ function handleRequestPresentShow(presentMessage) {
             throw new Error('Internal Error: screenAssignment is unexepctedly undefined');
         }
         const display = (0, windows_1.getDisplayForId)(parseInt(monitorId, 10));
-        console.log(`Opening ${message_1.MonitorViews[screenAssignment]} view on monitor ` +
+        console.log(`Opening ${screenAssignment} view on monitor ` +
             `${monitorId} (${display.bounds.width}x${display.bounds.height})`);
         (0, windows_1.createPresentationWindow)(screenAssignment, display.bounds.x, display.bounds.y, presentMessage.developerMode);
         setTimeout(project_1.sendSldeUpdatedMessage, 1000);

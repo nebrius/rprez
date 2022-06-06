@@ -23,8 +23,7 @@ import { exists, promises } from 'fs';
 const { readFile } = promises;
 import { Validator } from 'jsonschema';
 import {
-  MessageType,
-  IProject,
+  Project,
   CurrentSlideUpdatedMessage,
   ProjectSchema
 } from './common/message';
@@ -35,20 +34,18 @@ import {
 } from './server';
 
 let currentProjectDirectory: string | undefined;
-let currentProject: IProject | null = null;
+let currentProject: Project | null = null;
 let currentSlide = 0;
 
 export function getCurrentProjectDirectory(): string | undefined {
   return currentProjectDirectory;
 }
 
-export function getCurrentProject(): IProject | null {
+export function getCurrentProject(): Project | null {
   return currentProject;
 }
 
-export async function loadProject(
-  pathToProjectFile: string
-): Promise<IProject> {
+export async function loadProject(pathToProjectFile: string): Promise<Project> {
   const presentationFileExists = await promisify(exists)(pathToProjectFile);
   if (!presentationFileExists) {
     throw new Error(`Presentation file ${pathToProjectFile} does not exist`);
@@ -81,14 +78,14 @@ export async function loadProject(
   currentProjectDirectory = dirname(pathToProjectFile);
   setProjectDirectory(currentProjectDirectory);
 
-  (currentProject as IProject).slides = (currentProject as IProject).slides.map(
+  (currentProject as Project).slides = (currentProject as Project).slides.map(
     (slide) => ({
       slide: `/presentation/${slide.slide}`,
       notes: slide.notes && `/presentation/${slide.notes}`
     })
   );
 
-  return currentProject as IProject;
+  return currentProject as Project;
 }
 
 export function sendSldeUpdatedMessage() {
@@ -103,7 +100,7 @@ export function sendSldeUpdatedMessage() {
     throw new Error('Internal Error: could not get current/next slides');
   }
   const message: CurrentSlideUpdatedMessage = {
-    type: MessageType.CurrentSlideUpdated,
+    type: 'CurrentSlideUpdated',
     currentSlideIndex: currentSlide + 1, // Need 1 based, not 0 based index
     numSlides: currentProject.slides.length,
     currentSlideUrl: currentSlideContent.slide,

@@ -17,30 +17,29 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export enum MessageType {
-  ManagerReady = 'ManagerReady',
-  PresentationWindowReady = 'PresentationWindowReady',
-  ClientWindowReady = 'ClientWindowReady',
-  ScreenUpdated = 'ScreenUpdated',
-  RequestLoadPresentation = 'RequestLoadPresentation',
-  RequestReloadPresentation = 'RequestReloadPresentation',
-  RequestExportSlides = 'RequestExportSlides',
-  ExportSlidesProgress = 'ExportSlidesProgress',
-  ExportSlidesCompleted = 'ExportSlidesCompleted',
-  ProjectLoaded = 'ProjectLoaded',
-  RequestPresentShow = 'RequestPresentShow',
-  RequestExistShow = 'RequestExistShow',
-  RequestNextSlide = 'RequestNextSlide',
-  RequestPreviousSlide = 'RequestPreviousSlide',
-  CurrentSlideUpdated = 'CurrentSlideUpdated',
-  TimerUpdated = 'TimerUpdated',
-  TimerStarted = 'TimerStarted',
-  TimerPaused = 'TimerPaused',
-  RequestStartTimer = 'RequestStartTimer',
-  RequestPauseTimer = 'RequestPauseTimer',
-  RequestResetTimer = 'RequestResetTimer',
-  ClentMessage = 'ClentMessage'
-}
+export type MessageType =
+  | 'ManagerReady'
+  | 'PresentationWindowReady'
+  | 'ClientWindowReady'
+  | 'ScreenUpdated'
+  | 'RequestLoadPresentation'
+  | 'RequestReloadPresentation'
+  | 'RequestExportSlides'
+  | 'ExportSlidesProgress'
+  | 'ExportSlidesCompleted'
+  | 'ProjectLoaded'
+  | 'RequestPresentShow'
+  | 'RequestExistShow'
+  | 'RequestNextSlide'
+  | 'RequestPreviousSlide'
+  | 'CurrentSlideUpdated'
+  | 'TimerUpdated'
+  | 'TimerStarted'
+  | 'TimerPaused'
+  | 'RequestStartTimer'
+  | 'RequestPauseTimer'
+  | 'RequestResetTimer'
+  | 'ClentMessage';
 
 export interface Message {
   type: MessageType;
@@ -52,39 +51,41 @@ export interface ScreenInfo {
   id: number;
 }
 
-export enum MonitorViews {
-  None = 'None',
-  Speaker = 'Speaker',
-  Audience = 'Audience',
-  Clock = 'Clock'
-}
+export type MonitorViews = 'None' | 'Speaker' | 'Audience' | 'Clock';
 
 export interface ScreenUpdatedMessage extends Message {
+  type: 'ScreenUpdated';
   screens: ScreenInfo[];
 }
 
 export interface RequestPresentShowMessage extends Message {
+  type: 'RequestPresentShow';
   screenAssignments: { [id: number]: MonitorViews };
   developerMode: boolean;
 }
 
 export interface RequestLoadPresentationMessage extends Message {
+  type: 'RequestLoadPresentation';
   filename: string;
 }
 
 export interface ProjectLoadedMessage extends Message {
-  project: IProject;
+  type: 'ProjectLoaded';
+  project: Project;
 }
 
-export interface IExportSlidesProgress extends Message {
+export interface ExportSlidesProgress extends Message {
+  type: 'ExportSlidesProgress';
   percentage: number;
 }
 
 export interface TimerUpdatedMessage extends Message {
+  type: 'TimerUpdated';
   elapsedTime: number;
 }
 
 export interface CurrentSlideUpdatedMessage extends Message {
+  type: 'CurrentSlideUpdated';
   currentSlideIndex: number;
   numSlides: number;
   currentSlideUrl: string;
@@ -92,13 +93,13 @@ export interface CurrentSlideUpdatedMessage extends Message {
   nextSlideUrl: string | undefined;
 }
 
-export interface IProjectSlide {
+export interface ProjectSlide {
   slide: string;
   notes: string;
 }
 
-export interface IProject {
-  slides: IProjectSlide[];
+export interface Project {
+  slides: ProjectSlide[];
 }
 
 export const ProjectSchema = {

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { MessageType, Message, TimerUpdatedMessage } from '../common/message';
+import { Message, TimerUpdatedMessage } from '../common/message';
 import { sendMessageToPresentationWindows } from '../server';
 
 let elapsedTime = 0;
@@ -31,13 +31,13 @@ export function handleRequestStartTimer() {
     elapsedTime += currentTime - previousTime;
     previousTime = currentTime;
     const tmerUpdatedMessage: TimerUpdatedMessage = {
-      type: MessageType.TimerUpdated,
+      type: 'TimerUpdated',
       elapsedTime
     };
     sendMessageToPresentationWindows(tmerUpdatedMessage);
   }, 100);
   const message: Message = {
-    type: MessageType.TimerStarted
+    type: 'TimerStarted'
   };
   sendMessageToPresentationWindows(message);
 }
@@ -45,7 +45,7 @@ export function handleRequestStartTimer() {
 export function handleRequestPauseTimer() {
   clearInterval(timerInterval);
   const message: Message = {
-    type: MessageType.TimerPaused
+    type: 'TimerPaused'
   };
   sendMessageToPresentationWindows(message);
 }
@@ -53,7 +53,7 @@ export function handleRequestPauseTimer() {
 export function handleRequestResetTimer() {
   elapsedTime = 0;
   const tmerUpdatedMessage: TimerUpdatedMessage = {
-    type: MessageType.TimerUpdated,
+    type: 'TimerUpdated',
     elapsedTime
   };
   sendMessageToPresentationWindows(tmerUpdatedMessage);

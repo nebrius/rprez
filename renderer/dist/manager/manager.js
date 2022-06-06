@@ -16,7 +16,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { MessageType, MonitorViews } from '../common/message.js';
 import { createInternalError } from '../common/util.js';
 import { addMessageListener, sendMessage } from '../messaging.js';
 import { getElement } from '../util.js';
@@ -28,11 +27,12 @@ function createMonitorEntry(parent, screenInfo, screenIndex, defaultOption) {
     container.appendChild(label);
     const select = document.createElement('select');
     select.setAttribute('data-screenid', screenInfo.id.toString());
-    for (const monitorView in MonitorViews) {
+    const monitorViews = ['None', 'Speaker', 'Audience', 'Clock'];
+    for (const monitorView of monitorViews) {
         const noneOption = document.createElement('option');
         noneOption.value = monitorView;
         noneOption.innerText = monitorView;
-        if (defaultOption === MonitorViews[monitorView]) {
+        if (defaultOption === monitorView) {
             noneOption.selected = true;
         }
         select.appendChild(noneOption);
@@ -47,7 +47,7 @@ getElement('presentationInput').onchange = () => {
         throw new Error(createInternalError('"filenames" is unexpectedly null'));
     }
     const message = {
-        type: MessageType.RequestLoadPresentation,
+        type: 'RequestLoadPresentation',
         // TODO: figure out why 'path' isn't a valid property
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         filename: filenames[0].path
@@ -56,7 +56,7 @@ getElement('presentationInput').onchange = () => {
 };
 getElement('reloadShowButton').onclick = () => {
     const message = {
-        type: MessageType.RequestReloadPresentation
+        type: 'RequestReloadPresentation'
     };
     sendMessage(message);
 };
@@ -71,7 +71,7 @@ getElement('presentButton').onclick = () => {
         screenAssignments[monitorId] = monitorView;
     }
     const message = {
-        type: MessageType.RequestPresentShow,
+        type: 'RequestPresentShow',
         developerMode: developerModeCheckboxElement.checked,
         screenAssignments
     };
@@ -79,13 +79,13 @@ getElement('presentButton').onclick = () => {
 };
 getElement('exportSlidesButton').onclick = () => {
     const message = {
-        type: MessageType.RequestExportSlides
+        type: 'RequestExportSlides'
     };
     sendMessage(message);
 };
 addMessageListener((msg) => {
     switch (msg.type) {
-        case MessageType.ScreenUpdated: {
+        case 'ScreenUpdated': {
             const monitorListContainer = getElement('monitorList');
             for (const child of monitorListContainer.childNodes) {
                 monitorListContainer.removeChild(child);
@@ -94,30 +94,30 @@ addMessageListener((msg) => {
             for (let i = 0; i < screens.length; i++) {
                 let defaultScreen;
                 if (i === 0) {
-                    defaultScreen = MonitorViews.Audience;
+                    defaultScreen = 'Audience';
                 }
                 else if (i === 1) {
-                    defaultScreen = MonitorViews.Speaker;
+                    defaultScreen = 'Speaker';
                 }
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 createMonitorEntry(monitorListContainer, screens[i], i, defaultScreen);
             }
             break;
         }
-        case MessageType.ProjectLoaded: {
+        case 'ProjectLoaded': {
             const presentationView = getElement('presentationView');
             const loadView = getElement('loadView');
             presentationView.style.display = 'inherit';
             loadView.style.display = 'none';
             break;
         }
-        case MessageType.ExportSlidesProgress: {
+        case 'ExportSlidesProgress': {
             const exportSlidesProgress = getElement('exportSlidesProgress');
             exportSlidesProgress.style.display = 'inherit';
             exportSlidesProgress.value = msg.percentage;
             break;
         }
-        case MessageType.ExportSlidesCompleted: {
+        case 'ExportSlidesCompleted': {
             alert('Slide export complete');
             getElement('exportSlidesProgress').style.display = 'none';
             break;
@@ -128,7 +128,7 @@ addMessageListener((msg) => {
     }
 });
 const managerReadyMessage = {
-    type: MessageType.ManagerReady
+    type: 'ManagerReady'
 };
 sendMessage(managerReadyMessage);
 //# sourceMappingURL=manager.js.map

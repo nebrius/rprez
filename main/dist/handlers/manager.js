@@ -20,13 +20,12 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleManagerReadyMessage = void 0;
 const windows_1 = require("../windows");
-const message_1 = require("../common/message");
 const server_1 = require("../server");
 function handleManagerReadyMessage() {
     console.log('Manager Ready');
     const displays = (0, windows_1.getDisplays)();
     const screenUpdatedMessage = {
-        type: message_1.MessageType.ScreenUpdated,
+        type: 'ScreenUpdated',
         screens: displays.map((display) => ({
             width: Math.floor(display.bounds.width * display.scaleFactor),
             height: Math.floor(display.bounds.height * display.scaleFactor),

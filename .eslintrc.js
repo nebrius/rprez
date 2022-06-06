@@ -14,6 +14,7 @@ module.exports = {
   plugins: ['@typescript-eslint', 'prettier'],
   root: true,
   rules: {
+    quotes: ['error', 'single'],
     'prettier/prettier': [
       'error',
       {
@@ -85,7 +86,6 @@ module.exports = {
         selector: 'TSEnumDeclaration',
         message: 'Do not declare enums'
       }
-    ],
-    quotes: ['error', 'single']
+    ]
   }
 };

@@ -44,7 +44,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.closePresentationWindows = exports.createPresentationWindow = exports.createManagerWindow = exports.getDisplayForId = exports.getDisplays = void 0;
 const electron_1 = require("electron");
 const util_1 = require("./common/util");
-const message_1 = require("./common/message");
 // Keep a global reference of the variouswindow objects. If you don't, the window
 // will be closed automatically when the JavaScript object is garbage collected.
 let managerWindow = null;
@@ -90,7 +89,7 @@ function createPresentationWindow(type, x, y, developerMode) {
     // Create the browser window.
     const win = new electron_1.BrowserWindow({ width: 800, height: 600, x, y });
     // and load the index.html of the app.
-    const filebase = message_1.MonitorViews[type].toLowerCase();
+    const filebase = type.toLowerCase();
     win.loadURL(`http://localhost:${util_1.PORT}/rprez/${filebase}/${filebase}.html`);
     if (developerMode) {
         win.webContents.openDevTools();

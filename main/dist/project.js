@@ -79,7 +79,7 @@ function sendSldeUpdatedMessage() {
         throw new Error('Internal Error: could not get current/next slides');
     }
     const message = {
-        type: message_1.MessageType.CurrentSlideUpdated,
+        type: 'CurrentSlideUpdated',
         currentSlideIndex: currentSlide + 1,
         numSlides: currentProject.slides.length,
         currentSlideUrl: currentSlideContent.slide,

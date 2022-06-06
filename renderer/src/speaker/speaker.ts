@@ -18,7 +18,6 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
-  MessageType,
   Message,
   CurrentSlideUpdatedMessage,
   TimerUpdatedMessage
@@ -44,8 +43,8 @@ clockControlButton.onclick = () => {
   const message: Message = {
     type:
       clockControlButton.innerText === '⏯'
-        ? MessageType.RequestStartTimer
-        : MessageType.RequestPauseTimer
+        ? 'RequestStartTimer'
+        : 'RequestPauseTimer'
   };
   sendMessage(message);
 };
@@ -53,7 +52,7 @@ clockControlButton.onclick = () => {
 const clockResetButton = getElement('speaker-clockReset');
 clockResetButton.onclick = () => {
   const message: Message = {
-    type: MessageType.RequestResetTimer
+    type: 'RequestResetTimer'
   };
   sendMessage(message);
 };
@@ -76,7 +75,7 @@ setInterval(() => {
 
 addMessageListener((msg) => {
   switch (msg.type) {
-    case MessageType.CurrentSlideUpdated: {
+    case 'CurrentSlideUpdated': {
       const currentSldeUpdatedMessage = msg as CurrentSlideUpdatedMessage;
       currentSlideIframe.src = currentSldeUpdatedMessage.currentSlideUrl;
       nextSlideIframe.src = currentSldeUpdatedMessage.nextSlideUrl || '';
@@ -90,18 +89,18 @@ addMessageListener((msg) => {
       break;
     }
 
-    case MessageType.TimerUpdated: {
+    case 'TimerUpdated': {
       const time = new Date((msg as TimerUpdatedMessage).elapsedTime);
       elapsedTimeLabel.innerText = formateDateUTC(time);
       break;
     }
 
-    case MessageType.TimerStarted: {
+    case 'TimerStarted': {
       clockControlButton.innerText = '⏸';
       break;
     }
 
-    case MessageType.TimerPaused: {
+    case 'TimerPaused': {
       clockControlButton.innerText = '⏯';
       break;
     }
@@ -109,6 +108,6 @@ addMessageListener((msg) => {
 });
 
 const presentatonWindowReadyMessage: Message = {
-  type: MessageType.PresentationWindowReady
+  type: 'PresentationWindowReady'
 };
 sendMessage(presentatonWindowReadyMessage);

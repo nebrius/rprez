@@ -18,14 +18,14 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { getDisplays } from '../windows';
-import { ScreenUpdatedMessage, MessageType } from '../common/message';
+import { ScreenUpdatedMessage } from '../common/message';
 import { sendMessageToManager } from '../server';
 
 export function handleManagerReadyMessage(): void {
   console.log('Manager Ready');
   const displays = getDisplays();
   const screenUpdatedMessage: ScreenUpdatedMessage = {
-    type: MessageType.ScreenUpdated,
+    type: 'ScreenUpdated',
     screens: displays.map((display) => ({
       width: Math.floor(display.bounds.width * display.scaleFactor),
       height: Math.floor(display.bounds.height * display.scaleFactor),

@@ -23,7 +23,6 @@ import WebSocket, { Server } from 'ws';
 import express from 'express';
 
 import {
-  MessageType,
   Message,
   RequestLoadPresentationMessage,
   RequestPresentShowMessage
@@ -88,63 +87,63 @@ webSocketServer.on('connection', (wsClient) => {
   wsClient.on('message', (msg) => {
     const parsedMessage: Message = JSON.parse(msg.toString());
     switch (parsedMessage.type) {
-      case MessageType.ManagerReady:
+      case 'ManagerReady':
         managerConnection = wsClient;
         handleManagerReadyMessage();
         break;
 
-      case MessageType.PresentationWindowReady:
+      case 'PresentationWindowReady':
         presentationWindowConnections.set(wsClient, true);
         break;
 
-      case MessageType.RequestLoadPresentation:
+      case 'RequestLoadPresentation':
         handleRequestLoadPresentation(
           parsedMessage as RequestLoadPresentationMessage
         );
         break;
 
-      case MessageType.RequestReloadPresentation:
+      case 'RequestReloadPresentation':
         handleRequestReloadPresentation();
         break;
 
-      case MessageType.RequestPresentShow:
+      case 'RequestPresentShow':
         handleRequestPresentShow(parsedMessage as RequestPresentShowMessage);
         break;
 
-      case MessageType.RequestExistShow:
+      case 'RequestExistShow':
         handleRequestExitShow();
         break;
 
-      case MessageType.RequestExportSlides:
+      case 'RequestExportSlides':
         handleRequestExportSlides();
         break;
 
-      case MessageType.RequestNextSlide:
+      case 'RequestNextSlide':
         handleRequestNextSlide();
         break;
 
-      case MessageType.RequestPreviousSlide:
+      case 'RequestPreviousSlide':
         handleRequestPreviousSlide();
         break;
 
-      case MessageType.RequestStartTimer:
+      case 'RequestStartTimer':
         handleRequestStartTimer();
         break;
 
-      case MessageType.RequestPauseTimer:
+      case 'RequestPauseTimer':
         handleRequestPauseTimer();
         break;
 
-      case MessageType.RequestResetTimer:
+      case 'RequestResetTimer':
         handleRequestResetTimer();
         break;
 
-      case MessageType.ClientWindowReady:
+      case 'ClientWindowReady':
         clientWindowConnections.set(wsClient, true);
         handleClientWindowReady(parsedMessage);
         break;
 
-      case MessageType.ClentMessage:
+      case 'ClentMessage':
         handleClentMessage(parsedMessage);
         break;
 

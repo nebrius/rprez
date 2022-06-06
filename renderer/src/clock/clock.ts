@@ -17,11 +17,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-  MessageType,
-  Message,
-  TimerUpdatedMessage
-} from '../common/message.js';
+import { Message, TimerUpdatedMessage } from '../common/message.js';
 import { createInternalError, numToString } from '../common/util.js';
 import { addMessageListener, sendMessage } from '../messaging.js';
 
@@ -32,7 +28,7 @@ if (!elapsedTimeLabel) {
 
 addMessageListener((msg) => {
   switch (msg.type) {
-    case MessageType.TimerUpdated: {
+    case 'TimerUpdated': {
       const time = new Date((msg as TimerUpdatedMessage).elapsedTime);
       elapsedTimeLabel.innerText = `${numToString(
         time.getUTCHours()
@@ -45,6 +41,6 @@ addMessageListener((msg) => {
 });
 
 const presentatonWindowReadyMessage: Message = {
-  type: MessageType.PresentationWindowReady
+  type: 'PresentationWindowReady'
 };
 sendMessage(presentatonWindowReadyMessage);

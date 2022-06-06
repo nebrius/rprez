@@ -18,11 +18,9 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
-  MessageType,
   RequestLoadPresentationMessage,
   RequestPresentShowMessage,
-  ProjectLoadedMessage,
-  MonitorViews
+  ProjectLoadedMessage
 } from '../common/message';
 import {
   loadProject,
@@ -53,7 +51,7 @@ async function loadPresentation(filename: string): Promise<void> {
     Math.min(presentationProject.slides.length - 1, getSlideNumber())
   );
   const message: ProjectLoadedMessage = {
-    type: MessageType.ProjectLoaded,
+    type: 'ProjectLoaded',
     project: presentationProject
   };
   sendMessageToManager(message);
@@ -89,7 +87,7 @@ export function handleRequestPresentShow(
     }
     const display = getDisplayForId(parseInt(monitorId, 10));
     console.log(
-      `Opening ${MonitorViews[screenAssignment]} view on monitor ` +
+      `Opening ${screenAssignment} view on monitor ` +
         `${monitorId} (${display.bounds.width}x${display.bounds.height})`
     );
     createPresentationWindow(
