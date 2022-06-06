@@ -19,8 +19,8 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 
 import {
   MessageType,
-  IMessage,
-  ICurrentSlideUpdatedMessage
+  Message,
+  CurrentSlideUpdatedMessage
 } from '../common/message.js';
 import { addMessageListener, sendMessage } from '../messaging.js';
 import { getElement } from '../util.js';
@@ -39,7 +39,7 @@ let backIFrame: HTMLIFrameElement;
 addMessageListener((msg) => {
   switch (msg.type) {
     case MessageType.CurrentSlideUpdated: {
-      const currentSlideUpdatedMessage = msg as ICurrentSlideUpdatedMessage;
+      const currentSldeUpdatedMessage = msg as CurrentSlideUpdatedMessage;
       if (currentIFRame === 1) {
         currentIFRame = 2;
         frontIframe = iframe2;
@@ -49,10 +49,10 @@ addMessageListener((msg) => {
         frontIframe = iframe1;
         backIFrame = iframe2;
       }
-      frontIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
+      frontIframe.src = currentSldeUpdatedMessage.currentSlideUrl;
       console.log(
         `Slide changed to ${
-          (msg as ICurrentSlideUpdatedMessage).currentSlideIndex
+          (msg as CurrentSlideUpdatedMessage).currentSlideIndex
         }`
       );
       break;
@@ -66,7 +66,7 @@ addMessageListener((msg) => {
   }
 });
 
-const presentationWindowReadyMessage: IMessage = {
+const presentatonWindowReadyMessage: Message = {
   type: MessageType.PresentationWindowReady
 };
-sendMessage(presentationWindowReadyMessage);
+sendMessage(presentatonWindowReadyMessage);

@@ -22,11 +22,7 @@ import { getCurrentProject, getCurrentProjectDirectory } from '../project';
 import { sleep, PORT } from '../common/util';
 import { Document, ExternalDocument } from 'pdfjs';
 import { promises } from 'fs';
-import {
-  MessageType,
-  IExportSlidesProgress,
-  IMessage
-} from '../common/message';
+import { MessageType, IExportSlidesProgress, Message } from '../common/message';
 import { sendMessageToManager } from '../server';
 
 async function exportSlides(outputFile: string): Promise<void> {
@@ -111,7 +107,7 @@ async function exportSlides(outputFile: string): Promise<void> {
 
   // Wrap up
   console.log(`Finished exporting slides in ${Date.now() - startTime}ms`);
-  const completedMessage: IMessage = {
+  const completedMessage: Message = {
     type: MessageType.ExportSlidesCompleted
   };
   sendMessageToManager(completedMessage);

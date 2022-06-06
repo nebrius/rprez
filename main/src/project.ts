@@ -25,7 +25,7 @@ import { Validator } from 'jsonschema';
 import {
   MessageType,
   IProject,
-  ICurrentSlideUpdatedMessage,
+  CurrentSlideUpdatedMessage,
   ProjectSchema
 } from './common/message';
 import { createInternalError } from './common/util';
@@ -91,7 +91,7 @@ export async function loadProject(
   return currentProject as IProject;
 }
 
-export function sendSlideUpdatedMessage() {
+export function sendSldeUpdatedMessage() {
   if (currentProject === null) {
     throw new Error(
       createInternalError('"currentProject" is unexpectedly null')
@@ -102,7 +102,7 @@ export function sendSlideUpdatedMessage() {
   if (!currentSlideContent) {
     throw new Error('Internal Error: could not get current/next slides');
   }
-  const message: ICurrentSlideUpdatedMessage = {
+  const message: CurrentSlideUpdatedMessage = {
     type: MessageType.CurrentSlideUpdated,
     currentSlideIndex: currentSlide + 1, // Need 1 based, not 0 based index
     numSlides: currentProject.slides.length,
@@ -119,5 +119,5 @@ export function getSlideNumber(): number {
 
 export function setSlideNumber(newSlideNumber: number): void {
   currentSlide = newSlideNumber;
-  sendSlideUpdatedMessage();
+  sendSldeUpdatedMessage();
 }

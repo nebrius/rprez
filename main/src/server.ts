@@ -24,9 +24,9 @@ import express from 'express';
 
 import {
   MessageType,
-  IMessage,
-  IRequestLoadPresentationMessage,
-  IRequestPresentShowMessage
+  Message,
+  RequestLoadPresentationMessage,
+  RequestPresentShowMessage
 } from './common/message';
 import { createInternalError, PORT } from './common/util';
 
@@ -46,10 +46,7 @@ import {
   handleRequestPauseTimer,
   handleRequestResetTimer
 } from './handlers/timer';
-import {
-  handleClientWindowReady,
-  handleClientMessage
-} from './handlers/client';
+import { handleClientWindowReady, handleClentMessage } from './handlers/client';
 import { handleRequestExportSlides } from './handlers/export';
 
 const app = express();
@@ -58,16 +55,11 @@ app.use('/rprez', express.static(join(__dirname, '../../renderer/dist/')));
 const httpServer = createServer(app);
 const webSocketServer = new Server({ server: httpServer });
 
-// The browser version collides with the ws version, and ws doesn't expose this interface, booo.
-interface IWebSocket {
-  send(msg: string): void;
-}
-
 let managerConnection: WebSocket;
-const presentationWindowConnections = new Map<IWebSocket, boolean>();
-const clientWindowConnections = new Map<IWebSocket, boolean>();
+const presentationWindowConnections = new Map<WebSocket, boolean>();
+const clientWindowConnections = new Map<WebSocket, boolean>();
 
-export function sendMessageToManager(msg: IMessage): void {
+export function sendMessageToManager(msg: Message): void {
   if (!managerConnection) {
     throw new Error(
       createInternalError('"managerWindow" is unexpectedly null')
@@ -76,13 +68,13 @@ export function sendMessageToManager(msg: IMessage): void {
   managerConnection.send(JSON.stringify(msg));
 }
 
-export function sendMessageToPresentationWindows(msg: IMessage): void {
+export function sendMessageToPresentationWindows(msg: Message): void {
   for (const [connection] of presentationWindowConnections) {
     connection.send(JSON.stringify(msg));
   }
 }
 
-export function sendMessageToClientWindows(msg: IMessage): void {
+export function sendMessageToClientWindows(msg: Message): void {
   for (const [connection] of clientWindowConnections) {
     connection.send(JSON.stringify(msg));
   }
@@ -94,7 +86,7 @@ export function setProjectDirectory(dir: string): void {
 
 webSocketServer.on('connection', (wsClient) => {
   wsClient.on('message', (msg) => {
-    const parsedMessage: IMessage = JSON.parse(msg.toString());
+    const parsedMessage: Message = JSON.parse(msg.toString());
     switch (parsedMessage.type) {
       case MessageType.ManagerReady:
         managerConnection = wsClient;
@@ -107,7 +99,7 @@ webSocketServer.on('connection', (wsClient) => {
 
       case MessageType.RequestLoadPresentation:
         handleRequestLoadPresentation(
-          parsedMessage as IRequestLoadPresentationMessage
+          parsedMessage as RequestLoadPresentationMessage
         );
         break;
 
@@ -116,7 +108,7 @@ webSocketServer.on('connection', (wsClient) => {
         break;
 
       case MessageType.RequestPresentShow:
-        handleRequestPresentShow(parsedMessage as IRequestPresentShowMessage);
+        handleRequestPresentShow(parsedMessage as RequestPresentShowMessage);
         break;
 
       case MessageType.RequestExistShow:
@@ -152,8 +144,8 @@ webSocketServer.on('connection', (wsClient) => {
         handleClientWindowReady(parsedMessage);
         break;
 
-      case MessageType.ClientMessage:
-        handleClientMessage(parsedMessage);
+      case MessageType.ClentMessage:
+        handleClentMessage(parsedMessage);
         break;
 
       default:

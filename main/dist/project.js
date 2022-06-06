@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setSlideNumber = exports.getSlideNumber = exports.sendSlideUpdatedMessage = exports.loadProject = exports.getCurrentProject = exports.getCurrentProjectDirectory = void 0;
+exports.setSlideNumber = exports.getSlideNumber = exports.sendSldeUpdatedMessage = exports.loadProject = exports.getCurrentProject = exports.getCurrentProjectDirectory = void 0;
 const path_1 = require("path");
 const util_1 = require("util");
 const fs_1 = require("fs");
@@ -69,7 +69,7 @@ async function loadProject(pathToProjectFile) {
     return currentProject;
 }
 exports.loadProject = loadProject;
-function sendSlideUpdatedMessage() {
+function sendSldeUpdatedMessage() {
     if (currentProject === null) {
         throw new Error((0, util_2.createInternalError)('"currentProject" is unexpectedly null'));
     }
@@ -88,14 +88,14 @@ function sendSlideUpdatedMessage() {
     };
     (0, server_1.sendMessageToPresentationWindows)(message);
 }
-exports.sendSlideUpdatedMessage = sendSlideUpdatedMessage;
+exports.sendSldeUpdatedMessage = sendSldeUpdatedMessage;
 function getSlideNumber() {
     return currentSlide;
 }
 exports.getSlideNumber = getSlideNumber;
 function setSlideNumber(newSlideNumber) {
     currentSlide = newSlideNumber;
-    sendSlideUpdatedMessage();
+    sendSldeUpdatedMessage();
 }
 exports.setSlideNumber = setSlideNumber;
 //# sourceMappingURL=project.js.map

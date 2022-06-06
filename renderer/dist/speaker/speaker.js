@@ -54,11 +54,11 @@ setInterval(() => {
 addMessageListener((msg) => {
     switch (msg.type) {
         case MessageType.CurrentSlideUpdated: {
-            const currentSlideUpdatedMessage = msg;
-            currentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
-            nextSlideIframe.src = currentSlideUpdatedMessage.nextSlideUrl || '';
-            notesIframe.src = currentSlideUpdatedMessage.currentNotesUrl || '';
-            slideCountLabel.innerText = `${currentSlideUpdatedMessage.currentSlideIndex}/${currentSlideUpdatedMessage.numSlides}`;
+            const currentSldeUpdatedMessage = msg;
+            currentSlideIframe.src = currentSldeUpdatedMessage.currentSlideUrl;
+            nextSlideIframe.src = currentSldeUpdatedMessage.nextSlideUrl || '';
+            notesIframe.src = currentSldeUpdatedMessage.currentNotesUrl || '';
+            slideCountLabel.innerText = `${currentSldeUpdatedMessage.currentSlideIndex}/${currentSldeUpdatedMessage.numSlides}`;
             console.log(`Slide changed to ${msg.currentSlideIndex}`);
             break;
         }
@@ -77,8 +77,8 @@ addMessageListener((msg) => {
         }
     }
 });
-const presentationWindowReadyMessage = {
+const presentatonWindowReadyMessage = {
     type: MessageType.PresentationWindowReady
 };
-sendMessage(presentationWindowReadyMessage);
+sendMessage(presentatonWindowReadyMessage);
 //# sourceMappingURL=speaker.js.map

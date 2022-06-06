@@ -19,23 +19,23 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 
 import {
   MessageType,
-  IMessage,
-  IScreenUpdatedMessage,
-  IRequestPresentShowMessage,
-  IRequestLoadPresentationMessage,
+  Message,
+  ScreenUpdatedMessage,
+  RequestPresentShowMessage,
+  RequestLoadPresentationMessage,
   IExportSlidesProgress,
-  IScreenInfo,
+  ScreenInfo,
   MonitorViews
 } from '../common/message.js';
 import { createInternalError } from '../common/util.js';
 import { addMessageListener, sendMessage } from '../messaging.js';
 import { getElement } from '../util.js';
 
-let screens: IScreenInfo[] = [];
+let screens: ScreenInfo[] = [];
 
 function createMonitorEntry(
   parent: HTMLElement,
-  screenInfo: IScreenInfo,
+  screenInfo: ScreenInfo,
   screenIndex: number,
   defaultOption: MonitorViews | undefined
 ): void {
@@ -67,7 +67,7 @@ getElement('presentationInput').onchange = () => {
   if (!filenames) {
     throw new Error(createInternalError('"filenames" is unexpectedly null'));
   }
-  const message: IRequestLoadPresentationMessage = {
+  const message: RequestLoadPresentationMessage = {
     type: MessageType.RequestLoadPresentation,
     // TODO: figure out why 'path' isn't a valid property
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -77,7 +77,7 @@ getElement('presentationInput').onchange = () => {
 };
 
 getElement('reloadShowButton').onclick = () => {
-  const message: IMessage = {
+  const message: Message = {
     type: MessageType.RequestReloadPresentation
   };
   sendMessage(message);
@@ -98,7 +98,7 @@ getElement('presentButton').onclick = () => {
     );
     screenAssignments[monitorId] = monitorView;
   }
-  const message: IRequestPresentShowMessage = {
+  const message: RequestPresentShowMessage = {
     type: MessageType.RequestPresentShow,
     developerMode: (developerModeCheckboxElement as HTMLInputElement).checked,
     screenAssignments
@@ -107,7 +107,7 @@ getElement('presentButton').onclick = () => {
 };
 
 getElement('exportSlidesButton').onclick = () => {
-  const message: IMessage = {
+  const message: Message = {
     type: MessageType.RequestExportSlides
   };
   sendMessage(message);
@@ -120,7 +120,7 @@ addMessageListener((msg) => {
       for (const child of monitorListContainer.childNodes) {
         monitorListContainer.removeChild(child);
       }
-      screens = (msg as IScreenUpdatedMessage).screens;
+      screens = (msg as ScreenUpdatedMessage).screens;
       for (let i = 0; i < screens.length; i++) {
         let defaultScreen: MonitorViews | undefined;
         if (i === 0) {
@@ -165,7 +165,7 @@ addMessageListener((msg) => {
   }
 });
 
-const managerReadyMessage: IMessage = {
+const managerReadyMessage: Message = {
   type: MessageType.ManagerReady
 };
 sendMessage(managerReadyMessage);

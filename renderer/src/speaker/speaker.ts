@@ -19,9 +19,9 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 
 import {
   MessageType,
-  IMessage,
-  ICurrentSlideUpdatedMessage,
-  ITimerUpdatedMessage
+  Message,
+  CurrentSlideUpdatedMessage,
+  TimerUpdatedMessage
 } from '../common/message.js';
 import { numToString } from '../common/util.js';
 import { addMessageListener, sendMessage } from '../messaging.js';
@@ -41,7 +41,7 @@ const clockTimeLabel = getElement('speaker-clockTime');
 
 const clockControlButton = getElement('speaker-clockControl');
 clockControlButton.onclick = () => {
-  const message: IMessage = {
+  const message: Message = {
     type:
       clockControlButton.innerText === '⏯'
         ? MessageType.RequestStartTimer
@@ -52,7 +52,7 @@ clockControlButton.onclick = () => {
 
 const clockResetButton = getElement('speaker-clockReset');
 clockResetButton.onclick = () => {
-  const message: IMessage = {
+  const message: Message = {
     type: MessageType.RequestResetTimer
   };
   sendMessage(message);
@@ -77,21 +77,21 @@ setInterval(() => {
 addMessageListener((msg) => {
   switch (msg.type) {
     case MessageType.CurrentSlideUpdated: {
-      const currentSlideUpdatedMessage = msg as ICurrentSlideUpdatedMessage;
-      currentSlideIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
-      nextSlideIframe.src = currentSlideUpdatedMessage.nextSlideUrl || '';
-      notesIframe.src = currentSlideUpdatedMessage.currentNotesUrl || '';
-      slideCountLabel.innerText = `${currentSlideUpdatedMessage.currentSlideIndex}/${currentSlideUpdatedMessage.numSlides}`;
+      const currentSldeUpdatedMessage = msg as CurrentSlideUpdatedMessage;
+      currentSlideIframe.src = currentSldeUpdatedMessage.currentSlideUrl;
+      nextSlideIframe.src = currentSldeUpdatedMessage.nextSlideUrl || '';
+      notesIframe.src = currentSldeUpdatedMessage.currentNotesUrl || '';
+      slideCountLabel.innerText = `${currentSldeUpdatedMessage.currentSlideIndex}/${currentSldeUpdatedMessage.numSlides}`;
       console.log(
         `Slide changed to ${
-          (msg as ICurrentSlideUpdatedMessage).currentSlideIndex
+          (msg as CurrentSlideUpdatedMessage).currentSlideIndex
         }`
       );
       break;
     }
 
     case MessageType.TimerUpdated: {
-      const time = new Date((msg as ITimerUpdatedMessage).elapsedTime);
+      const time = new Date((msg as TimerUpdatedMessage).elapsedTime);
       elapsedTimeLabel.innerText = formateDateUTC(time);
       break;
     }
@@ -108,7 +108,7 @@ addMessageListener((msg) => {
   }
 });
 
-const presentationWindowReadyMessage: IMessage = {
+const presentatonWindowReadyMessage: Message = {
   type: MessageType.PresentationWindowReady
 };
-sendMessage(presentationWindowReadyMessage);
+sendMessage(presentatonWindowReadyMessage);

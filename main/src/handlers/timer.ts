@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { MessageType, IMessage, ITimerUpdatedMessage } from '../common/message';
+import { MessageType, Message, TimerUpdatedMessage } from '../common/message';
 import { sendMessageToPresentationWindows } from '../server';
 
 let elapsedTime = 0;
@@ -30,13 +30,13 @@ export function handleRequestStartTimer() {
     const currentTime = Date.now();
     elapsedTime += currentTime - previousTime;
     previousTime = currentTime;
-    const timerUpdatedMessage: ITimerUpdatedMessage = {
+    const tmerUpdatedMessage: TimerUpdatedMessage = {
       type: MessageType.TimerUpdated,
       elapsedTime
     };
-    sendMessageToPresentationWindows(timerUpdatedMessage);
+    sendMessageToPresentationWindows(tmerUpdatedMessage);
   }, 100);
-  const message: IMessage = {
+  const message: Message = {
     type: MessageType.TimerStarted
   };
   sendMessageToPresentationWindows(message);
@@ -44,7 +44,7 @@ export function handleRequestStartTimer() {
 
 export function handleRequestPauseTimer() {
   clearInterval(timerInterval);
-  const message: IMessage = {
+  const message: Message = {
     type: MessageType.TimerPaused
   };
   sendMessageToPresentationWindows(message);
@@ -52,9 +52,9 @@ export function handleRequestPauseTimer() {
 
 export function handleRequestResetTimer() {
   elapsedTime = 0;
-  const timerUpdatedMessage: ITimerUpdatedMessage = {
+  const tmerUpdatedMessage: TimerUpdatedMessage = {
     type: MessageType.TimerUpdated,
     elapsedTime
   };
-  sendMessageToPresentationWindows(timerUpdatedMessage);
+  sendMessageToPresentationWindows(tmerUpdatedMessage);
 }

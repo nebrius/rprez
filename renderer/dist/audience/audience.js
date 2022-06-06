@@ -27,7 +27,7 @@ let backIFrame;
 addMessageListener((msg) => {
     switch (msg.type) {
         case MessageType.CurrentSlideUpdated: {
-            const currentSlideUpdatedMessage = msg;
+            const currentSldeUpdatedMessage = msg;
             if (currentIFRame === 1) {
                 currentIFRame = 2;
                 frontIframe = iframe2;
@@ -38,7 +38,7 @@ addMessageListener((msg) => {
                 frontIframe = iframe1;
                 backIFrame = iframe2;
             }
-            frontIframe.src = currentSlideUpdatedMessage.currentSlideUrl;
+            frontIframe.src = currentSldeUpdatedMessage.currentSlideUrl;
             console.log(`Slide changed to ${msg.currentSlideIndex}`);
             break;
         }
@@ -49,8 +49,8 @@ addMessageListener((msg) => {
         }
     }
 });
-const presentationWindowReadyMessage = {
+const presentatonWindowReadyMessage = {
     type: MessageType.PresentationWindowReady
 };
-sendMessage(presentationWindowReadyMessage);
+sendMessage(presentatonWindowReadyMessage);
 //# sourceMappingURL=audience.js.map

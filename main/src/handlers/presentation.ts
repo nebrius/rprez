@@ -19,16 +19,16 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 
 import {
   MessageType,
-  IRequestLoadPresentationMessage,
-  IRequestPresentShowMessage,
-  IProjectLoadedMessage,
+  RequestLoadPresentationMessage,
+  RequestPresentShowMessage,
+  ProjectLoadedMessage,
   MonitorViews
 } from '../common/message';
 import {
   loadProject,
   getSlideNumber,
   setSlideNumber,
-  sendSlideUpdatedMessage
+  sendSldeUpdatedMessage
 } from '../project';
 import {
   createPresentationWindow,
@@ -52,7 +52,7 @@ async function loadPresentation(filename: string): Promise<void> {
   setSlideNumber(
     Math.min(presentationProject.slides.length - 1, getSlideNumber())
   );
-  const message: IProjectLoadedMessage = {
+  const message: ProjectLoadedMessage = {
     type: MessageType.ProjectLoaded,
     project: presentationProject
   };
@@ -62,7 +62,7 @@ async function loadPresentation(filename: string): Promise<void> {
 let currentProjectFile = '';
 
 export async function handleRequestLoadPresentation(
-  loadMessage: IRequestLoadPresentationMessage
+  loadMessage: RequestLoadPresentationMessage
 ): Promise<void> {
   currentProjectFile = loadMessage.filename;
   await loadPresentation(currentProjectFile);
@@ -73,7 +73,7 @@ export async function handleRequestReloadPresentation() {
 }
 
 export function handleRequestPresentShow(
-  presentMessage: IRequestPresentShowMessage
+  presentMessage: RequestPresentShowMessage
 ) {
   console.log('Starting presentation');
   for (const monitorId in presentMessage.screenAssignments) {
@@ -98,7 +98,7 @@ export function handleRequestPresentShow(
       display.bounds.y,
       presentMessage.developerMode
     );
-    setTimeout(sendSlideUpdatedMessage, 1000);
+    setTimeout(sendSldeUpdatedMessage, 1000);
   }
 }
 

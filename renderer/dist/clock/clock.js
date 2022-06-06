@@ -32,8 +32,8 @@ addMessageListener((msg) => {
         }
     }
 });
-const presentationWindowReadyMessage = {
+const presentatonWindowReadyMessage = {
     type: MessageType.PresentationWindowReady
 };
-sendMessage(presentationWindowReadyMessage);
+sendMessage(presentatonWindowReadyMessage);
 //# sourceMappingURL=clock.js.map

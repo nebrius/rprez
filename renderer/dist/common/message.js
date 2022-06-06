@@ -39,7 +39,7 @@ export var MessageType;
     MessageType["RequestStartTimer"] = "RequestStartTimer";
     MessageType["RequestPauseTimer"] = "RequestPauseTimer";
     MessageType["RequestResetTimer"] = "RequestResetTimer";
-    MessageType["ClientMessage"] = "ClientMessage";
+    MessageType["ClentMessage"] = "ClentMessage";
 })(MessageType || (MessageType = {}));
 export var MonitorViews;
 (function (MonitorViews) {

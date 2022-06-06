@@ -39,14 +39,14 @@ export enum MessageType {
   RequestStartTimer = 'RequestStartTimer',
   RequestPauseTimer = 'RequestPauseTimer',
   RequestResetTimer = 'RequestResetTimer',
-  ClientMessage = 'ClientMessage'
+  ClentMessage = 'ClentMessage'
 }
 
-export interface IMessage {
+export interface Message {
   type: MessageType;
 }
 
-export interface IScreenInfo {
+export interface ScreenInfo {
   width: number;
   height: number;
   id: number;
@@ -59,32 +59,32 @@ export enum MonitorViews {
   Clock = 'Clock'
 }
 
-export interface IScreenUpdatedMessage extends IMessage {
-  screens: IScreenInfo[];
+export interface ScreenUpdatedMessage extends Message {
+  screens: ScreenInfo[];
 }
 
-export interface IRequestPresentShowMessage extends IMessage {
+export interface RequestPresentShowMessage extends Message {
   screenAssignments: { [id: number]: MonitorViews };
   developerMode: boolean;
 }
 
-export interface IRequestLoadPresentationMessage extends IMessage {
+export interface RequestLoadPresentationMessage extends Message {
   filename: string;
 }
 
-export interface IProjectLoadedMessage extends IMessage {
+export interface ProjectLoadedMessage extends Message {
   project: IProject;
 }
 
-export interface IExportSlidesProgress extends IMessage {
+export interface IExportSlidesProgress extends Message {
   percentage: number;
 }
 
-export interface ITimerUpdatedMessage extends IMessage {
+export interface TimerUpdatedMessage extends Message {
   elapsedTime: number;
 }
 
-export interface ICurrentSlideUpdatedMessage extends IMessage {
+export interface CurrentSlideUpdatedMessage extends Message {
   currentSlideIndex: number;
   numSlides: number;
   currentSlideUrl: string;

@@ -66,7 +66,7 @@ function handleRequestPresentShow(presentMessage) {
         console.log(`Opening ${message_1.MonitorViews[screenAssignment]} view on monitor ` +
             `${monitorId} (${display.bounds.width}x${display.bounds.height})`);
         (0, windows_1.createPresentationWindow)(screenAssignment, display.bounds.x, display.bounds.y, presentMessage.developerMode);
-        setTimeout(project_1.sendSlideUpdatedMessage, 1000);
+        setTimeout(project_1.sendSldeUpdatedMessage, 1000);
     }
 }
 exports.handleRequestPresentShow = handleRequestPresentShow;

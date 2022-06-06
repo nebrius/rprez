@@ -109,8 +109,8 @@ webSocketServer.on('connection', (wsClient) => {
                 clientWindowConnections.set(wsClient, true);
                 (0, client_1.handleClientWindowReady)(parsedMessage);
                 break;
-            case message_1.MessageType.ClientMessage:
-                (0, client_1.handleClientMessage)(parsedMessage);
+            case message_1.MessageType.ClentMessage:
+                (0, client_1.handleClentMessage)(parsedMessage);
                 break;
             default:
                 throw new Error((0, util_1.createInternalError)(`Received unexpected message type ${parsedMessage.type}`));

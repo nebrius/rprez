@@ -30,11 +30,11 @@ function handleRequestStartTimer() {
         const currentTime = Date.now();
         elapsedTime += currentTime - previousTime;
         previousTime = currentTime;
-        const timerUpdatedMessage = {
+        const tmerUpdatedMessage = {
             type: message_1.MessageType.TimerUpdated,
             elapsedTime
         };
-        (0, server_1.sendMessageToPresentationWindows)(timerUpdatedMessage);
+        (0, server_1.sendMessageToPresentationWindows)(tmerUpdatedMessage);
     }, 100);
     const message = {
         type: message_1.MessageType.TimerStarted
@@ -52,11 +52,11 @@ function handleRequestPauseTimer() {
 exports.handleRequestPauseTimer = handleRequestPauseTimer;
 function handleRequestResetTimer() {
     elapsedTime = 0;
-    const timerUpdatedMessage = {
+    const tmerUpdatedMessage = {
         type: message_1.MessageType.TimerUpdated,
         elapsedTime
     };
-    (0, server_1.sendMessageToPresentationWindows)(timerUpdatedMessage);
+    (0, server_1.sendMessageToPresentationWindows)(tmerUpdatedMessage);
 }
 exports.handleRequestResetTimer = handleRequestResetTimer;
 //# sourceMappingURL=timer.js.map

@@ -17,16 +17,16 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IMessage } from '../common/message';
+import { Message } from '../common/message';
 import {
   sendMessageToPresentationWindows,
   sendMessageToClientWindows
 } from '../server';
 
-export function handleClientWindowReady(msg: IMessage): void {
+export function handleClientWindowReady(msg: Message): void {
   sendMessageToPresentationWindows(msg);
 }
 
-export function handleClientMessage(msg: IMessage): void {
+export function handleClentMessage(msg: Message): void {
   sendMessageToClientWindows(msg);
 }

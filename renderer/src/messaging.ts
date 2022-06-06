@@ -17,12 +17,12 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { IMessage } from './common/message.js';
+import { Message } from './common/message.js';
 import { PORT } from './common/util.js';
 
 const connection = new WebSocket(`ws://localhost:${PORT}/ws`);
 let isConnected = false;
-const messageQueue: IMessage[] = [];
+const messageQueue: Message[] = [];
 
 connection.addEventListener('open', () => {
   console.log('Connected to bridging server');
@@ -41,7 +41,7 @@ connection.addEventListener('error', (err) => {
   console.error(`Could not connect to bridging server: ${err}`);
 });
 
-export function sendMessage(msg: IMessage) {
+export function sendMessage(msg: Message) {
   if (!isConnected) {
     messageQueue.push(msg);
   } else {
@@ -49,7 +49,7 @@ export function sendMessage(msg: IMessage) {
   }
 }
 
-export function addMessageListener(cb: (msg: IMessage) => void): void {
+export function addMessageListener(cb: (msg: Message) => void): void {
   connection.addEventListener('message', (msg) => {
     console.log(`Received message: ${msg.data}`);
     cb(JSON.parse(msg.data));
