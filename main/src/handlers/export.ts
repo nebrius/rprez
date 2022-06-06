@@ -126,7 +126,7 @@ export async function handleRequestExportSlides(): Promise<void> {
   }
   const result = await dialog.showSaveDialog({
     title: 'Select export file path',
-    defaultPath: getCurrentProjectDirectory(),
+    defaultPath: projectDirectory,
     buttonLabel: 'Export',
     filters: [
       {

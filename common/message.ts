@@ -89,7 +89,7 @@ export interface ICurrentSlideUpdatedMessage extends IMessage {
   numSlides: number;
   currentSlideUrl: string;
   currentNotesUrl: string;
-  nextSlideUrl?: string;
+  nextSlideUrl: string | undefined;
 }
 
 export interface IProjectSlide {

@@ -59,6 +59,9 @@ function handleRequestPresentShow(presentMessage) {
             continue;
         }
         const screenAssignment = presentMessage.screenAssignments[monitorId];
+        if (!screenAssignment) {
+            throw new Error('Internal Error: screenAssignment is unexepctedly undefined');
+        }
         const display = (0, windows_1.getDisplayForId)(parseInt(monitorId, 10));
         console.log(`Opening ${message_1.MonitorViews[screenAssignment]} view on monitor ` +
             `${monitorId} (${display.bounds.width}x${display.bounds.height})`);

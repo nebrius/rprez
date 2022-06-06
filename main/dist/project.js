@@ -73,14 +73,18 @@ function sendSlideUpdatedMessage() {
     if (currentProject === null) {
         throw new Error((0, util_2.createInternalError)('"currentProject" is unexpectedly null'));
     }
+    const currentSlideContent = currentProject.slides[currentSlide];
+    const nextSlideContent = currentProject.slides[currentSlide + 1];
+    if (!currentSlideContent) {
+        throw new Error('Internal Error: could not get current/next slides');
+    }
     const message = {
         type: message_1.MessageType.CurrentSlideUpdated,
         currentSlideIndex: currentSlide + 1,
         numSlides: currentProject.slides.length,
-        currentSlideUrl: currentProject.slides[currentSlide].slide,
-        currentNotesUrl: currentProject.slides[currentSlide].notes,
-        nextSlideUrl: currentProject.slides[currentSlide + 1] &&
-            currentProject.slides[currentSlide + 1].slide
+        currentSlideUrl: currentSlideContent.slide,
+        currentNotesUrl: currentSlideContent.notes,
+        nextSlideUrl: nextSlideContent && nextSlideContent.slide
     };
     (0, server_1.sendMessageToPresentationWindows)(message);
 }

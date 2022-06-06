@@ -105,7 +105,7 @@ async function handleRequestExportSlides() {
     }
     const result = await electron_1.dialog.showSaveDialog({
         title: 'Select export file path',
-        defaultPath: (0, project_1.getCurrentProjectDirectory)(),
+        defaultPath: projectDirectory,
         buttonLabel: 'Export',
         filters: [
             {
