@@ -35,7 +35,7 @@
     "typescript": "^4.7.3"
   },
   "dependencies": {
-    "electron": "^19.0.3",
+    "electron": "^19.0.11",
     "express": "^4.18.1",
     "jsonschema": "^1.4.1",
     "pdfjs": "^2.4.7",
