@@ -29,7 +29,8 @@ export function handleManagerReadyMessage(): void {
     screens: displays.map((display) => ({
       width: Math.floor(display.bounds.width * display.scaleFactor),
       height: Math.floor(display.bounds.height * display.scaleFactor),
-      id: display.id
+      id: display.id,
+      label: display.label
     }))
   };
   sendMessageToManager(screenUpdatedMessage);

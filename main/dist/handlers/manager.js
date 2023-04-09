@@ -29,7 +29,8 @@ function handleManagerReadyMessage() {
         screens: displays.map((display) => ({
             width: Math.floor(display.bounds.width * display.scaleFactor),
             height: Math.floor(display.bounds.height * display.scaleFactor),
-            id: display.id
+            id: display.id,
+            label: display.label
         }))
     };
     (0, server_1.sendMessageToManager)(screenUpdatedMessage);

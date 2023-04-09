@@ -49,6 +49,7 @@ export interface ScreenInfo {
   width: number;
   height: number;
   id: number;
+  label: string;
 }
 
 export type MonitorViews = 'None' | 'Speaker' | 'Audience' | 'Clock';

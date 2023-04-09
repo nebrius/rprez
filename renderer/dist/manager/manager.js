@@ -23,7 +23,7 @@ let screens = [];
 function createMonitorEntry(parent, screenInfo, screenIndex, defaultOption) {
     const container = document.createElement('div');
     const label = document.createElement('span');
-    label.innerText = `Screen ${screenIndex} (${screenInfo.width}x${screenInfo.height})`;
+    label.innerText = `${screenInfo.label} (Screen ${screenIndex}, ${screenInfo.width}x${screenInfo.height})`;
     container.appendChild(label);
     const select = document.createElement('select');
     select.setAttribute('data-screenid', screenInfo.id.toString());
