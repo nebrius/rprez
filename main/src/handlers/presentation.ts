@@ -26,7 +26,7 @@ import {
   loadProject,
   getSlideNumber,
   setSlideNumber,
-  sendSldeUpdatedMessage
+  sendSlideUpdatedMessage
 } from '../project';
 import {
   createPresentationWindow,
@@ -96,7 +96,7 @@ export function handleRequestPresentShow(
       display.bounds.y,
       presentMessage.developerMode
     );
-    setTimeout(sendSldeUpdatedMessage, 1000);
+    setTimeout(sendSlideUpdatedMessage, 1000);
   }
 }
 

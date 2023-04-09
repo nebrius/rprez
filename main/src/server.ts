@@ -45,7 +45,10 @@ import {
   handleRequestPauseTimer,
   handleRequestResetTimer
 } from './handlers/timer';
-import { handleClientWindowReady, handleClentMessage } from './handlers/client';
+import {
+  handleClientWindowReady,
+  handleClientMessage
+} from './handlers/client';
 import { handleRequestExportSlides } from './handlers/export';
 
 const app = express();
@@ -144,7 +147,7 @@ webSocketServer.on('connection', (wsClient) => {
         break;
 
       case 'ClentMessage':
-        handleClentMessage(parsedMessage);
+        handleClientMessage(parsedMessage);
         break;
 
       default:

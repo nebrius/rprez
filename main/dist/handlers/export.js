@@ -41,10 +41,7 @@ async function exportSlides(outputFile) {
     const height = 1081 / dpi / 0.00003937;
     let progressPercentage = 0;
     const pages = [];
-    await Promise.all(slides.map((slideUrl, index) => 
-    // TODO: rearchitect this so we don't have to disable this lint rule
-    // eslint-disable-next-line no-async-promise-executor
-    new Promise(async (resolve) => {
+    await Promise.all(slides.map((slideUrl, index) => async () => {
         // Create a hidden renderer window. We'll use this window to load a page containing the slide in question,
         // and then "print" them to a PDF, which is stored in a buffer
         const renderWindow = new electron_1.BrowserWindow({
@@ -69,20 +66,23 @@ async function exportSlides(outputFile) {
         console.log(`Converting slide ${slideUrl}`);
         const data = await renderWindow.webContents.printToPDF({
             printBackground: true,
-            marginsType: 1,
+            margins: {
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0
+            },
             pageSize: { width, height }
         });
         pages[index] = new pdfjs_1.ExternalDocument(data);
         renderWindow.close();
-        // TODO: why do we have to pass undefined here?
-        resolve(undefined);
         progressPercentage += 0.5 / slides.length;
         message = {
             type: 'ExportSlidesProgress',
             percentage: progressPercentage
         };
         (0, server_1.sendMessageToManager)(message);
-    }))).catch((err) => console.error(err));
+    })).catch((err) => console.error(err));
     // Create a new empty document, and merge all slides into it, then write to a file
     const mergedPdf = new pdfjs_1.Document();
     for (const page of pages) {

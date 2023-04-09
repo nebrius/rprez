@@ -27,6 +27,6 @@ export function handleClientWindowReady(msg: Message): void {
   sendMessageToPresentationWindows(msg);
 }
 
-export function handleClentMessage(msg: Message): void {
+export function handleClientMessage(msg: Message): void {
   sendMessageToClientWindows(msg);
 }

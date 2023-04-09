@@ -88,7 +88,7 @@ export async function loadProject(pathToProjectFile: string): Promise<Project> {
   return currentProject as Project;
 }
 
-export function sendSldeUpdatedMessage() {
+export function sendSlideUpdatedMessage() {
   if (currentProject === null) {
     throw new Error(
       createInternalError('"currentProject" is unexpectedly null')
@@ -116,5 +116,5 @@ export function getSlideNumber(): number {
 
 export function setSlideNumber(newSlideNumber: number): void {
   currentSlide = newSlideNumber;
-  sendSldeUpdatedMessage();
+  sendSlideUpdatedMessage();
 }

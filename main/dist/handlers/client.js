@@ -18,14 +18,14 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleClentMessage = exports.handleClientWindowReady = void 0;
+exports.handleClientMessage = exports.handleClientWindowReady = void 0;
 const server_1 = require("../server");
 function handleClientWindowReady(msg) {
     (0, server_1.sendMessageToPresentationWindows)(msg);
 }
 exports.handleClientWindowReady = handleClientWindowReady;
-function handleClentMessage(msg) {
+function handleClientMessage(msg) {
     (0, server_1.sendMessageToClientWindows)(msg);
 }
-exports.handleClentMessage = handleClentMessage;
+exports.handleClientMessage = handleClientMessage;
 //# sourceMappingURL=client.js.map
