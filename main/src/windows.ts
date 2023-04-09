@@ -57,8 +57,6 @@ export async function createManagerWindow(): Promise<void> {
   // and load the index.html of the app.
   managerWindow.loadURL(`http://localhost:${PORT}/rprez/manager/manager.html`);
 
-  managerWindow.maximize();
-
   // Emitted when the window is closed.
   managerWindow.on('closed', () => {
     // Dereference the window object, usually you would store windows

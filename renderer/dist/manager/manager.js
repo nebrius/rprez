@@ -21,12 +21,17 @@ import { addMessageListener, sendMessage } from '../messaging.js';
 import { getElement } from '../util.js';
 let screens = [];
 function createMonitorEntry(parent, screenInfo, screenIndex, defaultOption) {
-    const container = document.createElement('div');
-    const label = document.createElement('span');
-    label.innerText = `${screenInfo.label} (Screen ${screenIndex}, ${screenInfo.width}x${screenInfo.height})`;
+    const container = document.createElement('tr');
+    const label = document.createElement('td');
+    label.innerText = screenInfo.label;
     container.appendChild(label);
+    const details = document.createElement('td');
+    details.innerText = `Screen ${screenIndex}, ${screenInfo.width}x${screenInfo.height}`;
+    container.appendChild(details);
+    const selectContainer = document.createElement('td');
     const select = document.createElement('select');
     select.setAttribute('data-screenid', screenInfo.id.toString());
+    select.setAttribute('class', 'form-select');
     const monitorViews = ['None', 'Speaker', 'Audience', 'Clock'];
     for (const monitorView of monitorViews) {
         const noneOption = document.createElement('option');
@@ -37,7 +42,8 @@ function createMonitorEntry(parent, screenInfo, screenIndex, defaultOption) {
         }
         select.appendChild(noneOption);
     }
-    container.appendChild(select);
+    selectContainer.appendChild(select);
+    container.appendChild(selectContainer);
     parent.appendChild(container);
 }
 getElement('presentationInput').onchange = () => {

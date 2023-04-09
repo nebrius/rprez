@@ -24,4 +24,5 @@ body {
 
 #presentationView {
   display: none;
+  max-width: 760px;
 }

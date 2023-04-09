@@ -74,7 +74,6 @@ async function createManagerWindow() {
     managerWindow = new electron_1.BrowserWindow({ width: 800, height: 600 });
     // and load the index.html of the app.
     managerWindow.loadURL(`http://localhost:${util_1.PORT}/rprez/manager/manager.html`);
-    managerWindow.maximize();
     // Emitted when the window is closed.
     managerWindow.on('closed', () => {
         // Dereference the window object, usually you would store windows
