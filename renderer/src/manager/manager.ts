@@ -103,7 +103,7 @@ getElement('presentButton').onclick = () => {
       monitorSelect.getAttribute('data-screenid') as string,
       10
     );
-    screenAssignments[monitorId] = monitorView;
+    if (monitorView != 'None') screenAssignments[monitorId] = monitorView;
   }
   const message: RequestPresentShowMessage = {
     type: 'RequestPresentShow',
