@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { addMessageListener, sendMessage } from '../messaging.js';
-import { getElement } from '../util.js';
+import { getElement, isDeveloperMode } from '../util.js';
 const iframe1 = getElement('audience-currentSlide-iframe-1');
 const iframe2 = getElement('audience-currentSlide-iframe-2');
 let currentIFRame = 1;
@@ -37,7 +37,7 @@ addMessageListener((msg) => {
                 frontIframe = iframe1;
                 backIFrame = iframe2;
             }
-            frontIframe.src = currentSldeUpdatedMessage.currentSlideUrl;
+            frontIframe.src = `${currentSldeUpdatedMessage.currentSlideUrl}?developerMode=${isDeveloperMode()}`;
             console.log(`Slide changed to ${msg.currentSlideIndex}`);
             break;
         }

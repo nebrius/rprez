@@ -86,13 +86,12 @@ exports.createManagerWindow = createManagerWindow;
 // Presentation window methods
 function createPresentationWindow(type, x, y, developerMode) {
     // Create the browser window.
-    const win = new electron_1.BrowserWindow({ width: 800, height: 600, x, y });
+    const win = new electron_1.BrowserWindow({ width: 1920, height: 1080, x, y });
     // and load the index.html of the app.
     const filebase = type.toLowerCase();
-    win.loadURL(`http://localhost:${util_1.PORT}/rprez/${filebase}/${filebase}.html`);
+    win.loadURL(`http://localhost:${util_1.PORT}/rprez/${filebase}/${filebase}.html?developerMode=${developerMode}`);
     if (developerMode) {
         win.webContents.openDevTools();
-        win.maximize();
     }
     else {
         win.setFullScreen(true);

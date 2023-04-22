@@ -26,3 +26,7 @@ export function getElement(id: string): HTMLElement {
   }
   return element;
 }
+
+export function isDeveloperMode() {
+  return new URL(location.href).searchParams.get('developerMode') === 'true';
+}

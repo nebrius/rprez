@@ -19,7 +19,7 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Message, CurrentSlideUpdatedMessage } from '../common/message.js';
 import { addMessageListener, sendMessage } from '../messaging.js';
-import { getElement } from '../util.js';
+import { getElement, isDeveloperMode } from '../util.js';
 
 const iframe1 = getElement(
   'audience-currentSlide-iframe-1'
@@ -45,7 +45,9 @@ addMessageListener((msg) => {
         frontIframe = iframe1;
         backIFrame = iframe2;
       }
-      frontIframe.src = currentSldeUpdatedMessage.currentSlideUrl;
+      frontIframe.src = `${
+        currentSldeUpdatedMessage.currentSlideUrl
+      }?developerMode=${isDeveloperMode()}`;
       console.log(
         `Slide changed to ${
           (msg as CurrentSlideUpdatedMessage).currentSlideIndex

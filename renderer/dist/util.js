@@ -24,4 +24,7 @@ export function getElement(id) {
     }
     return element;
 }
+export function isDeveloperMode() {
+    return new URL(location.href).searchParams.get('developerMode') === 'true';
+}
 //# sourceMappingURL=util.js.map
