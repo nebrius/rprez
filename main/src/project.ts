@@ -17,10 +17,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { dirname } from 'path';
-import { promisify } from 'util';
-import { exists, promises } from 'fs';
-const { readFile } = promises;
+import { dirname, join } from 'path';
 import { Validator } from 'jsonschema';
 import {
   Project,
@@ -32,6 +29,8 @@ import {
   sendMessageToPresentationWindows,
   setProjectDirectory
 } from './server';
+import { readFile } from 'fs/promises';
+import { exists } from './util';
 
 let currentProjectDirectory: string | undefined;
 let currentProject: Project | null = null;
@@ -46,11 +45,12 @@ export function getCurrentProject(): Project | null {
 }
 
 export async function loadProject(pathToProjectFile: string): Promise<Project> {
-  const presentationFileExists = await promisify(exists)(pathToProjectFile);
+  const presentationFileExists = await exists(pathToProjectFile);
   if (!presentationFileExists) {
     throw new Error(`Presentation file ${pathToProjectFile} does not exist`);
   }
 
+  // Read in the presentation file
   let data: Buffer;
   try {
     data = await readFile(pathToProjectFile);
@@ -60,14 +60,16 @@ export async function loadProject(pathToProjectFile: string): Promise<Project> {
     );
   }
 
+  // Parse the presentation file
   try {
-    currentProject = JSON.parse(data.toString());
+    currentProject = JSON.parse(data.toString()) as Project;
   } catch (err) {
     throw new Error(
       `Could not parse project file ${pathToProjectFile}: ${err}`
     );
   }
 
+  // Make sure the file contents matches the schema
   const results = new Validator().validate(currentProject, ProjectSchema);
   if (!results.valid) {
     throw new Error(
@@ -75,15 +77,25 @@ export async function loadProject(pathToProjectFile: string): Promise<Project> {
     );
   }
 
+  // Set the project directory for use later
   currentProjectDirectory = dirname(pathToProjectFile);
   setProjectDirectory(currentProjectDirectory);
 
-  (currentProject as Project).slides = (currentProject as Project).slides.map(
-    (slide) => ({
+  // Format the slide data to match our internal URL scheme and validate the files exist
+  for (let i = 0; i < currentProject.slides.length; i++) {
+    const slide = currentProject.slides[i];
+    if (!slide) {
+      throw new Error('Internal Error: slide is unexpectedly undefined');
+    }
+    const resolvedFilePath = join(currentProjectDirectory, slide.slide);
+    if (!(await exists(resolvedFilePath))) {
+      throw new Error(`Could not find slide ${resolvedFilePath}`);
+    }
+    currentProject.slides[i] = {
       slide: `/presentation/${slide.slide}`,
       notes: slide.notes && `/presentation/${slide.notes}`
-    })
-  );
+    };
+  }
 
   return currentProject as Project;
 }
