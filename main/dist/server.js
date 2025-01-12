@@ -21,7 +21,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setProjectDirectory = exports.sendMessageToClientWindows = exports.sendMessageToPresentationWindows = exports.sendMessageToManager = void 0;
+exports.sendMessageToManager = sendMessageToManager;
+exports.sendMessageToPresentationWindows = sendMessageToPresentationWindows;
+exports.sendMessageToClientWindows = sendMessageToClientWindows;
+exports.setProjectDirectory = setProjectDirectory;
 const path_1 = require("path");
 const http_1 = require("http");
 const ws_1 = require("ws");
@@ -46,23 +49,19 @@ function sendMessageToManager(msg) {
     }
     managerConnection.send(JSON.stringify(msg));
 }
-exports.sendMessageToManager = sendMessageToManager;
 function sendMessageToPresentationWindows(msg) {
     for (const [connection] of presentationWindowConnections) {
         connection.send(JSON.stringify(msg));
     }
 }
-exports.sendMessageToPresentationWindows = sendMessageToPresentationWindows;
 function sendMessageToClientWindows(msg) {
     for (const [connection] of clientWindowConnections) {
         connection.send(JSON.stringify(msg));
     }
 }
-exports.sendMessageToClientWindows = sendMessageToClientWindows;
 function setProjectDirectory(dir) {
     app.use('/presentation', express_1.default.static(dir));
 }
-exports.setProjectDirectory = setProjectDirectory;
 webSocketServer.on('connection', (wsClient) => {
     wsClient.on('message', (msg) => {
         const parsedMessage = JSON.parse(msg.toString());

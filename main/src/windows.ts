@@ -109,6 +109,8 @@ export function createPresentationWindow(
     }
     presentationWindows.splice(winIndex, 1);
   });
+
+  win.setAspectRatio(16 / 9);
 }
 
 export function closePresentationWindows(): void {

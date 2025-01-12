@@ -21,7 +21,7 @@ import { Message, TimerUpdatedMessage } from '../common/message';
 import { sendMessageToPresentationWindows } from '../server';
 
 let elapsedTime = 0;
-let timerInterval: NodeJS.Timer;
+let timerInterval: NodeJS.Timeout;
 
 export function handleRequestStartTimer() {
   clearInterval(timerInterval);

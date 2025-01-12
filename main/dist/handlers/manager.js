@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleManagerReadyMessage = void 0;
+exports.handleManagerReadyMessage = handleManagerReadyMessage;
 const windows_1 = require("../windows");
 const server_1 = require("../server");
 function handleManagerReadyMessage() {
@@ -35,5 +35,4 @@ function handleManagerReadyMessage() {
     };
     (0, server_1.sendMessageToManager)(screenUpdatedMessage);
 }
-exports.handleManagerReadyMessage = handleManagerReadyMessage;
 //# sourceMappingURL=manager.js.map

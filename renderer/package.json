@@ -9,7 +9,7 @@
     "lint-fix": "eslint --fix ./src/**/*.ts",
     "prebuild": "npm run lint",
     "build": "tsc",
-    "postbuild": "cpy ./src/**/*.{css,js,html} ./dist",
+    "postbuild": "cpy \"./src/**/*.{css,js,html}\" ./dist",
     "watch": "tsc --watch"
   },
   "repository": {

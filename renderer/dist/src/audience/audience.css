@@ -19,6 +19,11 @@ along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 
 body {
   background-color: black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   padding: 0px;
   margin: 0px;
 }

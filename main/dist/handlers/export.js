@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleRequestExportSlides = void 0;
+exports.handleRequestExportSlides = handleRequestExportSlides;
 const electron_1 = require("electron");
 const project_1 = require("../project");
 const util_1 = require("../common/util");
@@ -117,5 +117,4 @@ async function handleRequestExportSlides() {
         await exportSlides(result.filePath);
     }
 }
-exports.handleRequestExportSlides = handleRequestExportSlides;
 //# sourceMappingURL=export.js.map

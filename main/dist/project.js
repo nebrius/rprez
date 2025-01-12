@@ -18,7 +18,12 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setSlideNumber = exports.getSlideNumber = exports.sendSlideUpdatedMessage = exports.loadProject = exports.getCurrentProject = exports.getCurrentProjectDirectory = void 0;
+exports.getCurrentProjectDirectory = getCurrentProjectDirectory;
+exports.getCurrentProject = getCurrentProject;
+exports.loadProject = loadProject;
+exports.sendSlideUpdatedMessage = sendSlideUpdatedMessage;
+exports.getSlideNumber = getSlideNumber;
+exports.setSlideNumber = setSlideNumber;
 const path_1 = require("path");
 const jsonschema_1 = require("jsonschema");
 const message_1 = require("./common/message");
@@ -32,11 +37,9 @@ let currentSlide = 0;
 function getCurrentProjectDirectory() {
     return currentProjectDirectory;
 }
-exports.getCurrentProjectDirectory = getCurrentProjectDirectory;
 function getCurrentProject() {
     return currentProject;
 }
-exports.getCurrentProject = getCurrentProject;
 async function loadProject(pathToProjectFile) {
     const presentationFileExists = await (0, util_2.exists)(pathToProjectFile);
     if (!presentationFileExists) {
@@ -82,7 +85,6 @@ async function loadProject(pathToProjectFile) {
     }
     return currentProject;
 }
-exports.loadProject = loadProject;
 function sendSlideUpdatedMessage() {
     if (currentProject === null) {
         throw new Error((0, util_1.createInternalError)('"currentProject" is unexpectedly null'));
@@ -94,7 +96,7 @@ function sendSlideUpdatedMessage() {
     }
     const message = {
         type: 'CurrentSlideUpdated',
-        currentSlideIndex: currentSlide + 1,
+        currentSlideIndex: currentSlide + 1, // Need 1 based, not 0 based index
         numSlides: currentProject.slides.length,
         currentSlideUrl: currentSlideContent.slide,
         currentNotesUrl: currentSlideContent.notes,
@@ -102,14 +104,11 @@ function sendSlideUpdatedMessage() {
     };
     (0, server_1.sendMessageToPresentationWindows)(message);
 }
-exports.sendSlideUpdatedMessage = sendSlideUpdatedMessage;
 function getSlideNumber() {
     return currentSlide;
 }
-exports.getSlideNumber = getSlideNumber;
 function setSlideNumber(newSlideNumber) {
     currentSlide = newSlideNumber;
     sendSlideUpdatedMessage();
 }
-exports.setSlideNumber = setSlideNumber;
 //# sourceMappingURL=project.js.map

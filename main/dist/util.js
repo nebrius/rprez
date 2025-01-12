@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.exists = void 0;
+exports.exists = exists;
 const promises_1 = require("fs/promises");
 async function exists(path) {
     try {
@@ -29,5 +29,4 @@ async function exists(path) {
         return false;
     }
 }
-exports.exists = exists;
 //# sourceMappingURL=util.js.map

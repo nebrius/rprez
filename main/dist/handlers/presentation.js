@@ -18,7 +18,10 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleRequestExitShow = exports.handleRequestPresentShow = exports.handleRequestReloadPresentation = exports.handleRequestLoadPresentation = void 0;
+exports.handleRequestLoadPresentation = handleRequestLoadPresentation;
+exports.handleRequestReloadPresentation = handleRequestReloadPresentation;
+exports.handleRequestPresentShow = handleRequestPresentShow;
+exports.handleRequestExitShow = handleRequestExitShow;
 const project_1 = require("../project");
 const windows_1 = require("../windows");
 const server_1 = require("../server");
@@ -45,11 +48,9 @@ async function handleRequestLoadPresentation(loadMessage) {
     currentProjectFile = loadMessage.filename;
     await loadPresentation(currentProjectFile);
 }
-exports.handleRequestLoadPresentation = handleRequestLoadPresentation;
 async function handleRequestReloadPresentation() {
     await loadPresentation(currentProjectFile);
 }
-exports.handleRequestReloadPresentation = handleRequestReloadPresentation;
 function handleRequestPresentShow(presentMessage) {
     console.log('Starting presentation');
     for (const [monitorId, screenAssignment] of Object.entries(presentMessage.screenAssignments)) {
@@ -70,10 +71,8 @@ function handleRequestPresentShow(presentMessage) {
         setTimeout(project_1.sendSlideUpdatedMessage, 1000);
     }
 }
-exports.handleRequestPresentShow = handleRequestPresentShow;
 function handleRequestExitShow() {
     console.log('Exiting presentation');
     (0, windows_1.closePresentationWindows)();
 }
-exports.handleRequestExitShow = handleRequestExitShow;
 //# sourceMappingURL=presentation.js.map

@@ -18,7 +18,9 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleRequestResetTimer = exports.handleRequestPauseTimer = exports.handleRequestStartTimer = void 0;
+exports.handleRequestStartTimer = handleRequestStartTimer;
+exports.handleRequestPauseTimer = handleRequestPauseTimer;
+exports.handleRequestResetTimer = handleRequestResetTimer;
 const server_1 = require("../server");
 let elapsedTime = 0;
 let timerInterval;
@@ -40,7 +42,6 @@ function handleRequestStartTimer() {
     };
     (0, server_1.sendMessageToPresentationWindows)(message);
 }
-exports.handleRequestStartTimer = handleRequestStartTimer;
 function handleRequestPauseTimer() {
     clearInterval(timerInterval);
     const message = {
@@ -48,7 +49,6 @@ function handleRequestPauseTimer() {
     };
     (0, server_1.sendMessageToPresentationWindows)(message);
 }
-exports.handleRequestPauseTimer = handleRequestPauseTimer;
 function handleRequestResetTimer() {
     elapsedTime = 0;
     const tmerUpdatedMessage = {
@@ -57,5 +57,4 @@ function handleRequestResetTimer() {
     };
     (0, server_1.sendMessageToPresentationWindows)(tmerUpdatedMessage);
 }
-exports.handleRequestResetTimer = handleRequestResetTimer;
 //# sourceMappingURL=timer.js.map

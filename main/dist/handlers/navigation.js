@@ -18,7 +18,8 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleRequestPreviousSlide = exports.handleRequestNextSlide = void 0;
+exports.handleRequestNextSlide = handleRequestNextSlide;
+exports.handleRequestPreviousSlide = handleRequestPreviousSlide;
 const project_1 = require("../project");
 const timer_1 = require("./timer");
 function handleRequestNextSlide() {
@@ -32,7 +33,6 @@ function handleRequestNextSlide() {
         (0, timer_1.handleRequestStartTimer)();
     }
 }
-exports.handleRequestNextSlide = handleRequestNextSlide;
 function handleRequestPreviousSlide() {
     const currentProject = (0, project_1.getCurrentProject)();
     if (!currentProject) {
@@ -43,5 +43,4 @@ function handleRequestPreviousSlide() {
         (0, project_1.setSlideNumber)(currentSlide - 1);
     }
 }
-exports.handleRequestPreviousSlide = handleRequestPreviousSlide;
 //# sourceMappingURL=navigation.js.map

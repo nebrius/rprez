@@ -18,12 +18,14 @@ You should have received a copy of the GNU General Public License
 along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sleep = exports.numToString = exports.createInternalError = exports.PORT = void 0;
+exports.PORT = void 0;
+exports.createInternalError = createInternalError;
+exports.numToString = numToString;
+exports.sleep = sleep;
 exports.PORT = 3087;
 function createInternalError(msg) {
     return `Internal Error: ${msg}. This is a bug, please report it at https://github.com/nebrius/RPrez.`;
 }
-exports.createInternalError = createInternalError;
 function numToString(num) {
     let convertedNum = num.toString();
     if (convertedNum.length === 1) {
@@ -31,9 +33,7 @@ function numToString(num) {
     }
     return convertedNum;
 }
-exports.numToString = numToString;
 async function sleep(duration) {
     return new Promise((resolve) => setTimeout(resolve, duration));
 }
-exports.sleep = sleep;
 //# sourceMappingURL=util.js.map
