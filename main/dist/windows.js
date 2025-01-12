@@ -84,7 +84,7 @@ async function createManagerWindow() {
 }
 exports.createManagerWindow = createManagerWindow;
 // Presentation window methods
-function createPresentationWindow(type, x, y, developerMode) {
+function createPresentationWindow(type, x, y, developerMode, fullscreen) {
     // Create the browser window.
     const win = new electron_1.BrowserWindow({ width: 1920, height: 1080, x, y });
     // and load the index.html of the app.
@@ -93,7 +93,7 @@ function createPresentationWindow(type, x, y, developerMode) {
     if (developerMode) {
         win.webContents.openDevTools();
     }
-    else {
+    if (fullscreen) {
         win.setFullScreen(true);
     }
     win.setMenu(null);

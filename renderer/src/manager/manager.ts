@@ -93,6 +93,7 @@ getElement('reloadShowButton').onclick = () => {
 getElement('presentButton').onclick = () => {
   const screenAssignments: { [id: number]: MonitorViews } = {};
   const developerModeCheckboxElement = getElement('developerModeCheckbox');
+  const fullscreenCheckboxElement = getElement('fullscreenCheckbox');
   for (const monitorSelect of document.querySelectorAll(
     '#monitorList select'
   )) {
@@ -108,6 +109,7 @@ getElement('presentButton').onclick = () => {
   const message: RequestPresentShowMessage = {
     type: 'RequestPresentShow',
     developerMode: (developerModeCheckboxElement as HTMLInputElement).checked,
+    fullscreen: (fullscreenCheckboxElement as HTMLInputElement).checked,
     screenAssignments
   };
   sendMessage(message);

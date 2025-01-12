@@ -74,12 +74,16 @@ export function handleRequestPresentShow(
   presentMessage: RequestPresentShowMessage
 ) {
   console.log('Starting presentation');
-  for (const monitorId in presentMessage.screenAssignments) {
+  for (const [monitorId, screenAssignment] of Object.entries(
+    presentMessage.screenAssignments
+  )) {
+    if (screenAssignment === 'None') {
+      continue;
+    }
     // eslint-disable-next-line no-prototype-builtins
     if (!presentMessage.screenAssignments.hasOwnProperty(monitorId)) {
       continue;
     }
-    const screenAssignment = presentMessage.screenAssignments[monitorId];
     if (!screenAssignment) {
       throw new Error(
         'Internal Error: screenAssignment is unexepctedly undefined'
@@ -94,7 +98,8 @@ export function handleRequestPresentShow(
       screenAssignment,
       display.bounds.x,
       display.bounds.y,
-      presentMessage.developerMode
+      presentMessage.developerMode,
+      presentMessage.fullscreen
     );
     setTimeout(sendSlideUpdatedMessage, 1000);
   }

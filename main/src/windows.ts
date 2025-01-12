@@ -72,7 +72,8 @@ export function createPresentationWindow(
   type: MonitorViews,
   x: number,
   y: number,
-  developerMode: boolean
+  developerMode: boolean,
+  fullscreen: boolean
 ): void {
   // Create the browser window.
   const win = new BrowserWindow({ width: 1920, height: 1080, x, y });
@@ -85,7 +86,8 @@ export function createPresentationWindow(
 
   if (developerMode) {
     win.webContents.openDevTools();
-  } else {
+  }
+  if (fullscreen) {
     win.setFullScreen(true);
   }
 

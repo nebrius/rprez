@@ -69,6 +69,7 @@ getElement('reloadShowButton').onclick = () => {
 getElement('presentButton').onclick = () => {
     const screenAssignments = {};
     const developerModeCheckboxElement = getElement('developerModeCheckbox');
+    const fullscreenCheckboxElement = getElement('fullscreenCheckbox');
     for (const monitorSelect of document.querySelectorAll('#monitorList select')) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const monitorView = monitorSelect.selectedOptions[0]
@@ -79,6 +80,7 @@ getElement('presentButton').onclick = () => {
     const message = {
         type: 'RequestPresentShow',
         developerMode: developerModeCheckboxElement.checked,
+        fullscreen: fullscreenCheckboxElement.checked,
         screenAssignments
     };
     sendMessage(message);

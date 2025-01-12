@@ -63,6 +63,7 @@ export interface RequestPresentShowMessage extends Message {
   type: 'RequestPresentShow';
   screenAssignments: { [id: number]: MonitorViews };
   developerMode: boolean;
+  fullscreen: boolean;
 }
 
 export interface RequestLoadPresentationMessage extends Message {

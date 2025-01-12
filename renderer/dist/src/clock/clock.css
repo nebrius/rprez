@@ -1,0 +1,37 @@
+/*
+Copyright (c) Bryan Hughes <bryan@nebri.us>
+
+This file is part of RPrez.
+
+RPrez is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+RPrez is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with RPrez.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+body {
+  background-color: black;
+  padding: 0px;
+  margin: 0px;
+}
+
+#clock-elapsedTime {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: white;
+  font-size: 300pt;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}

@@ -52,19 +52,21 @@ async function handleRequestReloadPresentation() {
 exports.handleRequestReloadPresentation = handleRequestReloadPresentation;
 function handleRequestPresentShow(presentMessage) {
     console.log('Starting presentation');
-    for (const monitorId in presentMessage.screenAssignments) {
+    for (const [monitorId, screenAssignment] of Object.entries(presentMessage.screenAssignments)) {
+        if (screenAssignment === 'None') {
+            continue;
+        }
         // eslint-disable-next-line no-prototype-builtins
         if (!presentMessage.screenAssignments.hasOwnProperty(monitorId)) {
             continue;
         }
-        const screenAssignment = presentMessage.screenAssignments[monitorId];
         if (!screenAssignment) {
             throw new Error('Internal Error: screenAssignment is unexepctedly undefined');
         }
         const display = (0, windows_1.getDisplayForId)(parseInt(monitorId, 10));
         console.log(`Opening ${screenAssignment} view on monitor ` +
             `${monitorId} (${display.bounds.width}x${display.bounds.height})`);
-        (0, windows_1.createPresentationWindow)(screenAssignment, display.bounds.x, display.bounds.y, presentMessage.developerMode);
+        (0, windows_1.createPresentationWindow)(screenAssignment, display.bounds.x, display.bounds.y, presentMessage.developerMode, presentMessage.fullscreen);
         setTimeout(project_1.sendSlideUpdatedMessage, 1000);
     }
 }

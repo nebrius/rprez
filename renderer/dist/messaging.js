@@ -45,7 +45,10 @@ export function sendMessage(msg) {
 }
 export function addMessageListener(cb) {
     connection.addEventListener('message', (msg) => {
-        console.log(`Received message: ${msg.data}`);
+        const parsedMessage = JSON.parse(msg.data);
+        if (parsedMessage.type !== 'TimerUpdated') {
+            console.log(`Received message: ${msg.data}`);
+        }
         cb(JSON.parse(msg.data));
     });
 }
